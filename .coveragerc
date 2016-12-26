@@ -1,0 +1,10 @@
+[run]
+
+omit = 
+    *migrations*, 
+    *tests*,
+    *wsgi.py,
+    manage.py,
+    *settings*
+plugins =
+    django_coverage_plugin
