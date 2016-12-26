@@ -165,7 +165,7 @@ TEMPLATES = [
 ]
 
 # See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -236,11 +236,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_ALLOW_REGISTRATION = False
 ACCOUNT_ADAPTER = 'insights.users.adapters.AccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'insights.users.adapters.SocialAccountAdapter'
+ACCOUNT_LOGOUT_ON_GET = True
 
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'users:redirect'
+LOGIN_REDIRECT_URL = 'survey:start'
 LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
