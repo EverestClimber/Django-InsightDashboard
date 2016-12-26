@@ -1,0 +1,16 @@
+/* Display django-debug-toolbar.
+   See https://github.com/django-debug-toolbar/django-debug-toolbar/issues/742
+   and https://github.com/pydanny/cookiecutter-django/issues/317
+*/
+[hidden][style="display: block;"] {
+  display: block !important;
+}
+
+.brand img {
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.container {
+  max-width: 400px;
+}
