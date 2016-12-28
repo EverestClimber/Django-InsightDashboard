@@ -47,6 +47,7 @@ LOCAL_APPS = (
     # custom users app
     'insights.users.apps.UsersConfig',
     # Your stuff: custom apps go here
+    'survey',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
