@@ -14,3 +14,48 @@
 .container {
   max-width: 400px;
 }
+
+.fancy-select {
+  border: none;
+}
+
+.fancy-select .fancy-alert {
+  display: none;
+  color: #a94442;
+}
+
+.fancy-select .btn-group-vertical {
+  width: 100%;
+
+}
+
+.fancy-select .btn {
+  text-align: left;
+  white-space: inherit;
+}
+
+.fancy-select .btn i.fa{
+  float: right;
+  font-size: 20px;
+}
+
+.fancy-select button.fancy-checked {
+  color: #0e57a9;
+  background-color: white;
+}
+
+.fancy-select button i.fa{
+  display: none;
+}
+
+.fancy-select button.fancy-checked i.fa{
+  display: block;
+}
+
+.fancy-invalid-required {
+  border:solid 1px #a94442;
+}
+
+.fancy-invalid-required .fancy-alert {
+  display: block;
+}

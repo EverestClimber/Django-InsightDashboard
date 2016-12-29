@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, AnonymousUser as DjangoAnonymousUser
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -32,3 +32,6 @@ class User(AbstractUser):
         return reverse('users:detail', kwargs={'username': self.username})
 
 
+class AnonymousUser(User, DjangoAnonymousUser):
+    class Meta:
+        proxy = True

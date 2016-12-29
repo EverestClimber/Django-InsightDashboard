@@ -113,7 +113,7 @@ class SurveyItem(models.Model):
 
 class Response(models.Model):
     user = models.ForeignKey(User)
-    region = models.ForeignKey(Region)
+    region = models.ForeignKey(Region, null=True, blank=True)
     organization = models.ForeignKey(Organization)
     survey_item = models.ForeignKey(SurveyItem)
     created_at = models.DateTimeField(auto_now_add=True)
