@@ -8,7 +8,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import AnonymousUser
 
 from insights.users.models import User, Country
-from ..models import Survey, Organization
+from ..models import Survey, Organization, HCPCategory
 
 pytestmark = pytest.mark.django_db
 
@@ -44,10 +44,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         user = mixer.blend(User, country=country)
         req.user = user
         mixer.blend(Survey, active=True)
-        # resp = start_view(req)
-        # assert resp.status_code == 200, 'Now we a ready to start'
         self.assertRaises(ValueError, start_view, req)
-        # self.assertRaises(ValueError, start_view, req, 'Survy should be set')
 
     def test_authenticated_with_country_and_survey_and_organization(self):
         # user = mixer.blend(User, is_anonymous=True)
@@ -57,6 +54,19 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         req.user = user
         mixer.blend(Survey, active=True)
         mixer.blend(Organization)
+        self.assertRaises(ValueError, start_view, req)
+
+    def test_authenticated_with_country_and_survey_and_organization(self):
+        # user = mixer.blend(User, is_anonymous=True)
+        req = RequestFactory().get(reverse('survey:start'))
+        country = mixer.blend(Country)
+        user = mixer.blend(User, country=country)
+        req.user = user
+        mixer.blend(Survey, active=True)
+        mixer.blend(Organization)
+        mixer.blend(Organization)
+        mixer.blend(HCPCategory)
+        mixer.blend(HCPCategory)
         resp = start_view(req)
         assert resp.status_code == 200, 'Now we a ready to start'
         self.assertNotHTML(resp, 'input[name="country"]')

@@ -110,22 +110,23 @@ class SurveyItem(models.Model):
     def __str__(self):
         return "%s/%s" % (self.ordering, self.pk)
 
+class HCPCategory(models.Model):
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Category of HCP'
+        verbose_name_plural = 'Categories of HCP'
 
 class Response(models.Model):
     user = models.ForeignKey(User)
     region = models.ForeignKey(Region, null=True, blank=True)
     organization = models.ForeignKey(Organization)
+    hcp_category = models.ForeignKey(HCPCategory)
     survey_item = models.ForeignKey(SurveyItem)
+    data = jsonfield.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "%s - %s Response" % (self.pk, self.created_at)
 
-
-class Answer(models.Model):
-    response = models.ForeignKey(Response, on_delete=models.CASCADE)
-    survey_item = models.ForeignKey(SurveyItem)
-    data = jsonfield.JSONField()
-
-    def __str__(self):
-        return "%s Answer" % self.pk

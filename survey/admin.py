@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Region, Organization, Question, Option, Survey, SurveyItem, Response, Answer
+from .models import Region, Organization, Question, Option, Survey, SurveyItem, Response, HCPCategory
 
 
 @admin.register(Region)
@@ -57,6 +57,6 @@ class ResponseAdmin(admin.ModelAdmin):
     list_display = ('user', 'region', 'organization', 'survey_item', 'created_at')
 
 
-@admin.register(Answer)
-class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('response', 'survey_item', 'data')
+@admin.register(HCPCategory)
+class HCPCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_at')
