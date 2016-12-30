@@ -1,17 +1,16 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Start Survey" %}{% endblock %}
+{% block title %}{% trans "Start Survey" %} - {{ block.super }}{% endblock title %}
 {% block content %}
 
     <form action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
 
         {{ form.as_p }}
-{#        {{ form.organization }}#}
-{#        {{ form.region | as_crispy_field }}#}
+
         <div class="text-center">
           <button class="primaryAction btn btn-primary" type="submit">{% trans "Start survey" %}</button>
         </div>
     </form>
 {% endblock content %}
+

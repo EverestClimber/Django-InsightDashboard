@@ -40,17 +40,31 @@ $(document).ready(function () {
         $('#fancy-' + name + ' button').removeClass('fancy-checked');
         $(this).addClass('fancy-checked');
         $('#fancy-hidden-' + name).val($(this).attr('data-value'));
-        fancy_validate();
+    });
+
+    $("div.fancy-required button").click(function(){
+        fancy_validate($(this).attr('data-name'));
     });
 
 });
 
 
-function fancy_validate() {
+function fancy_validate(name) {
     var valid = true
 
+    var selector
+    console.log(name);
+
+    if (name) {
+        selector = '#fancy-' + name;
+    } else {
+        selector = '.fancy-required';
+    }
+
+    console.log(selector);
+
     $(document).ready(function () {
-        $('.fancy-required').each(function(index, element){
+        $(selector).each(function(index, element){
             var hiddens = $(element).find('input[type="hidden"]');
 
             if (hiddens.length) {

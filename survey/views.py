@@ -4,19 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import FormView, CreateView
 from django.core.urlresolvers import reverse
 
-from survey.models import Response, Survey
-from survey.forms import StartSurveyForm, StartForm
-
-class StartView(CreateView):
-    model = Response
-    fields = ['region', 'organization']
-    success_url = '/survey/questions/'
-    template_name = 'survey/start.html'
-
-    def form_valid(self, form):
-        user = self.request.user
-        form.instance.user = user
-        return super(StartView, self).form_valid(form)
+from survey.models import Response
+from survey.forms import StartForm
 
 @login_required
 def start_view(request):

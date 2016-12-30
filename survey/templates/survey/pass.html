@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Pass Survey" %}{% endblock %}
+{% block title %}{% trans "Pass Survey" %} - {{ block.super }}{% endblock %}
 {% block content %}
 
     <form action="" method="post" onsubmit="fancy_validate(); return false;">{% csrf_token %}
@@ -15,3 +15,5 @@
         </div>
     </form>
 {% endblock content %}
+
+{% block javascript %}{{ block.super }}{% endblock javascript %}
