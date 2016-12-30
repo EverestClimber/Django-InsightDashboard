@@ -5,7 +5,7 @@
 {% block head_title %}{% trans "Start Survey" %}{% endblock %}
 {% block content %}
 
-    <form action="" method="post" onsubmit="fancy_validate(); return false;">{% csrf_token %}
+    <form action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
 
         {{ form.as_p }}
 {#        {{ form.organization }}#}
