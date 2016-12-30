@@ -120,10 +120,11 @@ class HCPCategory(models.Model):
 
 class Response(models.Model):
     user = models.ForeignKey(User)
+    country = models.ForeignKey(Country)
     region = models.ForeignKey(Region, null=True, blank=True)
     organization = models.ForeignKey(Organization)
     hcp_category = models.ForeignKey(HCPCategory)
-    survey_item = models.ForeignKey(SurveyItem)
+    survey = models.ForeignKey(Survey)
     data = jsonfield.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -54,7 +54,7 @@ class SurveyItemAdmin(admin.ModelAdmin):
 
 @admin.register(Response)
 class ResponseAdmin(admin.ModelAdmin):
-    list_display = ('user', 'region', 'organization', 'survey_item', 'created_at')
+    list_display = ('user', 'region', 'organization', 'survey', 'created_at')
 
 
 @admin.register(HCPCategory)

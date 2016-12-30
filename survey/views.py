@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import FormView, CreateView
-from django import forms
+from django.core.urlresolvers import reverse
 
 from survey.models import Response, Survey
 from survey.forms import StartSurveyForm, StartForm
@@ -20,32 +20,14 @@ class StartView(CreateView):
 
 @login_required
 def start_view(request):
-
-
     if request.user.country is None:
         raise ValueError('User country is not set')
-
-    def get_choices_from_object_manager(object_manager):
-        objects = object_manager.all()
-        if len(objects):
-            choices = [(region.pk, region.name) for region in objects]
-        else:
-            choices = []
-        return choices
 
     regions = request.user.country.region_set.all()
     if len(regions):
         region_choices = [(region.pk, region.name) for region in regions]
     else:
         region_choices = []
-
-
-    surveys = Survey.objects.filter(active=True).all()
-
-    if len(surveys):
-        survey_choices = [(survey.pk, survey.name) for survey in surveys]
-    else:
-        survey_choices = []
 
     form = StartForm(request.POST or None, region_choices=region_choices)
 
@@ -55,6 +37,23 @@ def start_view(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            return HttpResponseRedirect('/thanks/')
+            response = Response(
+                user=request.user,
+                country=request.user.country,
+                organization_id=form.cleaned_data['organization'],
+                hcp_category_id=form.cleaned_data['hcp'],
+                survey_id=form.cleaned_data['survey']
+            )
+            if form.cleaned_data['region']:
+                response.region_id = form.cleaned_data['region']
+            response.save()
+            return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
 
+
+    return render(request, 'survey/start.html', {'form': form})
+
+@login_required
+def pass_view(request):
+    if request.method == 'POST':
+        pass
     return render(request, 'survey/start.html', {'form': form})
