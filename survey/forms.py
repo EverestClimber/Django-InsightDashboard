@@ -1,11 +1,11 @@
 from django import forms
-from .models import Response, Survey, Organization, HCPCategory
+from .models import Answer, Survey, Organization, HCPCategory
 from .widgets import FancyRadioSelect
 
 
 class StartSurveyForm(forms.ModelForm):
     class Meta:
-        model = Response
+        model = Answer
         fields = ['region', 'organization']
 
 

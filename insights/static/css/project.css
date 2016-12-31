@@ -59,3 +59,59 @@
 .fancy-invalid-required .fancy-alert {
   display: block;
 }
+
+.fancy-checkbox input[type="checkbox"] {
+  display: none !important;
+  position: absolute;
+}
+
+.fancy-ordered-select button {
+  text-align: left;
+  white-space: inherit;
+}
+
+.fancy-ordered-select .col-xs-6 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+/* --------------- steps ---------------- */
+.wizard > .steps > ul > li {
+    width: inherit !important;
+}
+
+.wizard > .content {
+  background: none !important;
+}
+
+.wizard .actions, .wizard .actions ul {
+  width: 100%;
+}
+
+.wizard .actions ul li {
+  width: 45%;
+  text-align: center;
+}
+
+
+/* ---------- additional elements for wizard -----------*/
+
+.wizard div.checkbox label {
+  padding-left: 2px;
+  padding-top: 4px;
+}
+
+
+.type_two_dependend_fields .additional {
+  display: none;
+}
+
+.field-other {
+  margin-top: 15px;
+}
+
+
+.w-100p {
+  width: 100%;
+}

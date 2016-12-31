@@ -1,0 +1,30 @@
+{{ item.question.text }}
+
+<div class="fancy-select fancy-checkbox">
+    <div class="btn-group-vertical" role="group">
+        {% for option in item.question.option_set.all %}
+
+            <div class="btn-group" role="group">
+                <button
+                        type="button"
+                        class="text-left btn btn-default"
+                        data-value="{{ option.value }}"
+                        data-checkbox-for="type_multiselect_with_other-checkbox-{{ option.pk }}"
+
+                >
+                    <i class="fa fa-check-circle pull-right" aria-hidden="true"></i>
+                    {{ option.value }}
+
+                </button>
+            </div>
+
+        {% endfor %}
+    </div>
+{% for option in item.question.option_set.all %}
+    <input type="checkbox" name="data[{{ item.question_id }}][]" id="type_multiselect_with_other-checkbox-{{ option.pk }}" value="{{ option.value }}">
+{% endfor %}
+
+    <div class="input-group w-100p field-other">
+        <input type="text" class="form-control" name="data[{{ item.question_id }}][other]" placeholder="Other">
+    </div>
+</div>

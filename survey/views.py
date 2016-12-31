@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import FormView, CreateView
 from django.core.urlresolvers import reverse
 
-from survey.models import Response
+from survey.models import Answer
 from survey.forms import StartForm
 
 @login_required
@@ -26,7 +26,7 @@ def start_view(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            response = Response(
+            response = Answer(
                 user=request.user,
                 country=request.user.country,
                 organization_id=form.cleaned_data['organization'],
@@ -42,7 +42,9 @@ def start_view(request):
     return render(request, 'survey/start.html', {'form': form})
 
 @login_required
-def pass_view(request):
+def pass_view(request, id):
     if request.method == 'POST':
         pass
-    return render(request, 'survey/start.html', {'form': form})
+    answer = Answer.objects.select_related('survey').get(pk=id)
+    items = answer.survey.survey_items.all().prefetch_related('question__option_set')
+    return render(request, 'survey/pass.html', {'items': items})

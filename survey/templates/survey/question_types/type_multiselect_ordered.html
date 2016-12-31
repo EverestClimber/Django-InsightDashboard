@@ -1,0 +1,36 @@
+{{ item.question.text }}
+
+<div class="row fancy-select fancy-ordered-select">
+    <div class="col-xs-6">
+        <div class="btn-group-vertical group-left w-100p" role="group" id="fancy-ordered-select-left-{{ item.question_id }}">
+            {% for option in item.question.option_set.all %}
+
+                <div class="btn-group" role="group">
+                    <button
+                            type="button"
+                            class="text-left btn btn-default"
+                            data-value="{{ option.value }}"
+                            data-name="{{ item.question_id }}"
+                            data-checkbox-for="type_multiselect_ordered-checkbox-{{ option.pk }}"
+
+                    >
+                        <i class="fa fa-check-circle pull-right" aria-hidden="true"></i>
+                        {{ option.value }}
+                        <input type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" style="display:none">
+                    </button>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="btn-group-vertical group-right w-100p" role="group" id="fancy-ordered-select-right-{{ item.question_id }}">
+
+        </div>
+    </div>
+
+    <div class="input-group w-100p field-other">
+        <input type="text" class="form-control" name="data[{{ item.pk }}][other]" placeholder="Other">
+    </div>
+</div>

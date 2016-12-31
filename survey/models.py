@@ -30,11 +30,11 @@ class Organization(models.Model):
 
 class Question(models.Model):
 
-    TYPE_TWO_DEPENDEND_FIELDS = 1
-    TYPE_YES_NO = 2
-    TYPE_MULTISELECT_WITH_OTHER = 3
-    TYPE_MULTISELECT_ORDERED = 4
-    TYPE_DEPENDEND_QUESTION = 11
+    TYPE_TWO_DEPENDEND_FIELDS = 'type_two_dependend_fields'
+    TYPE_YES_NO = 'type_yes_no'
+    TYPE_MULTISELECT_WITH_OTHER = 'type_multiselect_with_other'
+    TYPE_MULTISELECT_ORDERED = 'type_multiselect_ordered'
+    TYPE_DEPENDEND_QUESTION = 'type_dependeend_question'
 
     TYPE_CHOICES = (
         (TYPE_TWO_DEPENDEND_FIELDS, 'Two dependend fields'),
@@ -59,7 +59,7 @@ class Question(models.Model):
         (DEPENDENCY_CONTEXTUAL, 'Question availability depends of other question'),
     )
 
-    type = models.PositiveIntegerField('Question Type', choices=TYPE_CHOICES)
+    type = models.CharField('Question Type', choices=TYPE_CHOICES, max_length=50)
     field = models.PositiveIntegerField('Field Type', null=True, blank=True, choices=FIELD_CHOICES)
     text = models.CharField('Question text', max_length=1000)
     depends_of = models.ForeignKey('self', null=True, blank=True)
@@ -72,6 +72,9 @@ class Question(models.Model):
 
     def __str__(self):
         return self.text
+
+    def get_type_template_name(self):
+        return "survey/question_types/%s.html" % self.type
 
 
 class Option(models.Model):
@@ -98,7 +101,7 @@ class Survey(models.Model):
 
 
 class SurveyItem(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='survey_items')
     question = models.ForeignKey(Question)
     ordering = models.PositiveIntegerField('Order', default=0)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
@@ -118,7 +121,7 @@ class HCPCategory(models.Model):
         verbose_name = 'Category of HCP'
         verbose_name_plural = 'Categories of HCP'
 
-class Response(models.Model):
+class Answer(models.Model):
     user = models.ForeignKey(User)
     country = models.ForeignKey(Country)
     region = models.ForeignKey(Region, null=True, blank=True)

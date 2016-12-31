@@ -1,19 +1,57 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load crispy_forms_tags %}
+{% load static i18n %}
 
 {% block title %}{% trans "Pass Survey" %} - {{ block.super }}{% endblock %}
 {% block content %}
 
-    <form action="" method="post" onsubmit="fancy_validate(); return false;">{% csrf_token %}
+    <form action="" method="post">{% csrf_token %}
 
-        {{ form.as_p }}
-{#        {{ form.organization }}#}
-{#        {{ form.region | as_crispy_field }}#}
-        <div class="text-center">
-          <button class="primaryAction btn btn-primary" type="submit">{% trans "Start survey" %}</button>
+        <div id="wizard" style="display:none">
+            {% for item in items %}
+                <h1>1</h1>
+                <div class="step-content">
+                    <div class="text-center m-t-md {{ item.question.type }}">
+{#                        <h2>{{ item.question.get_type_template_name }}</h2>#}
+                        {% include item.question.get_type_template_name with item=item %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
+
     </form>
 {% endblock content %}
 
-{% block javascript %}{{ block.super }}{% endblock javascript %}
+{% block css %}{{ block.super }}
+    <link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+{% endblock css %}
+
+{% block javascript %}{{ block.super }}
+    <script type="text/javascript" src="{% static 'js/plugins/jquery.steps/jquery.steps.min.js' %}"></script>
+{% endblock javascript %}
+
+
+{% block inlinescript %}
+
+
+
+    $("#wizard").steps({
+        titleTemplate: '<span class="number">#index#</span>',
+        onStepChanged: function (event, currentIndex, priorIndex) {
+
+            if ($('#type_multiselect_with_other-checkbox-1').prop('checked') == true) {
+                $('#type_yes_no-Yes-5').prop('checked', true);
+                $('#type_yes_no-Yes-5').prop('disabled', true);
+                $('#type_yes_no-No-5').prop('disabled', true);
+            } else {
+                if ($('#type_yes_no-Yes-5').prop('disabled') == true) {
+                    $('#type_yes_no-Yes-5').prop('checked', false);
+                    $('#type_yes_no-Yes-5').prop('disabled', false);
+                    $('#type_yes_no-No-5').prop('disabled', false);
+                }
+            }
+
+        },
+    });
+
+    $("#wizard").show();
+{% endblock inlinescript %}

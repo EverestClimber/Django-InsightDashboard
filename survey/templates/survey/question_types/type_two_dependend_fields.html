@@ -1,0 +1,26 @@
+{{ item.question.text }}
+<div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">%</span>
+    <input type="text" class="form-control" name="data[{{ item.question_id }}][main]">
+</div>
+
+<div class="checkbox">
+    <input id="checkbox1" type="checkbox" class="additional-switcher" data-item-id="{{ item.question_id }}">
+    <label for="checkbox1">
+        Not sure
+    </label>
+</div>
+
+{% if item.question.question_set %}
+    {% with dependend=item.question.question_set.first %}
+        <div class="additional" id="additional-{{ item.question_id }}">
+            {{ dependend.text }}
+            <div class="input-group w-100p">
+                <input type="text" class="form-control" name="data[{{ item.question_id }}][additional]">
+            </div>
+        </div>
+    {% endwith %}
+{% endif %}
+
+
+

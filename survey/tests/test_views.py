@@ -9,7 +9,7 @@ from test_plus import TestCase
 from django.contrib.auth.models import AnonymousUser
 
 from insights.users.models import User, Country
-from ..models import Survey, Organization, HCPCategory, Region, Response
+from ..models import Survey, Organization, HCPCategory, Region, Answer
 
 pytestmark = pytest.mark.django_db
 
@@ -112,7 +112,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         resp = start_view(request)
         self.response_302(resp)
         _, _, kwargs = resolve(resp.url)
-        survey_response = Response.objects.get(pk=kwargs['id'])
+        survey_response = Answer.objects.get(pk=kwargs['id'])
         assert survey_response
         assert survey_response.user_id == user.pk
         assert survey_response.region_id == region.pk
