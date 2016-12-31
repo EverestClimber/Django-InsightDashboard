@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Thank you for your answers" %} - {{ block.super }}{% endblock %}
+{% block content %}
+
+    <div class="text-center">
+        <h2>Thank you!</h2>
+        <a href="{% url 'survey:start' %}" class="btn btn-primary">Start New Survey</a>
+    </div>
+
+
+{% endblock %}

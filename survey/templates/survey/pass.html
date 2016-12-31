@@ -4,7 +4,7 @@
 {% block title %}{% trans "Pass Survey" %} - {{ block.super }}{% endblock %}
 {% block content %}
 
-    <form action="" method="post">{% csrf_token %}
+    <form action="" method="post" id="survey-pass-form">{% csrf_token %}
 
         <div id="wizard" style="display:none">
             {% for item in items %}
@@ -50,6 +50,10 @@
                 }
             }
 
+        },
+
+        onFinished: function(event, currentIndex) {
+            $('#survey-pass-form').submit();
         },
     });
 

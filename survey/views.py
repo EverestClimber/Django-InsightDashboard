@@ -43,8 +43,19 @@ def start_view(request):
 
 @login_required
 def pass_view(request, id):
-    if request.method == 'POST':
-        pass
     answer = Answer.objects.select_related('survey').get(pk=id)
+    if answer.data:
+        return HttpResponseRedirect(reverse('survey:start'))
+
+    if answer.user_id != request.user.pk:
+        return HttpResponseRedirect(reverse('survey:start'))
+
+
+    if request.method == 'POST':
+        answer.data = dict(request.POST)
+        answer.save()
+        return HttpResponseRedirect(reverse('survey:thanks'))
+
+
     items = answer.survey.survey_items.all().prefetch_related('question__option_set')
     return render(request, 'survey/pass.html', {'items': items})
