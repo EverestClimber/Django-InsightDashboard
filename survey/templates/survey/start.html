@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Start Survey" %} - {{ block.super }}{% endblock title %}
 {% block content %}
 
     <form action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}

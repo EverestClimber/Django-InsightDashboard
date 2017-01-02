@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load static i18n compress %}
 
-{% block title %}{% trans "Pass Survey" %} - {{ block.super }}{% endblock %}
 {% block content %}
 
     <form action="" method="post" id="survey-pass-form">{% csrf_token %}
