@@ -50,12 +50,10 @@ def pass_view(request, id):
     if answer.user_id != request.user.pk:
         return HttpResponseRedirect(reverse('survey:start'))
 
-
     if request.method == 'POST':
         answer.data = dict(request.POST)
         answer.save()
         return HttpResponseRedirect(reverse('survey:thanks'))
-
 
     items = answer.survey.survey_items.all().prefetch_related('question__option_set')
     return render(request, 'survey/pass.html', {'items': items})

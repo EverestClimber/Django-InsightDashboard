@@ -76,6 +76,15 @@ class Question(models.Model):
     def get_type_template_name(self):
         return "survey/question_types/%s.html" % self.type
 
+    def get_subquestion(self):
+        if self.type != self.TYPE_TWO_DEPENDEND_FIELDS:
+            raise ValueError("Question type doesn't support subuquestions")
+        dependend = self.question_set.filter(type=self.TYPE_DEPENDEND_QUESTION)
+        if not len(dependend):
+            raise ValueError("Question has no subqueries")
+
+        return dependend.first()
+
 
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

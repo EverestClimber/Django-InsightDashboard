@@ -12,7 +12,7 @@
 </div>
 
 {% if item.question.question_set %}
-    {% with dependend=item.question.question_set.first %}
+    {% with dependend=item.question.get_subquestion %}
         <div class="additional" id="additional-{{ item.question_id }}">
             {{ dependend.text }}
             <div class="input-group w-100p">

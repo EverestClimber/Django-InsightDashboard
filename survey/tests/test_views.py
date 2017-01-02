@@ -13,7 +13,7 @@ from ..models import Survey, Organization, HCPCategory, Region, Answer
 
 pytestmark = pytest.mark.django_db
 
-from ..views import start_view
+from ..views import start_view, pass_view
 
 
 class SurveyStartViewTest(AssertHTMLMixin, TestCase):
@@ -121,4 +121,37 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         assert survey_response.hcp_category_id == hcp.pk
 
 
+class TestSurveyPass(AssertHTMLMixin, TestCase):
+    fixtures = ['survey.json']
 
+    def test_pass(self):
+        country = mixer.blend(Country)
+        user = mixer.blend(User, country=country)
+
+        answer = mixer.blend(Answer,
+                             user=user,
+                             country=country,
+                             organization_id=1,
+                             hcp_category_id=1,
+                             survey_id=1)
+
+        kwargs = {'id': answer.pk}
+        request = RequestFactory().get(reverse('survey:pass', kwargs=kwargs))
+        request.user = user
+        resp = pass_view(request, answer.pk)
+        self.response_200(resp)
+        with self.assertHTML(resp, 'input'): pass
+
+        request = RequestFactory().post(
+            reverse('survey:start'),
+            {'data[6][]': ['Health care system specific'], 'data[3][]': ['Quetapin-oral', 'Aloperidol-oral'],
+             'data[4][other]': [''], 'data[6][other]': [''],
+             'data[7][other]': [''], 'data[1][main]': ['33'], 'data[3][other]': [''], 'data[1][additional]': ['']}
+        )
+        request.user = user
+        resp = pass_view(request, answer.pk)
+
+        self.response_302(resp)
+        assert resp.url == reverse('survey:thanks')
+        answer.refresh_from_db()
+        assert answer.data
