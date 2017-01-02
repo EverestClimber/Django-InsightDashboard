@@ -14,7 +14,7 @@
     <![endif]-->
 
     {% block css %}
-        {% compress css %}
+        {% compress inline css %}
             <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
             <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
 
@@ -27,23 +27,7 @@
 
     {% endblock %}
 
-      {% block javascript %}
-        {% compress js %}
-            <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
-            <script src="{% static 'js/bootstrap.min.js' %}"></script>
-            <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
-            <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
-
-            <!-- Custom and plugin javascript -->
-            <script src="{% static 'js/inspinia.js' %}"></script>
-            <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
-            <script src="{% static 'js/project.js' %}"></script>
-
-
-
-        {% endcompress %}
-    {% endblock javascript %}
-
+        <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
   </head>
 
 
@@ -98,6 +82,23 @@
 
 
     {% block modal %}{% endblock modal %}
+
+      {% block javascript %}
+        {% compress js %}
+
+            <script src="{% static 'js/bootstrap.min.js' %}"></script>
+            <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+            <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+            <!-- Custom and plugin javascript -->
+            <script src="{% static 'js/inspinia.js' %}"></script>
+            <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+            <script src="{% static 'js/project.js' %}"></script>
+
+
+
+        {% endcompress %}
+    {% endblock javascript %}
 
     <script>
         $(document).ready(function() {
