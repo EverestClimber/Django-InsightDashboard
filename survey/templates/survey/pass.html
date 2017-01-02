@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static i18n %}
+{% load static i18n compress %}
 
 {% block title %}{% trans "Pass Survey" %} - {{ block.super }}{% endblock %}
 {% block content %}
@@ -22,11 +22,15 @@
 {% endblock content %}
 
 {% block css %}{{ block.super }}
-    <link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+    {% compress css inline %}
+        <link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
+    {% endcompress %}
 {% endblock css %}
 
 {% block javascript %}{{ block.super }}
-    <script type="text/javascript" src="{% static 'js/plugins/jquery.steps/jquery.steps.min.js' %}"></script>
+    {% compress js inline %}
+        <script type="text/javascript" src="{% static 'js/plugins/jquery.steps/jquery.steps.min.js' %}"></script>
+    {% endcompress %}
 {% endblock javascript %}
 
 

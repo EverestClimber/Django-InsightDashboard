@@ -1,0 +1,117 @@
+/* Display django-debug-toolbar.
+   See https://github.com/django-debug-toolbar/django-debug-toolbar/issues/742
+   and https://github.com/pydanny/cookiecutter-django/issues/317
+*/
+[hidden][style="display: block;"] {
+  display: block !important;
+}
+
+.brand img {
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.container {
+  max-width: 400px;
+}
+
+.fancy-select {
+  border: none;
+}
+
+.fancy-select .fancy-alert {
+  display: none;
+  color: #a94442;
+}
+
+.fancy-select .btn-group-vertical {
+  width: 100%;
+
+}
+
+.fancy-select .btn {
+  text-align: left;
+  white-space: inherit;
+}
+
+.fancy-select .btn i.fa{
+  float: right;
+  font-size: 20px;
+}
+
+.fancy-select button.fancy-checked {
+  color: #0e57a9;
+  background-color: white;
+}
+
+.fancy-select button i.fa{
+  display: none;
+}
+
+.fancy-select button.fancy-checked i.fa{
+  display: block;
+}
+
+.fancy-invalid-required {
+  border:solid 1px #a94442;
+}
+
+.fancy-invalid-required .fancy-alert {
+  display: block;
+}
+
+.fancy-checkbox input[type="checkbox"] {
+  display: none !important;
+  position: absolute;
+}
+
+.fancy-ordered-select button {
+  text-align: left;
+  white-space: inherit;
+}
+
+.fancy-ordered-select .col-xs-6 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+/* --------------- steps ---------------- */
+.wizard > .steps > ul > li {
+    width: inherit !important;
+}
+
+.wizard > .content {
+  background: none !important;
+}
+
+.wizard .actions, .wizard .actions ul {
+  width: 100%;
+}
+
+.wizard .actions ul li {
+  width: 45%;
+  text-align: center;
+}
+
+
+/* ---------- additional elements for wizard -----------*/
+
+.wizard div.checkbox label {
+  padding-left: 2px;
+  padding-top: 4px;
+}
+
+
+.type_two_dependend_fields .additional {
+  display: none;
+}
+
+.field-other {
+  margin-top: 15px;
+}
+
+
+.w-100p {
+  width: 100%;
+}
