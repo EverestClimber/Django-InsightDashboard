@@ -16,7 +16,7 @@
                     >
                         <i class="fa fa-check-circle pull-right" aria-hidden="true"></i>
                         {{ option.value }}
-                        <input type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" style="display:none">
+                        <input id="type_multiselect_ordered-checkbox-{{ option.pk }}" type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" style="display:none">
                     </button>
                 </div>
 

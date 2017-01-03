@@ -38,18 +38,25 @@
     $("#wizard").steps({
         titleTemplate: '<span class="number">#index#</span>',
         onStepChanged: function (event, currentIndex, priorIndex) {
+            if ($('#type_multiselect_ordered-checkbox-1')){
+                if ($('#type_multiselect_ordered-checkbox-1').prop('checked') == true) {
+                    if ('#type_yes_no-Yes-5') {
+                        $('#type_yes_no-Yes-5').prop('checked', true);
+                        $('#type_yes_no-Yes-5').prop('disabled', true);
+                    }
 
-            if ($('#type_multiselect_with_other-checkbox-1').prop('checked') == true) {
-                $('#type_yes_no-Yes-5').prop('checked', true);
-                $('#type_yes_no-Yes-5').prop('disabled', true);
-                $('#type_yes_no-No-5').prop('disabled', true);
-            } else {
-                if ($('#type_yes_no-Yes-5').prop('disabled') == true) {
-                    $('#type_yes_no-Yes-5').prop('checked', false);
-                    $('#type_yes_no-Yes-5').prop('disabled', false);
-                    $('#type_yes_no-No-5').prop('disabled', false);
+                    if ('#type_yes_no-No-5') {
+                        $('#type_yes_no-No-5').prop('disabled', true);
+                    }
+                } else {
+                    if ($('#type_yes_no-Yes-5') && $('#type_yes_no-Yes-5').prop('disabled') == true) {
+                        $('#type_yes_no-Yes-5').prop('checked', false);
+                        $('#type_yes_no-Yes-5').prop('disabled', false);
+                        $('#type_yes_no-No-5').prop('disabled', false);
+                    }
                 }
             }
+
 
         },
 
