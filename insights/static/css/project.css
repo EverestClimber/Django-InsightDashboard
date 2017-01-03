@@ -115,3 +115,14 @@
 .w-100p {
   width: 100%;
 }
+
+div.bootstrap-tagsinput {
+  width: 100%;
+}
+
+div.bootstrap-tagsinput input{
+  border: none !important;
+  display: inherit !important;
+}
+
+

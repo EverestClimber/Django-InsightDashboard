@@ -23,7 +23,7 @@ class StartForm(forms.Form):
             # region_choices = [('', '---')] + region_choices
             self.fields["region"] = forms.ChoiceField(choices=region_choices, required=True, widget=FancyRadioSelect)
         else:
-            self.fields['region'] = forms.IntegerField(widget=forms.HiddenInput(), initial=None)
+            self.fields['region'] = forms.IntegerField(widget=forms.HiddenInput(), initial=None, required=False)
 
         surveys = Survey.objects.filter(active=True).all()
         survey_choices = [(survey.pk, survey.name) for survey in surveys]

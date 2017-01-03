@@ -24,7 +24,9 @@
     <input type="checkbox" name="data[{{ item.question_id }}][]" id="type_multiselect_with_other-checkbox-{{ option.pk }}" value="{{ option.value }}">
 {% endfor %}
 
-    <div class="input-group w-100p field-other">
-        <input type="text" class="form-control" name="data[{{ item.question_id }}][other]" placeholder="Other">
+    <div class="input-group w-100p field-other text-left">
+        <input type="text" class="tagsinput form-control" name="data[{{ item.question_id }}][other]" placeholder="Other">
     </div>
+
+
 </div>

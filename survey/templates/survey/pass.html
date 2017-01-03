@@ -21,15 +21,13 @@
 {% endblock content %}
 
 {% block css %}{{ block.super }}
-    {% compress css inline %}
         <link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
-    {% endcompress %}
+        <link href="{% static 'css/plugins/bootstrap-tagsinput.css' %}" rel="stylesheet">
 {% endblock css %}
 
 {% block javascript %}{{ block.super }}
-    {% compress js inline %}
         <script type="text/javascript" src="{% static 'js/plugins/jquery.steps/jquery.steps.min.js' %}"></script>
-    {% endcompress %}
+        <script type="text/javascript" src="{% static 'js/plugins/bootstrap-tagsinput.js' %}"></script>
 {% endblock javascript %}
 
 
@@ -61,4 +59,9 @@
     });
 
     $("#wizard").show();
+
+    $('.tagsinput').tagsinput({
+        tagClass: 'label label-primary'
+    });
+
 {% endblock inlinescript %}
