@@ -21,7 +21,7 @@
 
 .fancy-select .fancy-alert {
   display: none;
-  color: #a94442;
+  color: #e60000;
 }
 
 .fancy-select .btn-group-vertical {
@@ -55,7 +55,7 @@
 }
 
 .fancy-invalid-required {
-  border:solid 1px #a94442;
+  border:solid 1px #e60000;
 }
 
 .fancy-invalid-required .fancy-alert {
