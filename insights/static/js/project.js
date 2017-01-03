@@ -97,6 +97,10 @@ $(document).ready(function () {
                 $('#additional-' + id).show();
                 main_input.val('');
                 main_input.prop('disabled', true);
+                if ($('#type_two_dependend_fields-main-' + id + '-error')) {
+                    $('#type_two_dependend_fields-main-' + id + '-error').detach();
+                    main_input.parent().parent().removeClass('has-error');
+                }
 
             } else {
                 $('#additional-' + id).hide();

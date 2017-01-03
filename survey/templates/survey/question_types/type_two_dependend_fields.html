@@ -1,8 +1,22 @@
 <div class="question">{{ item.question.text }}</div>
-<div class="input-group">
-    <span class="input-group-addon" id="basic-addon1">%</span>
-    <input id="type_two_dependend_fields-main-{{ item.question_id }}" type="text" class="form-control" name="data[{{ item.question_id }}][main]" pattern="[0-9]*">
+
+<div class="form-group">
+    <div class="input-group with-addon">
+    <div class="input-group-addon">%</div>
+    <input
+            id="type_two_dependend_fields-main-{{ item.question_id }}"
+            type="text"
+            class="form-control"
+            name="data[{{ item.question_id }}][main]"
+            pattern="[0-9]*"
+            data-rule-number="true"
+            data-rule-min="0"
+            data-rule-max="100"
+    >
 </div>
+
+</div>
+
 
 <div class="checkbox">
     <input id="checkbox1" type="checkbox" class="additional-switcher" data-item-id="{{ item.question_id }}">
@@ -15,8 +29,17 @@
     {% with dependend=item.question.get_subquestion %}
         <div class="additional" id="additional-{{ item.question_id }}">
             <div class="question">{{ dependend.text }}</div>
-            <div class="input-group w-100p">
-                <input type="text" class="form-control" name="data[{{ item.question_id }}][additional]" pattern="[0-9]*">
+            <div class="form-group w-100p">
+                <input
+                        id="type_two_dependend_fields-other-{{ item.question_id }}"
+                        type="text"
+                        class="form-control"
+                        name="data[{{ item.question_id }}][additional]"
+                        pattern="[0-9]*"
+                        data-rule-number="true"
+                        data-rule-min="0"
+                        data-rule-max="10"
+                >
             </div>
         </div>
     {% endwith %}

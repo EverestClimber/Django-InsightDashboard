@@ -135,3 +135,11 @@ div.bootstrap-tagsinput input{
   text-align: left;
   padding-bottom: 10px;
 }
+
+.has-error .form-control {
+    border-color: #e60000 !important;
+}
+
+.has-error .help-block {
+    color: #e60000;
+}

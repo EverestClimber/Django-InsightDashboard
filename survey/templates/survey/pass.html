@@ -28,15 +28,56 @@
 {% block javascript %}{{ block.super }}
         <script type="text/javascript" src="{% static 'js/plugins/jquery.steps/jquery.steps.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/plugins/bootstrap-tagsinput.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/plugins/jquery.validate.min.js' %}"></script>
 {% endblock javascript %}
 
 
 {% block inlinescript %}
 
-
+    var form = $('#survey-pass-form');
+    form.validate({
+        highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+        },
+        unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+        },
+        errorElement: 'div',
+        errorClass: 'help-block',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
 
     $("#wizard").steps({
         titleTemplate: '<span class="number">#index#</span>',
+        onStepChanging: function (event, currentIndex, newIndex)
+        {
+            // Always allow going backward even if the current step contains invalid fields!
+            if (currentIndex > newIndex)
+            {
+                return true;
+            }
+
+
+            // Clean up if user went backward before
+            if (currentIndex < newIndex)
+            {
+                // To remove error styles
+                $(".body:eq(" + newIndex + ") label.error", form).remove();
+                $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+            }
+
+            // Disable validation on fields that are disabled or hidden.
+            form.validate().settings.ignore = ":disabled,:hidden";
+
+            // Start validation; Prevent going forward if false
+            return form.valid();
+        },
         onStepChanged: function (event, currentIndex, priorIndex) {
             if ($('#type_multiselect_ordered-checkbox-1')){
                 if ($('#type_multiselect_ordered-checkbox-1').prop('checked') == true) {
