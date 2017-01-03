@@ -1,11 +1,11 @@
 {% load static i18n compress %}<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Otsuka - Insights{% endblock title %}</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
 
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -29,82 +29,84 @@
     {% endcompress %}
 
 
+</head>
 
-  </head>
 
+<body class="top-navigation">
 
-  <body class="top-navigation">
-
-    <div id="wrapper">
-        <div id="page-wrapper" class="gray-bg">
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
         <div class="row border-bottom white-bg">
-        <nav class="navbar navbar-static-top" role="navigation">
-            <div class="pull-left">
-{#                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">#}
-{#                    <i class="fa fa-reorder"></i>#}
-{#                </button>#}
-                <a href="{% url 'home' %}" class="brand"><img src="{% static 'img/logo.png' %}" height="40" alt="Otsuka"></a>
-            </div>
-            <div id="navbar">
-              {% if request.user.is_authenticated %}
-                <ul class="nav navbar-top-links navbar-right pull-right">
-                    <li>
-                        <a href="{% url 'account_logout' %}">
-                            <i class="fa fa-sign-out"></i> {% trans "Log Out" %}
-                        </a>
-                    </li>
-                </ul>
-              {% endif %}
+            <div class="container">
+            <nav class="navbar navbar-static-top" role="navigation">
+                <div class="pull-left">
+                    {#                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">#}
+                    {#                    <i class="fa fa-reorder"></i>#}
+                    {#                </button>#}
+                    <a href="{% url 'home' %}" class="brand"><img src="{% static 'img/logo.png' %}" height="40"
+                                                                  alt="Otsuka"></a>
+                </div>
+                <div id="navbar">
+                    {% if request.user.is_authenticated %}
+                        <ul class="nav navbar-top-links navbar-right pull-right">
+                            <li>
+                                <a href="{% url 'account_logout' %}">
+                                    <i class="fa fa-sign-out"></i> {% trans "Log Out" %}
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
 
+                </div>
+            </nav>
             </div>
-        </nav>
         </div>
         <div class="wrapper wrapper-content">
             <div class="container">
-              {% if messages %}
-                  {% for message in messages %}
-                      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
-                  {% endfor %}
-              {% endif %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
 
-              {% block content %}{% endblock content %}
+                {% block content %}{% endblock content %}
 
             </div>
 
         </div>
         <div class="footer">
 
-            <div>
+            <div class="container">
                 <strong>Copyright</strong> DeepSine &copy; 2014-2017
             </div>
         </div>
 
-        </div>
-        </div>
+    </div>
+</div>
 
 
-    {% block modal %}{% endblock modal %}
+{% block modal %}{% endblock modal %}
 
-        {% compress js %}
-        {% block javascript %}
-            <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
-            <script src="{% static 'js/bootstrap.min.js' %}"></script>
-            <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
-            <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+{% compress js %}
+    {% block javascript %}
+        <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+        <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
 
-            <!-- Custom and plugin javascript -->
-            <script src="{% static 'js/inspinia.js' %}"></script>
-            <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
-            <script src="{% static 'js/project.js' %}"></script>
+        <!-- Custom and plugin javascript -->
+        <script src="{% static 'js/inspinia.js' %}"></script>
+        <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+        <script src="{% static 'js/project.js' %}"></script>
 
 
     {% endblock javascript %}
-  {% endcompress %}
-    <script>
-        $(document).ready(function() {
-            {% block inlinescript %}{% endblock inlinescript %}
-        });
-    </script>
+{% endcompress %}
+<script>
+    $(document).ready(function () {
+        {% block inlinescript %}{% endblock inlinescript %}
+    });
+</script>
 
 </body>
 
