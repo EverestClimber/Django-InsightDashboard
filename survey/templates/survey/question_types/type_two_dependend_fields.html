@@ -1,4 +1,4 @@
-{{ item.question.text }}
+<div class="question">{{ item.question.text }}</div>
 <div class="input-group">
     <span class="input-group-addon" id="basic-addon1">%</span>
     <input id="type_two_dependend_fields-main-{{ item.question_id }}" type="text" class="form-control" name="data[{{ item.question_id }}][main]" pattern="[0-9]*">
@@ -14,7 +14,7 @@
 {% if item.question.question_set %}
     {% with dependend=item.question.get_subquestion %}
         <div class="additional" id="additional-{{ item.question_id }}">
-            {{ dependend.text }}
+            <div class="question">{{ dependend.text }}</div>
             <div class="input-group w-100p">
                 <input type="text" class="form-control" name="data[{{ item.question_id }}][additional]" pattern="[0-9]*">
             </div>

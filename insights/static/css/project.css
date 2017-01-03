@@ -128,3 +128,10 @@ div.bootstrap-tagsinput input{
 }
 
 
+
+.question {
+  font-weight: bold;
+  font-size: 15px;
+  text-align: left;
+  padding-bottom: 10px;
+}
