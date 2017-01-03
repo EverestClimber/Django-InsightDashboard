@@ -5,7 +5,7 @@
 
     <form action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
         <p>
-            <label>Country: {{ request.user }}</label>
+            <label>Country: {{ request.user.country }}</label>
         </p>
 
         {{ form.as_p }}
