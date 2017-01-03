@@ -242,6 +242,9 @@ ACCOUNT_ADAPTER = 'insights.users.adapters.AccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'insights.users.adapters.SocialAccountAdapter'
 ACCOUNT_LOGOUT_ON_GET = True
 
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_SESSION_COOKIE_AGE = 604800
+
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
