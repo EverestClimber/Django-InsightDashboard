@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import FormView, CreateView
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from survey.models import Answer
 from survey.forms import StartForm
@@ -38,6 +38,9 @@ def start_view(request):
             response.save()
             return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
 
+    storage = messages.get_messages(request)
+    for st in storage.storages:
+        st.used = True
 
     return render(request, 'survey/start.html', {'form': form})
 

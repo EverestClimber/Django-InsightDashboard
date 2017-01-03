@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-
+    Country: {{ request.user }}
     <form action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
 
         {{ form.as_p }}
@@ -13,3 +13,8 @@
     </form>
 {% endblock content %}
 
+{% block messages %}
+    {% if messages %}
+        {% for message in messages %}{% endfor %}
+    {% endif %}
+{% endblock %}
