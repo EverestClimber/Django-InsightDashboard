@@ -1,7 +1,7 @@
 {{ item.question.text }}
 <div class="input-group">
     <span class="input-group-addon" id="basic-addon1">%</span>
-    <input type="text" class="form-control" name="data[{{ item.question_id }}][main]" pattern="[0-9]*">
+    <input id="type_two_dependend_fields-main-{{ item.question_id }}" type="text" class="form-control" name="data[{{ item.question_id }}][main]" pattern="[0-9]*">
 </div>
 
 <div class="checkbox">

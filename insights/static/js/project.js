@@ -91,10 +91,16 @@ $(document).ready(function () {
 
         $("div.type_two_dependend_fields input.additional-switcher").change(function(){
             var id = $(this).attr('data-item-id')
+
+            var main_input = $('#type_two_dependend_fields-main-' + id)
             if (this.checked) {
                 $('#additional-' + id).show();
+                main_input.val('');
+                main_input.prop('disabled', true);
+
             } else {
                 $('#additional-' + id).hide();
+                main_input.prop('disabled', false);
             }
         });
 
