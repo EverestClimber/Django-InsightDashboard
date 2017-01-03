@@ -137,7 +137,7 @@
     background: #eee;
     display: block;
     margin: 5px 5px 10px 5px;
-    min-height: 220px;
+    min-height: 120px;
     height: auto;
     overflow: hidden;
     position: relative;
@@ -149,7 +149,7 @@
 }
 
 .wizard-big.wizard > .content {
-    min-height: 420px;
+    min-height: 320px;
 }
 .wizard.vertical > .content
 {
