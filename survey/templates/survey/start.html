@@ -2,8 +2,11 @@
 {% load i18n %}
 
 {% block content %}
-    Country: {{ request.user }}
+
     <form action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
+        <p>
+            <label>Country: {{ request.user }}</label>
+        </p>
 
         {{ form.as_p }}
 
