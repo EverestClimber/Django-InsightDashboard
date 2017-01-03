@@ -32,6 +32,8 @@
 .fancy-select .btn {
   text-align: left;
   white-space: inherit;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 .fancy-select .btn i.fa{
