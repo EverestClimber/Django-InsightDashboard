@@ -67,26 +67,34 @@ $(document).ready(function () {
         });
 
 
-        $("div.fancy-ordered-select button").click(function () {
-            var checkbox = $($(this).find('input[type="checkbox"]')[0]);
-            console.log(checkbox);
+        /**
+         * Move selected fancy-ordered element
+         * @param btn
+         */
+        function fancy_ordered_move(btn) {
+            var checkbox = $($(btn).find('input[type="checkbox"]')[0]);
 
-            var block = $(this).parent();
-            var name = $(this).attr('data-name')
+            var block = $(btn).parent();
+            var name = $(btn).attr('data-name')
 
 
             if (checkbox.prop('checked') == true) {
                 checkbox.prop("checked", false);
                 block.detach().appendTo('#fancy-ordered-select-left-' + name);
-                $(this).removeClass('fancy-checked');
+                $(btn).removeClass('fancy-checked');
             } else {
                 checkbox.prop("checked", true);
                 block.detach().appendTo('#fancy-ordered-select-right-' + name);
-                $(this).addClass('fancy-checked');
+                $(btn).addClass('fancy-checked');
             }
 
-            // Reorder
-            $("div.fancy-ordered-select div.group-right").each(function (i, element) {
+        }
+
+        /**
+         * Create new numeration for bages for select elements
+         */
+        function fancy_ordered_number_baged() {
+                $("div.fancy-ordered-select div.group-right").each(function (i, element) {
 
 
                 $(element).find('span.badge').each(function (j, badge) {
@@ -94,14 +102,26 @@ $(document).ready(function () {
                 });
 
             });
+        }
 
+        $("div.fancy-ordered-select button").click(function () {
+            fancy_ordered_move(this);
+            fancy_ordered_number_baged();
+        });
+
+        $("div.fancy-ordered-controls button").click(function () {
+            var id = $(this).attr('data-id');
+            $('#' + id + ' button').each(function (i, element) {
+                fancy_ordered_move(element);
+            });
+            fancy_ordered_number_baged();
         });
 
 
         $("div.type_two_dependend_fields input.additional-switcher").change(function () {
-            var id = $(this).attr('data-item-id')
+            var id = $(this).attr('data-item-id');
 
-            var main_input = $('#type_two_dependend_fields-main-' + id)
+            var main_input = $('#type_two_dependend_fields-main-' + id);
             if (this.checked) {
                 $('#additional-' + id).show();
                 main_input.val('');

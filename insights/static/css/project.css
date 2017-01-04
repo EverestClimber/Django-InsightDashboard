@@ -96,8 +96,8 @@
   white-space: inherit;
 }
 
-.fancy-ordered-select .col-xs-6 {
-  padding-left: 0;
+.fancy-ordered-select .col-xs-6, .fancy-ordered-controls .col-xs-6 {
+  padding-left: 7px;
   padding-right: 0;
 }
 

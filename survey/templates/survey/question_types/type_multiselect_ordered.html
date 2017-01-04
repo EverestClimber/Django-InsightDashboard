@@ -1,5 +1,14 @@
 <div class="question">{{ item.question.text }}</div>
 
+<div class="row fancy-ordered-controls">
+    <div class="col-xs-6">
+        <button class="btn btn-primary w-100p" type="button" data-id="fancy-ordered-select-left-{{ item.question_id }}">&gt;&gt;</button>
+    </div>
+        <div class="col-xs-6">
+        <button class="btn btn-primary w-100p" type="button" data-id="fancy-ordered-select-right-{{ item.question_id }}">&lt;&lt;</button>
+    </div>
+</div>
+
 <div class="row fancy-select fancy-ordered-select">
     <div class="col-xs-6">
         <div class="btn-group-vertical group-left w-100p" role="group" id="fancy-ordered-select-left-{{ item.question_id }}">
