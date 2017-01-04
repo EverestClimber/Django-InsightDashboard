@@ -4,11 +4,13 @@ from __future__ import absolute_import, unicode_literals
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm, ReadOnlyPasswordHashField
 from .models import User, Country
 
 
 class MyUserChangeForm(UserChangeForm):
+    password = ReadOnlyPasswordHashField(label="Password",
+                                         help_text='<a href="../password/">Change password</a>')
     class Meta(UserChangeForm.Meta):
         model = User
         fields = '__all__'
