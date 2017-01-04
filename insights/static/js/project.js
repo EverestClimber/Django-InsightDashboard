@@ -85,6 +85,16 @@ $(document).ready(function () {
                 $(this).addClass('fancy-checked');
             }
 
+            // Reorder
+            $("div.fancy-ordered-select div.group-right").each(function (i, element) {
+
+
+                $(element).find('span.badge').each(function (j, badge) {
+                    $(badge).text(j+1);
+                });
+
+            });
+
         });
 
 

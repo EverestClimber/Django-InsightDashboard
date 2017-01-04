@@ -14,7 +14,7 @@
                             data-checkbox-for="type_multiselect_ordered-checkbox-{{ option.pk }}"
 
                     >
-                        <i class="fa fa-check-circle pull-right" aria-hidden="true"></i>
+                        <span class="badge"></span>
                         {{ option.value }}
                         <input id="type_multiselect_ordered-checkbox-{{ option.pk }}" type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" style="display:none">
                     </button>

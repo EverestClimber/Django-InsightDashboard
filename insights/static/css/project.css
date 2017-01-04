@@ -101,6 +101,14 @@
   padding-right: 0;
 }
 
+.fancy-ordered-select button span.badge {
+  background-color: #0e57a9;
+}
+
+.fancy-ordered-select .group-left button span.badge {
+  display: none;
+}
+
 
 /* --------------- steps ---------------- */
 .wizard > .steps > ul > li {
