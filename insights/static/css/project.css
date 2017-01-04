@@ -104,6 +104,9 @@
   padding-top: 4px;
 }
 
+.wizard .actions ul>li:first-child:not(.disabled)>a{
+  background-color: #92bce2;
+}
 
 .type_two_dependend_fields .additional {
   display: none;
