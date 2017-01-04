@@ -96,6 +96,14 @@
   text-align: center;
 }
 
+.wizard .steps {
+  padding-left: 50%;
+}
+
+.wizard .steps > ul {
+  margin-left: -50%;
+}
+
 
 /* ---------- additional elements for wizard -----------*/
 
