@@ -1,9 +1,31 @@
 <div class="question">{{ item.question.text }}</div>
-<div>
-    <label class="radio-inline">
-      <input id="type_yes_no-Yes-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="Yes"> Yes
-    </label>
-    <label class="radio-inline">
-      <input id="type_yes_no-No-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="No"> No
-    </label>
+<div class="type_yes_no">
+
+    <button
+            id="btn-type_yes_no-Yes-{{ item.question_id }}"
+            class="btn btn-default"
+            type="button"
+            data-id="type_yes_no-Yes-{{ item.question_id }}"
+            data-type="Yes"
+    >
+        <i class="fa fa-check-circle" aria-hidden="true"></i>
+        <span>Yes</span>
+    </button>
+
+
+    <button
+            id="btn-type_yes_no-No-{{ item.question_id }}"
+            class="btn btn-default"
+            type="button"
+            data-id="type_yes_no-No-{{ item.question_id }}"
+            data-type="No"
+    >
+        <i class="fa fa-check-circle" aria-hidden="true"></i>
+        <span>No</span>
+    </button>
+
+
+      <input id="type_yes_no-Yes-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="Yes">
+      <input id="type_yes_no-No-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="No">
+
 </div>

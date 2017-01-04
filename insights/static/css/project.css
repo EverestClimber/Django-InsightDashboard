@@ -41,9 +41,33 @@
   font-size: 20px;
 }
 
-.fancy-select button.fancy-checked {
+.fancy-select button.fancy-checked, .type_yes_no button.fancy-checked {
   color: #0e57a9;
   background-color: white;
+}
+
+.type_yes_no button {
+  width: 30%;
+  min-width: 100px;
+}
+
+.type_yes_no button span{
+  position: relative;
+  left: -10px;
+}
+
+.type_yes_no button i.fa{
+  font-size: 20px;
+  float: left;
+  opacity: 0;
+}
+
+.type_yes_no button.fancy-checked i.fa{
+  opacity: 1;
+}
+
+.type_yes_no input[type="radio"] {
+  display: none !important;
 }
 
 .fancy-select button i.fa{
@@ -97,11 +121,12 @@
 }
 
 .wizard .steps {
-  padding-left: 50%;
+  text-align: center;
 }
 
-.wizard .steps > ul {
-  margin-left: -50%;
+.wizard .steps > ul > li {
+  float: none !important;
+  display: inline-block;
 }
 
 

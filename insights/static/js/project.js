@@ -108,6 +108,17 @@ $(document).ready(function () {
             }
         });
 
+
+        $("div.type_yes_no button").click(function () {
+            var btn = $(this)
+            var id = btn.attr('data-id');
+
+            btn.parent().find("button").removeClass('fancy-checked');
+            btn.addClass('fancy-checked');
+            $('#'+id).prop("checked", true);
+
+        });
+
     });
 
 
