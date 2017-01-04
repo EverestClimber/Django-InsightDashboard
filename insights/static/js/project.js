@@ -13,7 +13,7 @@ function fancy_validate(name) {
     console.log(selector);
 
     $(document).ready(function () {
-        $(selector).each(function(index, element){
+        $(selector).each(function (index, element) {
             var hiddens = $(element).find('input[type="hidden"]');
 
             if (hiddens.length) {
@@ -35,28 +35,28 @@ function fancy_validate(name) {
 $(document).ready(function () {
 
     /* HANDLE TYPES */
-    setTimeout(function(){
-        $("div.fancy-radio button").click(function(){
+    setTimeout(function () {
+        $("div.fancy-radio button").click(function () {
             var name = $(this).attr('data-name');
             $('#fancy-' + name + ' button').removeClass('fancy-checked');
             $(this).addClass('fancy-checked');
             $('#fancy-hidden-' + name).val($(this).attr('data-value'));
         });
 
-        $("div.fancy-required button").click(function(){
+        $("div.fancy-required button").click(function () {
             fancy_validate($(this).attr('data-name'));
         });
 
-        $("div.fancy-checkbox button").click(function(){
+        $("div.fancy-checkbox button").click(function () {
             var id = $(this).attr('data-checkbox-for');
 
-            var checkbox = $('#'+id);
+            var checkbox = $('#' + id);
 
             if (checkbox.prop('checked') == true) {
-                checkbox.prop( "checked", false );
+                checkbox.prop("checked", false);
                 $(this).removeClass('fancy-checked');
             } else {
-                checkbox.prop( "checked", true );
+                checkbox.prop("checked", true);
                 $(this).addClass('fancy-checked');
             }
 
@@ -67,7 +67,7 @@ $(document).ready(function () {
         });
 
 
-        $("div.fancy-ordered-select button").click(function(){
+        $("div.fancy-ordered-select button").click(function () {
             var checkbox = $($(this).find('input[type="checkbox"]')[0]);
             console.log(checkbox);
 
@@ -75,21 +75,20 @@ $(document).ready(function () {
             var name = $(this).attr('data-name')
 
 
-
             if (checkbox.prop('checked') == true) {
-                checkbox.prop( "checked", false );
-                block.detach().appendTo('#fancy-ordered-select-left-'+name);
+                checkbox.prop("checked", false);
+                block.detach().appendTo('#fancy-ordered-select-left-' + name);
                 $(this).removeClass('fancy-checked');
             } else {
-                checkbox.prop( "checked", true );
-                block.detach().appendTo('#fancy-ordered-select-right-'+name);
+                checkbox.prop("checked", true);
+                block.detach().appendTo('#fancy-ordered-select-right-' + name);
                 $(this).addClass('fancy-checked');
             }
 
         });
 
 
-        $("div.type_two_dependend_fields input.additional-switcher").change(function(){
+        $("div.type_two_dependend_fields input.additional-switcher").change(function () {
             var id = $(this).attr('data-item-id')
 
             var main_input = $('#type_two_dependend_fields-main-' + id)
@@ -115,14 +114,12 @@ $(document).ready(function () {
 
             btn.parent().find("button").removeClass('fancy-checked');
             btn.addClass('fancy-checked');
-            $('#'+id).prop("checked", true);
+            $('#' + id).prop("checked", true);
 
         });
 
+
     });
-
-
-
 
 
 });

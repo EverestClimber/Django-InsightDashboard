@@ -34,82 +34,92 @@
 
 {% block inlinescript %}
 
-    var form = $('#survey-pass-form');
-    form.validate({
-        highlight: function(element) {
-            $(element).closest('.form-group').addClass('has-error');
-        },
-        unhighlight: function(element) {
-            $(element).closest('.form-group').removeClass('has-error');
-        },
-        errorElement: 'div',
-        errorClass: 'help-block',
-        errorPlacement: function(error, element) {
-            if(element.parent('.input-group').length) {
-                error.insertAfter(element.parent());
-            } else {
-                error.insertAfter(element);
-            }
-        }
-    });
-
-    $("#wizard").steps({
-        titleTemplate: '<span class="number">#index#</span>',
-        onStepChanging: function (event, currentIndex, newIndex)
-        {
-            // Always allow going backward even if the current step contains invalid fields!
-            if (currentIndex > newIndex)
-            {
-                return true;
-            }
-
-
-            // Clean up if user went backward before
-            if (currentIndex < newIndex)
-            {
-                // To remove error styles
-                $(".body:eq(" + newIndex + ") label.error", form).remove();
-                $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-            }
-
-            // Disable validation on fields that are disabled or hidden.
-            form.validate().settings.ignore = ":disabled,:hidden";
-
-            // Start validation; Prevent going forward if false
-            return form.valid();
-        },
-        onStepChanged: function (event, currentIndex, priorIndex) {
-            if ($('#type_multiselect_ordered-checkbox-1')){
-                if ($('#type_multiselect_ordered-checkbox-1').prop('checked') == true) {
-                    if ('#type_yes_no-Yes-5') {
-                        $('#type_yes_no-Yes-5').prop('checked', true);
-                        $('#type_yes_no-Yes-5').prop('disabled', true);
-                    }
-
-                    if ('#type_yes_no-No-5') {
-                        $('#type_yes_no-No-5').prop('disabled', true);
-                    }
+var form = $('#survey-pass-form');
+        form.validate({
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'help-block',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
                 } else {
-                    if ($('#type_yes_no-Yes-5') && $('#type_yes_no-Yes-5').prop('disabled') == true) {
-                        $('#type_yes_no-Yes-5').prop('checked', false);
-                        $('#type_yes_no-Yes-5').prop('disabled', false);
-                        $('#type_yes_no-No-5').prop('disabled', false);
-                    }
+                    error.insertAfter(element);
                 }
             }
+        });
+
+        $("#wizard").steps({
+            titleTemplate: '<span class="number">#index#</span>',
+            onStepChanging: function (event, currentIndex, newIndex) {
+                // Always allow going backward even if the current step contains invalid fields!
+                if (currentIndex > newIndex) {
+                    return true;
+                }
 
 
-        },
+                // Clean up if user went backward before
+                if (currentIndex < newIndex) {
+                    // To remove error styles
+                    $(".body:eq(" + newIndex + ") label.error", form).remove();
+                    $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                }
 
-        onFinished: function(event, currentIndex) {
-            $('#survey-pass-form').submit();
-        },
-    });
+                // Disable validation on fields that are disabled or hidden.
+                form.validate().settings.ignore = ":disabled,:hidden";
 
-    $("#wizard").show();
+                // Start validation; Prevent going forward if false
+                return form.valid();
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+                if ($('#type_multiselect_ordered-checkbox-1')) {
+                    if ($('#type_multiselect_ordered-checkbox-1').prop('checked') == true) {
+                        if ('#type_yes_no-Yes-5') {
+                            $('#type_yes_no-Yes-5').prop('checked', true);
+                            $('#type_yes_no-Yes-5').prop('disabled', true);
+                        }
 
-    $('.tagsinput').tagsinput({
-        tagClass: 'label label-primary'
-    });
+                        if ('#type_yes_no-No-5') {
+                            $('#type_yes_no-No-5').prop('disabled', true);
+                        }
+
+                        if ('#btn-type_yes_no-Yes-5') {
+                            $('#btn-type_yes_no-Yes-5').addClass('fancy-checked');
+                            $('#btn-type_yes_no-Yes-5').prop('disabled', true);
+                        }
+
+                        if ('#btn-type_yes_no-No-5') {
+                            $('#btn-type_yes_no-No-5').removeClass('fancy-checked');
+                            $('#btn-type_yes_no-No-5').prop('disabled', true);
+                        }
+                    } else {
+                        if ($('#type_yes_no-Yes-5') && $('#type_yes_no-Yes-5').prop('disabled') == true) {
+                            $('#type_yes_no-Yes-5').prop('checked', false);
+                            $('#type_yes_no-Yes-5').prop('disabled', false);
+                            $('#type_yes_no-No-5').prop('disabled', false);
+                            $('#btn-type_yes_no-Yes-5').prop('disabled', false);
+                            $('#btn-type_yes_no-No-5').prop('disabled', false);
+                            $('#btn-type_yes_no-Yes-5').removeClass('fancy-checked');
+                        }
+                    }
+                }
+
+
+            },
+
+            onFinished: function (event, currentIndex) {
+                $('#survey-pass-form').submit();
+            },
+        });
+
+        $("#wizard").show();
+
+        $('.tagsinput').tagsinput({
+            tagClass: 'label label-primary'
+        });
 
 {% endblock inlinescript %}
