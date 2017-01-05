@@ -207,8 +207,14 @@ div.bootstrap-tagsinput input{
   width: 100px;
 }
 
+.type_two_dependend_fields .centered {
+  display: inline-block;
+  width: 139px;
+}
+
 .type_two_dependend_fields input.amount {
   width: 137px;
+  display: inline-block !important;
 }
 
 

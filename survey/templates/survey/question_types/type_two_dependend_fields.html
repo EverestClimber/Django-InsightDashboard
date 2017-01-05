@@ -1,23 +1,24 @@
 <div class="question">{{ item.question.text }}</div>
 
-<div class="form-group">
-    <div class="input-group with-addon">
-    <div class="input-group-addon">%</div>
-    <input
-            id="type_two_dependend_fields-main-{{ item.question_id }}"
-            type="number"
-            class="form-control percents"
-            name="data[{{ item.question_id }}][main]"
-            pattern="[0-9]*"
-            data-rule-number="true"
-            data-rule-min="0"
-            data-msg-min="Please enter value between 0% and 100%"
-            data-rule-max="100"
-            data-msg-max="Please enter value between 0% and 100%"
-            onkeyup="$(this).valid(); return true;"
-    >
-</div>
-
+<div class="form-group text-center">
+    <div class="centered">
+        <div class="input-group">
+            <div class="input-group-addon">%</div>
+            <input
+                    id="type_two_dependend_fields-main-{{ item.question_id }}"
+                    type="number"
+                    class="form-control percents"
+                    name="data[{{ item.question_id }}][main]"
+                    pattern="[0-9]*"
+                    data-rule-number="true"
+                    data-rule-min="0"
+                    data-msg-min="Please enter value between 0% and 100%"
+                    data-rule-max="100"
+                    data-msg-max="Please enter value between 0% and 100%"
+                    onkeyup="$(this).valid(); return true;"
+            >
+        </div>
+    </div>
 </div>
 
 
@@ -32,7 +33,7 @@
     {% with dependend=item.question.get_subquestion %}
         <div class="additional" id="additional-{{ item.question_id }}">
             <div class="question">{{ dependend.text }}</div>
-            <div class="form-group w-100p">
+            <div class="form-group text-center">
                 <input
                         id="type_two_dependend_fields-other-{{ item.question_id }}"
                         type="number"
