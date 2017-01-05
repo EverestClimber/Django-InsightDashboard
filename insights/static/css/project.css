@@ -210,3 +210,15 @@ div.bootstrap-tagsinput input{
 .type_two_dependend_fields input.amount {
   width: 137px;
 }
+
+
+.fancy-select .cell {
+  display: table-cell;
+  vertical-align: middle;
+
+}
+
+.fancy-select .text {
+    display: table-cell;
+    padding-left: 5px;
+}

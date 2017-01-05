@@ -23,8 +23,8 @@
                             data-checkbox-for="type_multiselect_ordered-checkbox-{{ option.pk }}"
 
                     >
-                        <span class="badge"></span>
-                        {{ option.value }}
+                        <span class="cell"><span class="badge"></span></span>
+                        <span class="text">{{ option.value }}</span>
                         <input id="type_multiselect_ordered-checkbox-{{ option.pk }}" type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" style="display:none">
                     </button>
                 </div>
