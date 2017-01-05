@@ -190,3 +190,12 @@ div.bootstrap-tagsinput input{
 #footer-presser {
   margin-top: 100px;
 }
+
+
+.type_two_dependend_fields input.percents {
+  width: 100px;
+}
+
+.type_two_dependend_fields input.amount {
+  width: 137px;
+}
