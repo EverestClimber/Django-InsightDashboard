@@ -25,7 +25,7 @@ class ChoiseButton(ChoiceInput):
                     data-value="{choice_value}"
                     data-name="{name}"
                     {attr}>
-                        <i class="fa fa-check-circle pull-right" aria-hidden="true"></i>
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
                         {choice_label}
 
                 </button>''',

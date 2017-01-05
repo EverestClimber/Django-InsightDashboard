@@ -37,13 +37,18 @@
 }
 
 .fancy-select .btn i.fa{
-  float: right;
+  opacity: 0;
   font-size: 20px;
+  margin-right: 6px;
 }
 
 .fancy-select button.fancy-checked, .type_yes_no button.fancy-checked {
   color: #0e57a9;
   background-color: white;
+}
+
+.fancy-select button.fancy-checked i.fa{
+  opacity: 1;
 }
 
 .type_yes_no button {
@@ -68,14 +73,6 @@
 
 .type_yes_no input[type="radio"] {
   display: none !important;
-}
-
-.fancy-select button i.fa{
-  display: none;
-}
-
-.fancy-select button.fancy-checked i.fa{
-  display: block;
 }
 
 .fancy-invalid-required {
