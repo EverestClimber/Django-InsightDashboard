@@ -5,7 +5,7 @@
     <div class="input-group-addon">%</div>
     <input
             id="type_two_dependend_fields-main-{{ item.question_id }}"
-            type="text"
+            type="number"
             class="form-control percents"
             name="data[{{ item.question_id }}][main]"
             pattern="[0-9]*"
@@ -34,7 +34,7 @@
             <div class="form-group w-100p">
                 <input
                         id="type_two_dependend_fields-other-{{ item.question_id }}"
-                        type="text"
+                        type="number"
                         class="form-control amount"
                         name="data[{{ item.question_id }}][additional]"
                         pattern="[0-9]*"
