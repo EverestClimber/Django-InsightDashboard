@@ -34,8 +34,9 @@
 
 {% block inlinescript %}
 
-var form = $('#survey-pass-form');
+        var form = $('#survey-pass-form');
         form.validate({
+            onkeyup: true,
             highlight: function (element) {
                 $(element).closest('.form-group').addClass('has-error');
             },
@@ -57,6 +58,7 @@ var form = $('#survey-pass-form');
             titleTemplate: '<span class="number">#index#</span>',
             onStepChanging: function (event, currentIndex, newIndex) {
                 // Always allow going backward even if the current step contains invalid fields!
+                console.log('test');
                 if (currentIndex > newIndex) {
                     return true;
                 }
@@ -73,6 +75,7 @@ var form = $('#survey-pass-form');
                 form.validate().settings.ignore = ":disabled,:hidden";
 
                 // Start validation; Prevent going forward if false
+                console.log(form.valid());
                 return form.valid();
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
