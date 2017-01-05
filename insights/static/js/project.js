@@ -109,13 +109,13 @@ $(document).ready(function () {
             fancy_ordered_number_baged();
         });
 
-        $("div.fancy-ordered-controls button").click(function () {
-            var id = $(this).attr('data-id');
-            $('#' + id + ' button').each(function (i, element) {
-                fancy_ordered_move(element);
-            });
-            fancy_ordered_number_baged();
-        });
+        // $("div.fancy-ordered-controls button").click(function () {
+        //     var id = $(this).attr('data-id');
+        //     $('#' + id + ' button').each(function (i, element) {
+        //         fancy_ordered_move(element);
+        //     });
+        //     fancy_ordered_number_baged();
+        // });
 
 
         $("div.type_two_dependend_fields input.additional-switcher").change(function () {

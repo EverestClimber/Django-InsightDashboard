@@ -98,6 +98,11 @@
   padding-right: 0;
 }
 
+.fancy-ordered-controls .col-xs-6 {
+  background: white;
+  font-weight: bold;
+}
+
 .fancy-ordered-select button span.badge {
   background-color: #0e57a9;
 }
