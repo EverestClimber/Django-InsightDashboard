@@ -103,9 +103,6 @@
     "created_at": "2016-12-28T21:31:27.964Z"
   }
 },
-
-
-
 {
   "model": "survey.question",
   "pk": 9,
@@ -184,7 +181,6 @@
     "created_at": "2016-12-28T20:31:02.240Z"
   }
 },
-
 {
   "model": "survey.question",
   "pk": 15,
@@ -198,8 +194,19 @@
     "created_at": "2016-12-28T21:31:27.964Z"
   }
 },
-
-
+{
+  "model": "survey.question",
+  "pk": 16,
+  "fields": {
+    "type": "type_simple_input",
+    "field": null,
+    "text": "Other comments",
+    "depends_of": null,
+    "dependency_type": null,
+    "script": "",
+    "created_at": "2017-01-06T14:27:53.333Z"
+  }
+},
 {
   "model": "survey.option",
   "pk": 1,
@@ -410,7 +417,26 @@
     "created_at": "2016-12-28T21:39:57.975Z"
   }
 },
-
+{
+  "model": "survey.option",
+  "pk": 22,
+  "fields": {
+    "question": 7,
+    "value": "Patients with SCZ with concomitant Substance use/abuse on a daily basis or several times per week (not Occasional/Recreational)",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:41:50.553Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 23,
+  "fields": {
+    "question": 7,
+    "value": "Substance abuse including Drugs and Alcohol",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:42:48.730Z"
+  }
+},
 {
   "model": "survey.option",
   "pk": 24,
@@ -431,9 +457,6 @@
     "created_at": "2017-01-05T13:49:21.085Z"
   }
 },
-
-
-
 {
   "model": "survey.option",
   "pk": 26,
@@ -664,15 +687,21 @@
     "created_at": "2017-01-05T13:49:21.085Z"
   }
 },
-
-
-
 {
   "model": "survey.survey",
   "pk": 1,
   "fields": {
     "name": "Test",
     "active": true,
+    "created_at": "2016-12-28T22:01:34.162Z"
+  }
+},
+{
+  "model": "survey.survey",
+  "pk": 8,
+  "fields": {
+    "name": "Test2",
+    "active": false,
     "created_at": "2016-12-28T22:01:34.162Z"
   }
 },
@@ -746,17 +775,12 @@
     "created_at": "2016-12-28T22:02:42.379Z"
   }
 },
-
-
-
-
-
 {
   "model": "survey.surveyitem",
   "pk": 9,
   "fields": {
     "survey": 1,
-    "question": 1,
+    "question": 9,
     "ordering": 1,
     "created_at": "2016-12-29T22:01:57.556Z"
   }
@@ -766,7 +790,7 @@
   "pk": 10,
   "fields": {
     "survey": 1,
-    "question": 2,
+    "question": 10,
     "ordering": 1,
     "created_at": "2016-12-29T22:02:06.659Z"
   }
@@ -776,7 +800,7 @@
   "pk": 11,
   "fields": {
     "survey": 1,
-    "question": 3,
+    "question": 11,
     "ordering": 1,
     "created_at": "2016-12-29T22:02:11.828Z"
   }
@@ -786,7 +810,7 @@
   "pk": 12,
   "fields": {
     "survey": 1,
-    "question": 4,
+    "question": 12,
     "ordering": 1,
     "created_at": "2016-12-29T22:02:24.077Z"
   }
@@ -796,7 +820,7 @@
   "pk": 13,
   "fields": {
     "survey": 1,
-    "question": 5,
+    "question": 13,
     "ordering": 1,
     "created_at": "2016-12-29T22:02:32.121Z"
   }
@@ -806,7 +830,7 @@
   "pk": 14,
   "fields": {
     "survey": 1,
-    "question": 6,
+    "question": 14,
     "ordering": 1,
     "created_at": "2016-12-29T22:02:37.154Z"
   }
@@ -816,11 +840,19 @@
   "pk": 15,
   "fields": {
     "survey": 1,
-    "question": 7,
+    "question": 15,
     "ordering": 1,
     "created_at": "2016-12-29T22:02:42.379Z"
   }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 16,
+  "fields": {
+    "survey": 1,
+    "question": 16,
+    "ordering": 1,
+    "created_at": "2017-01-06T14:28:17.502Z"
+  }
 }
-
-
 ]
