@@ -103,6 +103,103 @@
     "created_at": "2016-12-28T21:31:27.964Z"
   }
 },
+
+
+
+{
+  "model": "survey.question",
+  "pk": 9,
+  "fields": {
+    "type": "type_two_dependend_fields",
+    "field": 1,
+    "text": "How many of your Patients over 35 years old with SCZ have Substance abuse?",
+    "depends_of": null,
+    "dependency_type": null,
+    "script": "",
+    "created_at": "2016-12-28T20:25:12.476Z"
+  }
+},
+{
+  "model": "survey.question",
+  "pk": 10,
+  "fields": {
+    "type": "type_yes_no",
+    "field": null,
+    "text": "Do you treat patients over 35 years old with SCZ and Substance abuse differently to other Patients with SCZ?",
+    "depends_of": null,
+    "dependency_type": null,
+    "script": "",
+    "created_at": "2016-12-28T20:28:23.239Z"
+  }
+},
+{
+  "model": "survey.question",
+  "pk": 11,
+  "fields": {
+    "type": "type_multiselect_ordered",
+    "field": null,
+    "text": "What are the top 3 antipsychotics you use for the treatment of SCZ in Patients over 35 years old with SCZ and Substance abuse in maintenance setting?",
+    "depends_of": null,
+    "dependency_type": null,
+    "script": "",
+    "created_at": "2016-12-28T20:29:21.105Z"
+  }
+},
+{
+  "model": "survey.question",
+  "pk": 12,
+  "fields": {
+    "type": "type_multiselect_ordered",
+    "field": null,
+    "text": "What is your rationale to choose one treatment over another?",
+    "depends_of": null,
+    "dependency_type": null,
+    "script": "",
+    "created_at": "2016-12-28T20:29:37.680Z"
+  }
+},
+{
+  "model": "survey.question",
+  "pk": 13,
+  "fields": {
+    "type": "type_yes_no",
+    "field": null,
+    "text": "Do you have experience with Aripiprazole for the treatment of SCZ in patients over 35 years old with SCZ and substance abuse?",
+    "depends_of": 1,
+    "dependency_type": 2,
+    "script": "//alert('test');",
+    "created_at": "2016-12-28T20:30:42.038Z"
+  }
+},
+{
+  "model": "survey.question",
+  "pk": 14,
+  "fields": {
+    "type": "type_multiselect_ordered",
+    "field": null,
+    "text": "Why would you choose Aripiprazole over another antipsychotic?",
+    "depends_of": null,
+    "dependency_type": null,
+    "script": "",
+    "created_at": "2016-12-28T20:31:02.240Z"
+  }
+},
+
+{
+  "model": "survey.question",
+  "pk": 15,
+  "fields": {
+    "type": "type_dependeend_question",
+    "field": 2,
+    "text": "Out of the last 10 patients with SCZ, how many have Substance abuse?",
+    "depends_of": 9,
+    "dependency_type": 1,
+    "script": "",
+    "created_at": "2016-12-28T21:31:27.964Z"
+  }
+},
+
+
 {
   "model": "survey.option",
   "pk": 1,
@@ -313,26 +410,7 @@
     "created_at": "2016-12-28T21:39:57.975Z"
   }
 },
-{
-  "model": "survey.option",
-  "pk": 22,
-  "fields": {
-    "question": 7,
-    "value": "Patients with SCZ with concomitant Substance use/abuse on a daily basis or several times per week (not Occasional/Recreational)",
-    "ordering": 0,
-    "created_at": "2016-12-28T21:41:50.553Z"
-  }
-},
-{
-  "model": "survey.option",
-  "pk": 23,
-  "fields": {
-    "question": 7,
-    "value": "Substance abuse including Drugs and Alcohol",
-    "ordering": 0,
-    "created_at": "2016-12-28T21:42:48.730Z"
-  }
-},
+
 {
   "model": "survey.option",
   "pk": 24,
@@ -353,6 +431,242 @@
     "created_at": "2017-01-05T13:49:21.085Z"
   }
 },
+
+
+
+{
+  "model": "survey.option",
+  "pk": 26,
+  "fields": {
+    "question": 11,
+    "value": "Ari-oral",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:32:56.080Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 27,
+  "fields": {
+    "question": 11,
+    "value": "Ari-LAI",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:33:05.286Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 28,
+  "fields": {
+    "question": 11,
+    "value": "Resperidol-oral",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:33:18.702Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 29,
+  "fields": {
+    "question": 11,
+    "value": "Resperidol-LAI",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:33:26.478Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 30,
+  "fields": {
+    "question": 11,
+    "value": "Quetapin-oral",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:33:34.413Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 31,
+  "fields": {
+    "question": 11,
+    "value": "Aloperidol-oral",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:33:42.062Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 32,
+  "fields": {
+    "question": 11,
+    "value": "Aloperidol-LAI",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:33:56.801Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 33,
+  "fields": {
+    "question": 12,
+    "value": "Age",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:35:39.053Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 34,
+  "fields": {
+    "question": 12,
+    "value": "Mechanism of Action",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:35:56.827Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 35,
+  "fields": {
+    "question": 12,
+    "value": "Preference of the patients",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:36:05.528Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 36,
+  "fields": {
+    "question": 12,
+    "value": "Efficacy profile",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:36:18.150Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 37,
+  "fields": {
+    "question": 12,
+    "value": "Tolerability profile",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:36:27.935Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 38,
+  "fields": {
+    "question": 12,
+    "value": "Health care system specific",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:36:36.514Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 39,
+  "fields": {
+    "question": 12,
+    "value": "Pre-dominancy of Symptoms",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:36:46.550Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 40,
+  "fields": {
+    "question": 14,
+    "value": "Age",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:39:01.682Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 41,
+  "fields": {
+    "question": 14,
+    "value": "Mechanism of Action",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:39:16.652Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 42,
+  "fields": {
+    "question": 14,
+    "value": "Preference of the patients",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:39:24.884Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 43,
+  "fields": {
+    "question": 14,
+    "value": "Efficacy profile",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:39:32.141Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 44,
+  "fields": {
+    "question": 14,
+    "value": "Tolerability profile",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:39:39.970Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 45,
+  "fields": {
+    "question": 14,
+    "value": "Health care system specific",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:39:47.202Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 46,
+  "fields": {
+    "question": 14,
+    "value": "Pre-dominancy of Symptoms",
+    "ordering": 0,
+    "created_at": "2016-12-28T21:39:57.975Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 49,
+  "fields": {
+    "question": 11,
+    "value": "Paliperidone-oral",
+    "ordering": 0,
+    "created_at": "2017-01-05T13:49:10.380Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 50,
+  "fields": {
+    "question": 11,
+    "value": "Paliperidone-LAI",
+    "ordering": 0,
+    "created_at": "2017-01-05T13:49:21.085Z"
+  }
+},
+
+
+
 {
   "model": "survey.survey",
   "pk": 1,
@@ -431,5 +745,98 @@
     "ordering": 1,
     "created_at": "2016-12-28T22:02:42.379Z"
   }
+},
+
+
+
+
+
+
+
+
+
+
+
+
+{
+  "model": "survey.survey",
+  "pk": 8,
+  "fields": {
+    "name": "Test",
+    "active": true,
+    "created_at": "2016-12-28T22:01:34.162Z"
+  }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 9,
+  "fields": {
+    "survey": 1,
+    "question": 1,
+    "ordering": 1,
+    "created_at": "2016-12-28T22:01:57.556Z"
+  }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 10,
+  "fields": {
+    "survey": 1,
+    "question": 2,
+    "ordering": 1,
+    "created_at": "2016-12-28T22:02:06.659Z"
+  }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 11,
+  "fields": {
+    "survey": 1,
+    "question": 3,
+    "ordering": 1,
+    "created_at": "2016-12-28T22:02:11.828Z"
+  }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 12,
+  "fields": {
+    "survey": 1,
+    "question": 4,
+    "ordering": 1,
+    "created_at": "2016-12-28T22:02:24.077Z"
+  }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 13,
+  "fields": {
+    "survey": 1,
+    "question": 5,
+    "ordering": 1,
+    "created_at": "2016-12-28T22:02:32.121Z"
+  }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 14,
+  "fields": {
+    "survey": 1,
+    "question": 6,
+    "ordering": 1,
+    "created_at": "2016-12-28T22:02:37.154Z"
+  }
+},
+{
+  "model": "survey.surveyitem",
+  "pk": 15,
+  "fields": {
+    "survey": 1,
+    "question": 7,
+    "ordering": 1,
+    "created_at": "2016-12-28T22:02:42.379Z"
+  }
 }
+
+
 ]

@@ -35,6 +35,7 @@ class Question(models.Model):
     TYPE_MULTISELECT_WITH_OTHER = 'type_multiselect_with_other'
     TYPE_MULTISELECT_ORDERED = 'type_multiselect_ordered'
     TYPE_DEPENDEND_QUESTION = 'type_dependeend_question'
+    TYPE_SIMPLE_INPUT = 'type_simple_input'
 
     TYPE_CHOICES = (
         (TYPE_TWO_DEPENDEND_FIELDS, 'Two dependend fields'),
@@ -42,6 +43,7 @@ class Question(models.Model):
         (TYPE_MULTISELECT_WITH_OTHER, 'Unordered multiselect with "Other" option'),
         (TYPE_MULTISELECT_ORDERED, 'Multiselect with ordering and "Other" option'),
         (TYPE_DEPENDEND_QUESTION, 'Dependend question for TYPE_TWO_DEPENDEND_FIELDS type'),
+        (TYPE_SIMPLE_INPUT, 'Simple input field'),
     )
 
     FIELD_PERCENT = 1
@@ -122,6 +124,7 @@ class SurveyItem(models.Model):
     def __str__(self):
         return "%s/%s" % (self.ordering, self.pk)
 
+
 class HCPCategory(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
@@ -129,6 +132,7 @@ class HCPCategory(models.Model):
     class Meta:
         verbose_name = 'Category of HCP'
         verbose_name_plural = 'Categories of HCP'
+
 
 class Answer(models.Model):
     user = models.ForeignKey(User)
