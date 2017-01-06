@@ -36,7 +36,7 @@ def start_view(request):
             if form.cleaned_data['region']:
                 response.region_id = form.cleaned_data['region']
             response.save()
-            return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
+            return HttpResponseRedirect(reverse('survey:rules', kwargs={'id': response.pk}))
 
     storage = messages.get_messages(request)
     for st in storage.storages:

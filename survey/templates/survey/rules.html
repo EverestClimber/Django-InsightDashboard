@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <h1>Heading 1</h1>
+    {% lorem %}
+
+    <h1>Headeing 2</h1>
+    {% lorem %}
+
+
+
+    <div class="text-center">
+        <a href="{% url 'survey:pass' id=id %}" class="btn btn-primary">Continue Survey</a>
+    </div>
+
+
+{% endblock %}
