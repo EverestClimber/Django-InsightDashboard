@@ -81,7 +81,7 @@
   "model": "survey.question",
   "pk": 7,
   "fields": {
-    "type": "type_yes_no",
+    "type": "type_yes_no_jumping",
     "field": null,
     "text": "If you consider your patient population over 35 years old, would any of your answer be different?",
     "depends_of": null,
