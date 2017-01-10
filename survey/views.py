@@ -38,10 +38,6 @@ def start_view(request):
             response.save()
             return HttpResponseRedirect(reverse('survey:rules', kwargs={'id': response.pk}))
 
-    storage = messages.get_messages(request)
-    for st in storage.storages:
-        st.used = True
-
     return render(request, 'survey/start.html', {'form': form})
 
 @login_required

@@ -57,7 +57,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         mixer.blend(Organization)
         self.assertRaises(ValueError, start_view, req)
 
-    def test_authenticated_with_country_and_survey_and_organization(self):
+    def test_authenticated_with_country_and_survey_and_organization_and_category(self):
         # user = mixer.blend(User, is_anonymous=True)
         req = RequestFactory().get(reverse('survey:start'))
         country = mixer.blend(Country)
