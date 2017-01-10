@@ -1,8 +1,8 @@
 function fancy_validate(name) {
-    var valid = true
+    var valid = true;
 
-    var selector
-    console.log(name);
+    var selector;
+    // console.log(name);
 
     if (name) {
         selector = '#fancy-' + name;
@@ -10,7 +10,7 @@ function fancy_validate(name) {
         selector = '.fancy-required';
     }
 
-    console.log(selector);
+    // console.log(selector);
 
     $(document).ready(function () {
         $(selector).each(function (index, element) {
@@ -147,6 +147,61 @@ $(document).ready(function () {
             $('#' + id).prop("checked", true);
 
         });
+
+        var multiselect_ordered_ai=1;
+
+        $("div.type_multiselect_ordered input.input-other").keyup(function(event){
+              if ( event.which == 13 || event.which == 188) {
+                var el = $(this);
+                var id = el.attr('data-id');
+                var val = $.trim(el.val());
+
+                var unchecked = $('#fancy-ordered-select-left-' + id + ' button[data-value="' + val + '"]');
+                var checked = $('#fancy-ordered-select-right-' + id + ' button[data-value="' + val + '"]');
+
+                if (unchecked.length) {
+
+                    fancy_ordered_move(unchecked[ 0 ]);
+                    fancy_ordered_number_baged();
+                } else if (!checked.length) {
+
+                    var template = $("#type_multiselect_ordered_option_template-"+id).clone();
+                    template.removeAttr('id');
+
+                    template.appendTo('#fancy-ordered-select-right-' + id);
+                    var button = template.find('button').first();
+                    var txt = template.find('.text').first();
+                    var checkbox = template.find('input').first();
+
+
+                    var generated_id = 'g' + multiselect_ordered_ai;
+                    var option_id = 'type_multiselect_ordered-checkbox-' + generated_id;
+                    multiselect_ordered_ai ++;
+
+                    button.attr('data-value', val);
+                    button.attr('data-name', id);
+                    button.attr('data-checkbox-for', option_id);
+                    button.click(function () {
+                        fancy_ordered_move(this);
+                        fancy_ordered_number_baged();
+                    });
+                    txt.text(val);
+                    checkbox.attr('name', 'data[' + id + '][]');
+                    checkbox.attr('value', val);
+                    checkbox.attr('id', option_id);
+                    template.removeClass('template');
+
+
+                    fancy_ordered_number_baged();
+
+                }
+
+                el.val('');
+                event.preventDefault();
+
+              }
+        });
+
 
 
     });

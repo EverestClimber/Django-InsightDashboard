@@ -22,12 +22,12 @@
 
 {% block css %}{{ block.super }}
         <link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
-        <link href="{% static 'css/plugins/bootstrap-tagsinput.css' %}" rel="stylesheet">
+
 {% endblock css %}
 
 {% block javascript %}{{ block.super }}
         <script type="text/javascript" src="{% static 'js/plugins/jquery.steps/jquery.steps.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/plugins/bootstrap-tagsinput.js' %}"></script>
+
         <script type="text/javascript" src="{% static 'js/plugins/jquery.validate.min.js' %}"></script>
 {% endblock javascript %}
 
@@ -58,7 +58,7 @@
             titleTemplate: '<span class="number">#index#</span>',
             onStepChanging: function (event, currentIndex, newIndex) {
                 // Always allow going backward even if the current step contains invalid fields!
-                console.log('test');
+                // console.log('test');
                 if (currentIndex > newIndex) {
                     return true;
                 }
@@ -75,7 +75,7 @@
                 form.validate().settings.ignore = ":disabled,:hidden";
 
                 // Start validation; Prevent going forward if false
-                console.log(form.valid());
+                // console.log(form.valid());
                 return form.valid();
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
@@ -121,8 +121,5 @@
 
         $("#wizard").show();
 
-        $('.tagsinput').tagsinput({
-            tagClass: 'label label-primary'
-        });
 
 {% endblock inlinescript %}

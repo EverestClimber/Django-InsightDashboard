@@ -39,6 +39,27 @@
         </div>
     </div>
 </div>
-<div class="input-group w-100p field-other text-left">
-    <input type="text" class="tagsinput form-control" name="data[{{ item.question_id }}][other]" placeholder="Other">
+
+<div class="btn-group" role="group" id="type_multiselect_ordered_option_template-{{ item.question_id }}" class="template">
+    <button
+            type="button"
+            class="text-left btn btn-default fancy-checked"
+            data-value="{{ option.value }}"
+            data-name="{{ item.question_id }}"
+            data-checkbox-for="type_multiselect_ordered-checkbox-{{ option.pk }}"
+
+    >
+        <span class="cell"><span class="badge"></span></span>
+        <span class="text">{{ option.value }}</span>
+        <input type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" checked="true" style="display:none">
+    </button>
+</div>
+
+<div class="form-group w-100p field-other text-left">
+    <input
+            type="text"
+            class="form-control input-other"
+            name="data[{{ item.question_id }}][other]"
+            data-id="{{ item.question_id }}"
+            placeholder="Other">
 </div>
