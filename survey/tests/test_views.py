@@ -13,7 +13,7 @@ from ..models import Survey, Organization, HCPCategory, Region, Answer
 
 pytestmark = pytest.mark.django_db
 
-from ..views import start_view, pass_view
+from ..views import start_view, pass_view, RulesView
 
 
 class SurveyStartViewTest(AssertHTMLMixin, TestCase):
@@ -155,3 +155,25 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
         assert resp.url == reverse('survey:thanks')
         answer.refresh_from_db()
         assert answer.data
+
+
+class TestSurveyRules(TestCase):
+
+    def test_rules(self):
+        country = mixer.blend(Country)
+        user = mixer.blend(User, country=country)
+        answer = mixer.blend(Answer,
+                             user=user,
+                             country=country,
+                             organization_id=1,
+                             hcp_category_id=1,
+                             survey_id=1)
+
+        kwargs = {'id': answer.pk}
+        request = RequestFactory().get(reverse('survey:rules', kwargs=kwargs))
+        request.user = user
+        response = RulesView.as_view()(request, **kwargs)
+        response.render()
+        assert response.cookies.get(RulesView.cookie_name)
+
+

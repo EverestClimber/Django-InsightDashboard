@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
-from django.contrib import messages
+from django.views.generic import TemplateView
 
 from survey.models import Answer
 from survey.forms import StartForm
@@ -36,7 +37,11 @@ def start_view(request):
             if form.cleaned_data['region']:
                 response.region_id = form.cleaned_data['region']
             response.save()
-            return HttpResponseRedirect(reverse('survey:rules', kwargs={'id': response.pk}))
+            if request.COOKIES.get(RulesView.cookie_name):
+                next_view = 'survey:pass'
+            else:
+                next_view = 'survey:rules'
+            return HttpResponseRedirect(reverse(next_view, kwargs={'id': response.pk}))
 
     return render(request, 'survey/start.html', {'form': form})
 
@@ -56,3 +61,14 @@ def pass_view(request, id):
 
     items = answer.survey.survey_items.all().prefetch_related('question__option_set')
     return render(request, 'survey/pass.html', {'items': items})
+
+
+class RulesView(LoginRequiredMixin, TemplateView):
+    template_name = 'survey/rules.html'
+    cookie_name = 'rules_was_viewed'
+
+
+    def get(self, request, *args, **kwargs):
+        response = super(self.__class__, self).get(self, request, *args, **kwargs)
+        response.set_cookie(self.cookie_name, True, 365*24*60*60)
+        return response
