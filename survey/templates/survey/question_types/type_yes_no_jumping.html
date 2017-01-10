@@ -1,0 +1,68 @@
+<div class="question">{{ item.question.text }}</div>
+<div class="type_yes_no">
+
+    <button
+            id="btn-type_yes_no-Yes-{{ item.question_id }}"
+            class="btn btn-default yes"
+            type="button"
+            data-id="type_yes_no-Yes-{{ item.question_id }}"
+            data-type="Yes"
+            data-question-id="{{ item.question_id }}"
+    >
+        <i class="fa fa-check-circle" aria-hidden="true"></i>
+        <span>Yes</span>
+    </button>
+
+
+    <button
+            id="btn-type_yes_no-No-{{ item.question_id }}"
+            class="btn btn-default no btn-type_yes_no-breaking-No"
+            type="button"
+            data-id="type_yes_no-No-{{ item.question_id }}"
+            data-type="No"
+            data-question-id="{{ item.question_id }}"
+    >
+        <i class="fa fa-check-circle" aria-hidden="true"></i>
+        <span>No</span>
+    </button>
+
+
+      <input id="type_yes_no-Yes-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="Yes">
+      <input id="type_yes_no-No-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="No">
+
+
+
+
+</div>
+
+<div class="type_yes_no_jumping-breaking" id="breaking-type_yes_no-{{ item.question_id }}">
+    <div class="question">Do you wish to proceed to answer the questions for patient group over 35 years old?</div>
+    <div class="type_yes_no">
+        <button
+                id="type_yes_no-No-{{ item.question_id }}"
+                class="btn btn-default"
+                type="button"
+                data-id="type_yes_no-breaking-Yes-{{ item.question_id }}"
+                data-type="Yes"
+        >
+            <i class="fa fa-check-circle" aria-hidden="true"></i>
+            <span>Yes</span>
+        </button>
+
+
+        <button
+                id="btn-type_yes_no-breaking-No-{{ item.question_id }}"
+                class="btn btn-default btn-type_yes_no-breaking-No"
+                type="button"
+                data-id="type_yes_no-breaking-No-{{ item.question_id }}"
+                data-type="No"
+        >
+            <i class="fa fa-check-circle" aria-hidden="true"></i>
+            <span>No</span>
+        </button>
+
+
+        <input id="type_yes_no-breaking-Yes-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="Yes">
+        <input id="type_yes_no-breaking-No-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="No">
+    </div>
+</div>

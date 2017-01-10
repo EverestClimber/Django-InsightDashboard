@@ -75,6 +75,10 @@
   display: none !important;
 }
 
+.type_yes_no_jumping-breaking {
+  display: none;
+}
+
 .fancy-invalid-required {
   border:solid 1px #e60000;
 }

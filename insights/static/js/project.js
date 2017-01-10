@@ -139,13 +139,31 @@ $(document).ready(function () {
 
 
         $("div.type_yes_no button").click(function () {
-            var btn = $(this)
+            var btn = $(this);
             var id = btn.attr('data-id');
 
             btn.parent().find("button").removeClass('fancy-checked');
             btn.addClass('fancy-checked');
             $('#' + id).prop("checked", true);
 
+        });
+
+        $("div.type_yes_no_jumping button.yes").click(function () {
+
+            var id = $(this).attr('data-question-id');
+            $('#breaking-type_yes_no-'+id).show();
+        });
+
+        $("div.type_yes_no_jumping button.no").click(function () {
+
+            var id = $(this).attr('data-question-id');
+            $('#breaking-type_yes_no-'+id).hide();
+        });
+
+        $('button.btn-type_yes_no-breaking-No').click(function() {
+            for (i=7; i<=14; i++) {
+                $('#wizard .actions a[href="#next"]').get(0).click();
+            }
         });
 
         var multiselect_ordered_ai=1;

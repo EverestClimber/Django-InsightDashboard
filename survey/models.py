@@ -36,6 +36,7 @@ class Question(models.Model):
     TYPE_MULTISELECT_ORDERED = 'type_multiselect_ordered'
     TYPE_DEPENDEND_QUESTION = 'type_dependeend_question'
     TYPE_SIMPLE_INPUT = 'type_simple_input'
+    TYPE_YES_NO_JUMPING = 'type_yes_no_jumping'
 
     TYPE_CHOICES = (
         (TYPE_TWO_DEPENDEND_FIELDS, 'Two dependend fields'),
@@ -44,6 +45,7 @@ class Question(models.Model):
         (TYPE_MULTISELECT_ORDERED, 'Multiselect with ordering and "Other" option'),
         (TYPE_DEPENDEND_QUESTION, 'Dependend question for TYPE_TWO_DEPENDEND_FIELDS type'),
         (TYPE_SIMPLE_INPUT, 'Simple input field'),
+        (TYPE_YES_NO_JUMPING, 'Yes-No, that allow to jump to the certain question'),
     )
 
     FIELD_PERCENT = 1
