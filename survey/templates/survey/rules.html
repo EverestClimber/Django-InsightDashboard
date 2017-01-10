@@ -3,13 +3,39 @@
 
 {% block content %}
 
-    <h1>Heading 1</h1>
-    {% lorem %}
+    <h1>Introduction</h1>
+    <p>Welcome to the Otsuka Medical Insights system.</p>
 
-    <h1>Headeing 2</h1>
-    {% lorem %}
+    <p>
+        The following Questions have been developed and agreed by the TA specific Otsuka Medical Teams to be
+        strategically significant.
+    </p>
+
+    <p>
+        Your contribution in collecting these Insights from HCPs will help to better understand these strategic topics.
+    </p>
 
 
+
+    <h1>User Instructions</h1>
+    <ol>
+        <li>
+            Please ensure that you set context and clearly state the Definition of the Patient Group of interest to the
+            HCP before beginning the Questionnaire.
+        </li>
+
+        <li>
+            Please input answers for all relevant questions from your discussions with HCPs, and for any unanswered
+            questions, leave blank and proceed to the next question.
+        </li>
+
+        <li>
+            Please do not collect any private, individually identifiable information of any HCPs or patients
+            (e.g. Names, Contact details, other information related to any individual’s identity)
+        </li>
+    </ol>
+
+    <p>All answers will be collected and you will have access to the results in a simple report.</p>
 
     <div class="text-center">
         <a href="{% url 'survey:pass' id=id %}" class="btn btn-primary">Continue Survey</a>
