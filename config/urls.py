@@ -10,6 +10,10 @@ from django.views import defaults as default_views
 
 from allauth.account.views import login
 
+admin.site.site_header = 'Insights admin'
+admin.site.site_title = 'Insights'
+
+
 urlpatterns = [
     url(r'^$', login, name='home'),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
