@@ -18,7 +18,7 @@
   "fields": {
     "type": "type_yes_no",
     "field": null,
-    "text": "Do you treat patients with SCZ and Substance abuse differently to other Patients with SCZ?",
+    "text": "Do you treat patients under 35 years old with SCZ and Substance abuse differently to other Patients with SCZ?",
     "depends_of": null,
     "dependency_type": null,
     "script": "",
@@ -31,7 +31,7 @@
   "fields": {
     "type": "type_multiselect_ordered",
     "field": null,
-    "text": "What are the top 3 antipsychotics you use for the treatment of SCZ in Patients with SCZ and Substance abuse in maintenance setting?",
+    "text": "What are the top 3 antipsychotics you use for the treatment of SCZ in Patients under 35 years old with SCZ and Substance abuse in maintenance setting?",
     "depends_of": null,
     "dependency_type": null,
     "script": "",
@@ -57,7 +57,7 @@
   "fields": {
     "type": "type_yes_no",
     "field": null,
-    "text": "Do you have experience with Aripiprazole for the treatment of SCZ in patients with SCZ and substance abuse?",
+    "text": "Do you have experience with Aripiprazole for the treatment of SCZ in patients under 35 years old with SCZ and substance abuse?",
     "depends_of": 1,
     "dependency_type": 2,
     "script": "//alert('test');",
@@ -96,7 +96,7 @@
   "fields": {
     "type": "type_dependeend_question",
     "field": 2,
-    "text": "Out of the last 10 patients with SCZ, how many have Substance abuse?",
+    "text": "Out of the last 10 patients under 35 years old with SCZ, how many have Substance abuse?",
     "depends_of": 1,
     "dependency_type": 1,
     "script": "",
@@ -688,6 +688,106 @@
   }
 },
 {
+  "model": "survey.option",
+  "pk": 51,
+  "fields": {
+    "question": 3,
+    "value": "Clozapine-oral",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:46:34.497Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 52,
+  "fields": {
+    "question": 3,
+    "value": "Olanzapine-oral",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:46:53.214Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 53,
+  "fields": {
+    "question": 3,
+    "value": "Olanzapine-LAI",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:47:05.745Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 54,
+  "fields": {
+    "question": 11,
+    "value": "Clozapine-oral",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:47:25.489Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 55,
+  "fields": {
+    "question": 11,
+    "value": "Olanzapine-oral",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:47:36.887Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 56,
+  "fields": {
+    "question": 11,
+    "value": "Olanzapine-LAI",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:47:53.500Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 57,
+  "fields": {
+    "question": 4,
+    "value": "Published Evidence",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:49:12.611Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 58,
+  "fields": {
+    "question": 12,
+    "value": "Published Evidence",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:49:24.006Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 59,
+  "fields": {
+    "question": 6,
+    "value": "Published Evidence",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:50:07.748Z"
+  }
+},
+{
+  "model": "survey.option",
+  "pk": 60,
+  "fields": {
+    "question": 14,
+    "value": "Published Evidence",
+    "ordering": 0,
+    "created_at": "2017-01-11T13:50:24.919Z"
+  }
+},
+{
   "model": "survey.survey",
   "pk": 1,
   "fields": {
@@ -843,6 +943,120 @@
     "question": 16,
     "ordering": 1,
     "created_at": "2017-01-06T14:28:17.502Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 1,
+  "fields": {
+    "name": "East",
+    "country": 3,
+    "created_at": "2016-12-28T20:10:55.914Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 2,
+  "fields": {
+    "name": "North",
+    "country": 3,
+    "created_at": "2016-12-28T20:11:01.434Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 3,
+  "fields": {
+    "name": "South",
+    "country": 3,
+    "created_at": "2017-01-05T13:31:23.717Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 4,
+  "fields": {
+    "name": "North",
+    "country": 4,
+    "created_at": "2017-01-05T13:32:21.206Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 5,
+  "fields": {
+    "name": "South",
+    "country": 4,
+    "created_at": "2017-01-05T13:32:26.215Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 6,
+  "fields": {
+    "name": "Centre",
+    "country": 4,
+    "created_at": "2017-01-05T13:33:10.140Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 7,
+  "fields": {
+    "name": "North",
+    "country": 5,
+    "created_at": "2017-01-05T13:37:41.840Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 8,
+  "fields": {
+    "name": "South",
+    "country": 5,
+    "created_at": "2017-01-05T13:37:48.612Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 9,
+  "fields": {
+    "name": "East",
+    "country": 5,
+    "created_at": "2017-01-05T13:37:54.973Z"
+  }
+},
+{
+  "model": "survey.region",
+  "pk": 10,
+  "fields": {
+    "name": "West",
+    "country": 5,
+    "created_at": "2017-01-11T12:06:01.710Z"
+  }
+},
+{
+  "model": "users.country",
+  "pk": 3,
+  "fields": {
+    "name": "Spain",
+    "created_at": "2016-12-28T20:10:20.497Z"
+  }
+},
+{
+  "model": "users.country",
+  "pk": 4,
+  "fields": {
+    "name": "Italy",
+    "created_at": "2016-12-28T20:10:26.283Z"
+  }
+},
+{
+  "model": "users.country",
+  "pk": 5,
+  "fields": {
+    "name": "France",
+    "created_at": "2016-12-28T20:10:33.451Z"
   }
 }
 ]
