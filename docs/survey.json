@@ -946,6 +946,54 @@
   }
 },
 {
+  "model": "survey.organization",
+  "pk": 1,
+  "fields": {
+    "name": "Drug Abuse Specialised Mental Health Centre",
+    "created_at": "2016-12-28T20:08:48.538Z"
+  }
+},
+{
+  "model": "survey.organization",
+  "pk": 2,
+  "fields": {
+    "name": "Mental Health Centres",
+    "created_at": "2016-12-28T20:08:55.070Z"
+  }
+},
+{
+  "model": "survey.organization",
+  "pk": 3,
+  "fields": {
+    "name": "Hospital",
+    "created_at": "2016-12-28T20:09:04.217Z"
+  }
+},
+{
+  "model": "survey.hcpcategory",
+  "pk": 1,
+  "fields": {
+    "name": "KOL",
+    "created_at": "2016-12-29T23:28:37.942Z"
+  }
+},
+{
+  "model": "survey.hcpcategory",
+  "pk": 2,
+  "fields": {
+    "name": "Rising Star",
+    "created_at": "2016-12-29T23:28:44.255Z"
+  }
+},
+{
+  "model": "survey.hcpcategory",
+  "pk": 3,
+  "fields": {
+    "name": "Other HCP",
+    "created_at": "2016-12-29T23:28:49.367Z"
+  }
+},
+{
   "model": "survey.region",
   "pk": 1,
   "fields": {
