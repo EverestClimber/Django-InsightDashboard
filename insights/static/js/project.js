@@ -162,10 +162,14 @@ $(document).ready(function () {
         var multiselect_ordered_ai=1;
 
         $("div.type_multiselect_ordered input.input-other").keyup(function(event){
+
               if ( event.which == 13 || event.which == 188) {
                 var el = $(this);
                 var id = el.attr('data-id');
                 var val = $.trim(el.val());
+                if (val[val.length - 1] == ',') {
+                    val = val.substr(0, val.length-1);
+                }
 
                 var unchecked = $('#fancy-ordered-select-left-' + id + ' button[data-value="' + val + '"]');
                 var checked = $('#fancy-ordered-select-right-' + id + ' button[data-value="' + val + '"]');
