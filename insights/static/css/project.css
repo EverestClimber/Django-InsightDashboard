@@ -240,3 +240,7 @@ div.bootstrap-tagsinput input{
 .type_yes_no_jumping-breaking {
   margin-top: 30px;
 }
+
+.spaced li{
+  padding-bottom: 12px;
+}
