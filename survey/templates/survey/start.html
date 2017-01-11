@@ -11,13 +11,7 @@
         {{ form.as_p }}
 
         <div class="text-center">
-          <button class="primaryAction btn btn-primary" type="submit">{% trans "Start survey" %}</button>
+          <button class="primaryAction btn btn-primary" type="submit">{% trans "Next" %}</button>
         </div>
     </form>
 {% endblock content %}
-
-{% block messages %}
-    {% if messages %}
-        {% for message in messages %}{% endfor %}
-    {% endif %}
-{% endblock %}

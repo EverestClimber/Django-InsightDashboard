@@ -1,6 +1,6 @@
+from unittest.mock import MagicMock
 from mixer.backend.django import mixer
 from with_asserts.mixin import AssertHTMLMixin
-
 import pytest
 
 from django.core.urlresolvers import reverse, resolve
@@ -13,7 +13,7 @@ from ..models import Survey, Organization, HCPCategory, Region, Answer
 
 pytestmark = pytest.mark.django_db
 
-from ..views import start_view, pass_view, RulesView
+from ..views import start_view, pass_view, definition_view, InstructionsView
 
 
 class SurveyStartViewTest(AssertHTMLMixin, TestCase):
@@ -157,23 +157,54 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
         assert answer.data
 
 
-class TestSurveyRules(TestCase):
+class TestSurveyDefinition(AssertHTMLMixin, TestCase):
 
-    def test_rules(self):
+    def test_defines_unauthorized(self):
+        request = RequestFactory().get(reverse('survey:definition'))
+        request.user = AnonymousUser()
+        response = definition_view(request)
+        self.response_302(response)
+        assert '/accounts/login/' in response.url
+
+
+    def test_definitions_wo_cookies(self):
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country)
-        answer = mixer.blend(Answer,
-                             user=user,
-                             country=country,
-                             organization_id=1,
-                             hcp_category_id=1,
-                             survey_id=1)
-
-        kwargs = {'id': answer.pk}
-        request = RequestFactory().get(reverse('survey:rules', kwargs=kwargs))
+        request = RequestFactory().get(reverse('survey:definition'))
         request.user = user
-        response = RulesView.as_view()(request, **kwargs)
+        response = definition_view(request)
+        self.response_302(response)
+        assert '/survey/instructions/' in response.url
+
+    def test_with_cookies(self):
+        country = mixer.blend(Country)
+        user = mixer.blend(User, country=country)
+        request = RequestFactory().get(reverse('survey:definition'))
+        request.user = user
+        request.COOKIES[InstructionsView.cookie_name] = True
+        response = definition_view(request)
+        self.response_200(response)
+        print (response.content)
+        with self.assertHTML(response, 'a.btn'):
+            pass
+
+
+class TestSurveyInstructions(AssertHTMLMixin, TestCase):
+    def test_instructions_unauthorized(self):
+        request = RequestFactory().get(reverse('survey:instructions'))
+        request.user = AnonymousUser()
+        response = definition_view(request)
+        self.response_302(response)
+        assert '/accounts/login/' in response.url
+
+    def test_with_cookies(self):
+        country = mixer.blend(Country)
+        user = mixer.blend(User, country=country)
+        request = RequestFactory().get(reverse('survey:instructions'))
+        request.user = user
+        response = InstructionsView.as_view()(request)
         response.render()
-        assert response.cookies.get(RulesView.cookie_name)
-
-
+        self.response_200(response)
+        assert response.cookies.get(InstructionsView.cookie_name)
+        with self.assertHTML(response, 'a.btn'):
+            pass

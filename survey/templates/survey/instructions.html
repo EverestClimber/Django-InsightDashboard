@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <h1>Otsuka Medical Insights - CNS Pilot</h1>
+    <p>
+        The following Questions have been developed and agreed by the specific Otsuka Medical Teams to be strategically
+        significant.
+    </p>
+
+    <p>
+        Your contribution in gathering these Insights from HCPs will help to better understand these strategic topics.
+    </p>
+
+
+    <h1>User Instructions</h1>
+    <ol>
+        <li>
+            Please input answers for all relevant questions from your discussions with HCPs, and for any unanswered
+            questions, leave blank and proceed to the next question.
+        </li>
+
+        <li>
+            Please do not collect any private, individually identifiable information of any HCPs or patients
+            (e.g. Names, Contact details, other information related to anyone’s identity)
+        </li>
+
+        <li>
+            All answers will be collated and analysed and you will have access to the results in a simple report.
+        </li>
+    </ol>
+
+
+    <div class="text-center">
+        <a href="{% url 'survey:definition' %}" class="btn btn-primary">Next</a>
+    </div>
+
+
+{% endblock %}
+
+{% block messages %}
+    {% if messages %}
+        {% for message in messages %}{% endfor %}
+    {% endif %}
+{% endblock %}

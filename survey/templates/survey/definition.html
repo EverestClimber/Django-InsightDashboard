@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <h1>Otsuka Medical Insights - CNS Pilot</h1>
+    <p>
+        HCP discussion to capture Insights on treatment experience of
+        <b>Patients with SCZ and Concomitant Substance Abuse</b>
+    </p>
+
+    <p>
+        Please clarify with the HCP regarding the definition of the patient group for this discussion as follows:
+    </p>
+
+
+    <ul>
+        <li>
+            Patients with SCZ with concomitant Substance abuse including Drug and Alcohol on a daily basis or several
+            times per week
+        </li>
+
+        <li>
+            Not Occasional or Recreational
+        </li>
+
+        <li>
+            Substance abuse including Drugs and Alcohol
+        </li>
+    </ul>
+
+
+    <div class="text-center">
+        <a href="{% url 'survey:start'  %}" class="btn btn-primary">Start Survey</a>
+    </div>
+
+
+{% endblock %}
+
+{% block messages %}
+    {% if messages %}
+        {% for message in messages %}{% endfor %}
+    {% endif %}
+{% endblock %}

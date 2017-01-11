@@ -8,6 +8,26 @@ from django.views.generic import TemplateView
 from survey.models import Answer
 from survey.forms import StartForm
 
+
+@login_required
+def definition_view(request):
+    if request.COOKIES.get(InstructionsView.cookie_name):
+        return render(request, 'survey/definition.html')
+    else:
+        return HttpResponseRedirect(reverse('survey:instructions'))
+
+
+class InstructionsView(LoginRequiredMixin, TemplateView):
+    template_name = 'survey/instructions.html'
+    cookie_name = 'instructions_was_viewed2'
+
+
+    def get(self, request, *args, **kwargs):
+        response = super(self.__class__, self).get(self, request, *args, **kwargs)
+        response.set_cookie(self.cookie_name, True, 365*24*60*60)
+        return response
+
+
 @login_required
 def start_view(request):
     if request.user.country is None:
@@ -21,10 +41,6 @@ def start_view(request):
 
     form = StartForm(request.POST or None, region_choices=region_choices)
 
-
-    # form['organization'].choices = (('', '---'), (1, 1), (2, 3))
-    # form['survey'].choices = (('', '---'), (1, 1), (2, 3))
-
     if request.method == 'POST':
         if form.is_valid():
             response = Answer(
@@ -37,13 +53,11 @@ def start_view(request):
             if form.cleaned_data['region']:
                 response.region_id = form.cleaned_data['region']
             response.save()
-            if request.COOKIES.get(RulesView.cookie_name):
-                next_view = 'survey:pass'
-            else:
-                next_view = 'survey:rules'
-            return HttpResponseRedirect(reverse(next_view, kwargs={'id': response.pk}))
+            return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
+
 
     return render(request, 'survey/start.html', {'form': form})
+
 
 @login_required
 def pass_view(request, id):
@@ -61,14 +75,3 @@ def pass_view(request, id):
 
     items = answer.survey.survey_items.all().prefetch_related('question__option_set')
     return render(request, 'survey/pass.html', {'items': items})
-
-
-class RulesView(LoginRequiredMixin, TemplateView):
-    template_name = 'survey/rules.html'
-    cookie_name = 'rules_was_viewed'
-
-
-    def get(self, request, *args, **kwargs):
-        response = super(self.__class__, self).get(self, request, *args, **kwargs)
-        response.set_cookie(self.cookie_name, True, 365*24*60*60)
-        return response

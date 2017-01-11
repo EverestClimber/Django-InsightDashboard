@@ -248,7 +248,7 @@ ACCOUNT_SESSION_COOKIE_AGE = 604800
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'survey:start'
+LOGIN_REDIRECT_URL = 'survey:definition'
 LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
