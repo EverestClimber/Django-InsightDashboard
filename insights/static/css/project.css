@@ -232,3 +232,7 @@ div.bootstrap-tagsinput input{
     display: table-cell;
     padding-left: 5px;
 }
+
+.template {
+  display: none !important;
+}
