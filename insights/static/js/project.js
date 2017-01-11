@@ -96,7 +96,6 @@ $(document).ready(function () {
         function fancy_ordered_number_baged() {
                 $("div.fancy-ordered-select div.group-right").each(function (i, element) {
 
-
                 $(element).find('span.badge').each(function (j, badge) {
                     $(badge).text(j+1);
                 });
@@ -158,12 +157,6 @@ $(document).ready(function () {
 
             var id = $(this).attr('data-question-id');
             $('#breaking-type_yes_no-'+id).hide();
-        });
-
-        $('button.btn-type_yes_no-breaking-No').click(function() {
-            for (i=7; i<=14; i++) {
-                $('#wizard .actions a[href="#next"]').get(0).click();
-            }
         });
 
         var multiselect_ordered_ai=1;

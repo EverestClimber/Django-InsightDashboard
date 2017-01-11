@@ -236,3 +236,7 @@ div.bootstrap-tagsinput input{
 .template {
   display: none !important;
 }
+
+.type_yes_no_jumping-breaking {
+  margin-top: 30px;
+}

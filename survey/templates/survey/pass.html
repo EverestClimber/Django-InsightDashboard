@@ -35,6 +35,7 @@
 {% block inlinescript %}
 
         var form = $('#survey-pass-form');
+        var already_jumped = false;
         form.validate({
             onkeyup: true,
             highlight: function (element) {
@@ -108,6 +109,15 @@
                             $('#btn-type_yes_no-No-5').prop('disabled', false);
                             $('#btn-type_yes_no-Yes-5').removeClass('fancy-checked');
                         }
+                    }
+                }
+
+                if (priorIndex == 6) {
+                    if ($(".btn-type_yes_no-breaking-No.fancy-checked").length && !already_jumped) {
+                        for (i=7; i<=14; i++) {
+                            $('#wizard .actions a[href="#next"]').get(0).click();
+                        }
+                        already_jumped = true;
                     }
                 }
 
