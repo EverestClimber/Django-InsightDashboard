@@ -80,37 +80,8 @@
                 return form.valid();
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
-                if ($('#type_multiselect_ordered-checkbox-1')) {
-                    if ($('#type_multiselect_ordered-checkbox-1').prop('checked') == true) {
-                        if ('#type_yes_no-Yes-5') {
-                            $('#type_yes_no-Yes-5').prop('checked', true);
-                            $('#type_yes_no-Yes-5').prop('disabled', true);
-                        }
-
-                        if ('#type_yes_no-No-5') {
-                            $('#type_yes_no-No-5').prop('disabled', true);
-                        }
-
-                        if ('#btn-type_yes_no-Yes-5') {
-                            $('#btn-type_yes_no-Yes-5').addClass('fancy-checked');
-                            $('#btn-type_yes_no-Yes-5').prop('disabled', true);
-                        }
-
-                        if ('#btn-type_yes_no-No-5') {
-                            $('#btn-type_yes_no-No-5').removeClass('fancy-checked');
-                            $('#btn-type_yes_no-No-5').prop('disabled', true);
-                        }
-                    } else {
-                        if ($('#type_yes_no-Yes-5') && $('#type_yes_no-Yes-5').prop('disabled') == true) {
-                            $('#type_yes_no-Yes-5').prop('checked', false);
-                            $('#type_yes_no-Yes-5').prop('disabled', false);
-                            $('#type_yes_no-No-5').prop('disabled', false);
-                            $('#btn-type_yes_no-Yes-5').prop('disabled', false);
-                            $('#btn-type_yes_no-No-5').prop('disabled', false);
-                            $('#btn-type_yes_no-Yes-5').removeClass('fancy-checked');
-                        }
-                    }
-                }
+                connect_dependend_widgets(1, 5);
+                connect_dependend_widgets(26, 13);
 
                 if (priorIndex == 6) {
                     if ($(".btn-type_yes_no-breaking-No.fancy-checked").length && !already_jumped) {
