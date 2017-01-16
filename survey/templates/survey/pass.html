@@ -80,8 +80,8 @@
                 return form.valid();
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
-                connect_dependend_widgets(1, 5);
-                connect_dependend_widgets(26, 13);
+                connect_dependend_widget_list([1, 2], 5);
+                connect_dependend_widget_list([26, 27], 13);
 
                 if (priorIndex == 6) {
                     if ($(".btn-type_yes_no-breaking-No.fancy-checked").length && !already_jumped) {

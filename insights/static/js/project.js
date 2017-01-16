@@ -44,39 +44,6 @@ function fancy_validate(name) {
  */
 function connect_dependend_widgets(master_id, slave_id) {
 
-    // if ($('#type_multiselect_ordered-checkbox-1')) {
-    //     if ($('#type_multiselect_ordered-checkbox-1').prop('checked') == true) {
-    //         if ('#type_yes_no-Yes-5') {
-    //             $('#type_yes_no-Yes-5').prop('checked', true);
-    //             $('#type_yes_no-Yes-5').prop('disabled', true);
-    //         }
-    //
-    //         if ('#type_yes_no-No-5') {
-    //             $('#type_yes_no-No-5').prop('disabled', true);
-    //         }
-    //
-    //         if ('#btn-type_yes_no-Yes-5') {
-    //             $('#btn-type_yes_no-Yes-5').addClass('fancy-checked');
-    //             $('#btn-type_yes_no-Yes-5').prop('disabled', true);
-    //         }
-    //
-    //         if ('#btn-type_yes_no-No-5') {
-    //             $('#btn-type_yes_no-No-5').removeClass('fancy-checked');
-    //             $('#btn-type_yes_no-No-5').prop('disabled', true);
-    //         }
-    //     } else {
-    //         if ($('#type_yes_no-Yes-5') && $('#type_yes_no-Yes-5').prop('disabled') == true) {
-    //             $('#type_yes_no-Yes-5').prop('checked', false);
-    //             $('#type_yes_no-Yes-5').prop('disabled', false);
-    //             $('#type_yes_no-No-5').prop('disabled', false);
-    //             $('#btn-type_yes_no-Yes-5').prop('disabled', false);
-    //             $('#btn-type_yes_no-No-5').prop('disabled', false);
-    //             $('#btn-type_yes_no-Yes-5').removeClass('fancy-checked');
-    //         }
-    //     }
-    // }
-
-
     if ($('#type_multiselect_ordered-checkbox-' + master_id)) {
         if ($('#type_multiselect_ordered-checkbox-' + master_id).prop('checked') == true) {
             if ('#type_yes_no-Yes-' + slave_id) {
@@ -106,6 +73,61 @@ function connect_dependend_widgets(master_id, slave_id) {
                 $('#btn-type_yes_no-No-' + slave_id).prop('disabled', false);
                 $('#btn-type_yes_no-Yes-' + slave_id).removeClass('fancy-checked');
             }
+        }
+    }
+}
+
+
+/**
+ * Check if master list options exists and checked
+ * @param master_list
+ * @returns {boolean}
+ * @private
+ */
+function _if_master_list_checked(master_list) {
+    for(var i=0; i<master_list.length; i++) {
+        if ($('#type_multiselect_ordered-checkbox-' + master_list[i])
+            && $('#type_multiselect_ordered-checkbox-' + master_list[i]).prop('checked') == true) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Connect dependend ordered select widget with several options and yes-no radio widget
+ * @param master_list array
+ * @param slave_id int
+ */
+function connect_dependend_widget_list(master_list, slave_id) {
+    if (_if_master_list_checked(master_list)) {
+        if ('#type_yes_no-Yes-' + slave_id) {
+            $('#type_yes_no-Yes-' + slave_id).prop('checked', true);
+            $('#type_yes_no-Yes-' + slave_id).prop('disabled', true);
+        }
+
+        if ('#type_yes_no-No-' + slave_id) {
+            $('#type_yes_no-No-' + slave_id).prop('disabled', true);
+        }
+
+        if ('#btn-type_yes_no-Yes-' + slave_id) {
+            $('#btn-type_yes_no-Yes-' + slave_id).addClass('fancy-checked');
+            $('#btn-type_yes_no-Yes-' + slave_id).prop('disabled', true);
+        }
+
+        if ('#btn-type_yes_no-No-' + slave_id) {
+            $('#btn-type_yes_no-No-' + slave_id).removeClass('fancy-checked');
+            $('#btn-type_yes_no-No-' + slave_id).prop('disabled', true);
+        }
+    } else {
+        if ($('#type_yes_no-Yes-' + slave_id) && $('#type_yes_no-Yes-' + slave_id).prop('disabled') == true) {
+            $('#type_yes_no-Yes-' + slave_id).prop('checked', false);
+            $('#type_yes_no-Yes-' + slave_id).prop('disabled', false);
+            $('#type_yes_no-No-' + slave_id).prop('disabled', false);
+            $('#btn-type_yes_no-Yes-' + slave_id).prop('disabled', false);
+            $('#btn-type_yes_no-No-' + slave_id).prop('disabled', false);
+            $('#btn-type_yes_no-Yes-' + slave_id).removeClass('fancy-checked');
         }
     }
 }
