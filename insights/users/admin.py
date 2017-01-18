@@ -41,8 +41,8 @@ class MyUserAdmin(AuthUserAdmin):
     fieldsets = (
             ('User Profile', {'fields': ('name', 'country')}),
     ) + AuthUserAdmin.fieldsets
-    list_display = ('username', 'name', 'country', 'is_superuser')
-    search_fields = ['name']
+    list_display = ('username', 'name', 'email', 'country', 'is_superuser')
+    search_fields = ['name', 'email']
 
 
 @admin.register(Country)
