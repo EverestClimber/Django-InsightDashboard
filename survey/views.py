@@ -47,7 +47,6 @@ def start_view(request):
                 user=request.user,
                 country=request.user.country,
                 organization_id=form.cleaned_data['organization'],
-                hcp_category_id=form.cleaned_data['hcp'],
                 survey_id=form.cleaned_data['survey']
             )
             if form.cleaned_data['region']:

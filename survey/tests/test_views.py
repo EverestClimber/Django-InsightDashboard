@@ -55,7 +55,9 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         req.user = user
         mixer.blend(Survey, active=True)
         mixer.blend(Organization)
-        self.assertRaises(ValueError, start_view, req)
+        resp = start_view(req)
+        # https://app.asana.com/0/inbox/227388348049228/248961928381934/248963770361765
+        assert resp.status_code == 200, 'Woring without organization now also is possible'
 
     def test_authenticated_with_country_and_survey_and_organization_and_category(self):
         # user = mixer.blend(User, is_anonymous=True)
@@ -88,7 +90,6 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         mixer.blend(Survey, active=True)
         organization = mixer.blend(Organization)
         mixer.blend(Organization)
-        hcp = mixer.blend(HCPCategory)
         mixer.blend(HCPCategory)
         resp = start_view(req)
         assert resp.status_code == 200, 'Now we a ready to start'
@@ -103,8 +104,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
                 'country': country.pk,
                 'region': region.pk,
                 'survey': survey.pk,
-                'organization': organization.pk,
-                'hcp': hcp.pk
+                'organization': organization.pk
             }
         )
         request.user = user
@@ -118,7 +118,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         assert survey_response.region_id == region.pk
         assert survey_response.survey_id == survey.pk
         assert survey_response.organization_id == organization.pk
-        assert survey_response.hcp_category_id == hcp.pk
+
 
 
 class TestSurveyPass(AssertHTMLMixin, TestCase):

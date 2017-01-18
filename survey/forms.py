@@ -1,5 +1,5 @@
 from django import forms
-from .models import Answer, Survey, Organization, HCPCategory
+from .models import Answer, Survey, Organization
 from .widgets import FancyRadioSelect
 
 
@@ -44,9 +44,3 @@ class StartForm(forms.Form):
         else:
             raise ValueError('There is no organizations yet, please add one')
 
-        hcps = HCPCategory.objects.all()
-        hcp_choices = [(hcp.pk, hcp.name) for hcp in hcps]
-        if len(hcp_choices):
-            self.fields["hcp"] = forms.ChoiceField(choices=hcp_choices, widget=FancyRadioSelect, label='Category of HCP')
-        else:
-            raise ValueError('There is no hcp categories yet, please add one')
