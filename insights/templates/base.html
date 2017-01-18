@@ -79,15 +79,17 @@
                     {% endif %}
                 {% endblock %}
 
+                <!-- content -->
                 {% block content %}{% endblock content %}
+                <!-- end content -->
                 <div id="footer-presser"></div>
 
             </div>
 
         </div>
         <div class="footer">
-
             <div class="container text-center">
+                {% block over_footer %}{% endblock %}
                 &copy; {% now "Y" %} Otsuka Pharmaceutical Europe Ltd.<br/>Developed by DeepSine in collaboration with BPI S.r.l.
             </div>
         </div>

@@ -241,6 +241,17 @@ div.bootstrap-tagsinput input{
   margin-top: 30px;
 }
 
-.spaced li{
+.spaced li {
   padding-bottom: 12px;
+}
+
+.information-tag {
+  position: absolute;
+  text-align: right;
+  top: -60px;
+  right: 0px;
+}
+
+.footer .container {
+  position: relative;
 }
