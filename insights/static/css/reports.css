@@ -34,7 +34,7 @@
 
 
 @media (max-width: 992px) {
-  .survey-cards > .row > * {
+  .survey-cards > .row > *, .question-3 > .row > * {
     margin-bottom: 20px;
   }
 }
@@ -120,9 +120,13 @@
 
 .report-table > tbody > tr > td {
   padding: 4px 8px;
+  vertical-align: middle;
   font-size: 14px;
   font-weight: 600;
   border: none;
+}
+
+.report-table > tbody > tr {
   border-bottom: 2px solid white;
 }
 
@@ -135,28 +139,28 @@
   padding-right: 30px;
 }
 
-.report-table > tbody > tr:last-child > td {
+.report-table > tbody > tr:last-child {
   border-bottom: none;
 }
 
-.report-table > tbody > tr.report-table-first-red > td {
+.report-table > tbody > tr.report-table-first-red {
   background-color: #b8103b;
   color: white;
 }
 
-.report-table > tbody > tr.report-table-second-red > td {
+.report-table > tbody > tr.report-table-second-red {
   background-color: #f28d9e;
 }
 
-.report-table > tbody > tr.report-table-third-red > td {
+.report-table > tbody > tr.report-table-third-red {
   background-color: #f9c6ce;
 }
 
-.report-table > tbody > tr.report-table-second-blue > td {
+.report-table > tbody > tr.report-table-second-blue {
   background-color: #0072bc;
 }
 
-.report-table > tbody > tr.report-table-third-blue > td {
+.report-table > tbody > tr.report-table-third-blue {
   background-color: #84bbdf;
 }
 
