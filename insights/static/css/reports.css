@@ -1,0 +1,55 @@
+.report {
+  color: #3d3d3d;
+}
+
+@media (min-width: 992px) {
+  .report {
+    margin-left: -185px;
+    margin-right: -185px;
+  }
+}
+
+.report-card {
+  background-color: white;
+  padding: 15px 20px;
+  box-shadow: 3px 3px 20px -4px rgba(110,110,110,1)
+}
+
+.report-card-red {
+  border-left: 5px solid #b8103b;
+}
+
+.report-card-blue {
+  border-left: 5px solid #328ec9;
+}
+
+.report-card-gray {
+  border-left: 5px solid #464646;
+}
+
+.report-card-head .head-delim {
+  height: 1px;
+  width: 20px;
+  background-color: #dedede;
+  margin: 12px 0 15px 0;
+}
+
+.report-card-head .title {
+  letter-spacing: 1px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.report-card .report-card-text-lg {
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.report-card .report-card-text {
+  font-size: 11px;
+  margin-top: 12px;
+  line-height: 1;
+}
