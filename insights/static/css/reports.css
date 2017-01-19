@@ -66,11 +66,16 @@
   border-left: 5px solid #464646;
 }
 
+.report-card-table {
+  border-top: 5px solid #b8103b;
+}
+
 .report-card-head {
   margin-bottom: 40px;
 }
 
 .report-card-head .head-delim {
+  display: inline-block;
   height: 1px;
   width: 20px;
   background-color: #dedede;
@@ -103,6 +108,56 @@
 
 .report-card .report-card-text-lesser {
   font-size: 12px;
+}
+
+.question-3 {
+  margin-top: 70px;
+}
+
+.report-card.report-card-table .report-card-head {
+  margin-bottom: 30px;
+}
+
+.report-table > tbody > tr > td {
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-bottom: 2px solid white;
+}
+
+.report-table > tbody > tr > td:first-child {
+  padding-left: 20px;
+}
+
+.report-table > tbody > tr > td:last-child {
+  text-align: right;
+  padding-right: 30px;
+}
+
+.report-table > tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+.report-table > tbody > tr.report-table-first-red > td {
+  background-color: #b8103b;
+  color: white;
+}
+
+.report-table > tbody > tr.report-table-second-red > td {
+  background-color: #f28d9e;
+}
+
+.report-table > tbody > tr.report-table-third-red > td {
+  background-color: #f9c6ce;
+}
+
+.report-table > tbody > tr.report-table-second-blue > td {
+  background-color: #0072bc;
+}
+
+.report-table > tbody > tr.report-table-third-blue > td {
+  background-color: #84bbdf;
 }
 
 .left-1 {
