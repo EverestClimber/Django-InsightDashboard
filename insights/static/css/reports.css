@@ -66,11 +66,15 @@
   border-left: 5px solid #464646;
 }
 
+.report-card-head {
+  margin-bottom: 40px;
+}
+
 .report-card-head .head-delim {
   height: 1px;
   width: 20px;
   background-color: #dedede;
-  margin: 15px 0 40px 0;
+  margin: 15px 0 0 0;
 }
 
 .report-card-head .title {
@@ -79,6 +83,10 @@
   font-weight: 600;
   font-size: 17px;
   line-height: 1;
+}
+
+.report-card-head .surveys-total {
+  margin-top: 13px;
 }
 
 .report-card .report-card-text-lg {
