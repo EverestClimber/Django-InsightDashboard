@@ -7,11 +7,43 @@
     margin-left: -185px;
     margin-right: -185px;
   }
+
+  .equal-heights {
+    display: flex;
+  }
+
+  .equal-heights > * {
+    display: flex;
+  }
+
+  .report-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .report-card .report-card-body {
+    margin-top: auto;
+  }
+}
+
+@media (max-width: 992px) {
+  .survey-cards > .row > *:not(:first-child) {
+    margin-top: 20px;
+  }
+}
+
+.survey-overview-title {
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 21px;
 }
 
 .report-card {
+  width: 100%;
   background-color: white;
-  padding: 15px 20px;
+  padding: 15px 20px 40px 20px;
   box-shadow: 3px 3px 20px -4px rgba(110,110,110,1)
 }
 
@@ -31,7 +63,7 @@
   height: 1px;
   width: 20px;
   background-color: #dedede;
-  margin: 12px 0 15px 0;
+  margin: 12px 0 40px 0;
 }
 
 .report-card-head .title {
@@ -49,7 +81,16 @@
 }
 
 .report-card .report-card-text {
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 12px;
   line-height: 1;
+}
+
+.report-card .report-card-text-lesser {
+  font-size: 12px;
+}
+
+.left-1 {
+  position: relative;
+  left: 1px;
 }
