@@ -2,14 +2,13 @@
   color: #3d3d3d;
 }
 
-@media (min-width: 992px) {
-  .report {
-    margin-left: -185px;
-    margin-right: -185px;
-  }
+@media (min-width: 768px) {
 
   .equal-heights {
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: stretch;
   }
 
   .equal-heights > * {
@@ -26,9 +25,17 @@
   }
 }
 
+@media (min-width: 992px) {
+  .report {
+    margin-left: -185px;
+    margin-right: -185px;
+  }
+}
+
+
 @media (max-width: 992px) {
-  .survey-cards > .row > *:not(:first-child) {
-    margin-top: 20px;
+  .survey-cards > .row > * {
+    margin-bottom: 20px;
   }
 }
 
