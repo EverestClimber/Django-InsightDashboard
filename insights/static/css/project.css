@@ -264,6 +264,12 @@ div.bootstrap-tagsinput input{
   }
 }
 
+@media (max-width: 768px) {
+  .top-navigation .navbar-collapse > .nav > li:first-child > a {
+    margin-left: 0;
+  }
+}
+
 .container.navbar-container {
   max-width: 970px;
 }
@@ -274,4 +280,8 @@ div.bootstrap-tagsinput input{
 
 .top-navigation .nav > li:first-child > a {
   margin-left: 15px;
+}
+
+.navbar-collapse.collapse.in .dropdown-menu {
+  position: static;
 }

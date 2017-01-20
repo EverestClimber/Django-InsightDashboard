@@ -57,11 +57,16 @@
                     <a href="{% url 'home' %}" class="brand"><img src="{% static 'img/logo2.png' %}" height="40"
                                                                   alt="Otsuka"></a>
                 </div>
-                <div id="navbar">
+                <div class="pull-right">
+                  <button type="button" class="btn btn-default navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <i class="fa fa-bars"></i>
+                  </button>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar">
 
                     {% if request.user.is_authenticated %}
-                        <ul class="nav navbar-top-links navbar-left pull-left">
-                          <li class="hidden-xs">
+                        <ul class="nav navbar-top-links navbar-left">
+                          <li class="">
                             <a href="/survey/instructions">{% trans "Instructions" %}</a>
                           </li>
                           <li class="dropdown">
@@ -107,7 +112,7 @@
                           </li>
                         </ul>
 
-                        <ul class="nav navbar-top-links navbar-right pull-right">
+                        <ul class="nav navbar-top-links navbar-right">
                           <li>
                                 <a href="{% url 'account_logout' %}">
                                     <i class="fa fa-sign-out"></i> {% trans "Log Out" %}
