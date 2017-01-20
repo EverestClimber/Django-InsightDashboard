@@ -15,10 +15,6 @@
   max-width: 600px;
 }
 
-.container.navbar-container {
-  max-width: 970px;
-}
-
 .fancy-select {
   border: none;
 }
@@ -260,8 +256,20 @@ div.bootstrap-tagsinput input{
   position: relative;
 }
 
-/* ---------- Reports dropdown -----------*/
+/* ---------- Navbar -----------*/
 
 .dropdown-menu.reports-dropdown {
   padding-top: 10px;
+}
+
+.container.navbar-container {
+  max-width: 970px;
+}
+
+.top-navigation .nav > li > a {
+  padding: 15px;
+}
+
+.top-navigation .nav > li:first-child > a {
+  margin-left: 15px;
 }

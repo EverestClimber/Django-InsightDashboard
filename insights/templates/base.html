@@ -57,8 +57,12 @@
                                                                   alt="Otsuka"></a>
                 </div>
                 <div id="navbar">
+
                     {% if request.user.is_authenticated %}
-                        <ul class="nav navbar-top-links navbar-right pull-right">
+                        <ul class="nav navbar-top-links navbar-right pull-left">
+                          <li>
+                            <a href="/survey/instructions">{% trans "Instructions" %}</a>
+                          </li>
                           <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Reports <span class="caret"></span></a>
                             <ul class="dropdown-menu reports-dropdown">
@@ -91,6 +95,9 @@
                               </li>
                             </ul>
                           </li>
+                        </ul>
+
+                        <ul class="nav navbar-top-links navbar-right pull-right">
                           <li>
                                 <a href="{% url 'account_logout' %}">
                                     <i class="fa fa-sign-out"></i> {% trans "Log Out" %}
