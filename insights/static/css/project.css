@@ -259,3 +259,9 @@ div.bootstrap-tagsinput input{
 .footer .container {
   position: relative;
 }
+
+/* ---------- Reports dropdown -----------*/
+
+.dropdown-menu.reports-dropdown {
+  padding-top: 10px;
+}

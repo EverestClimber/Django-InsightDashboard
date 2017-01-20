@@ -59,7 +59,39 @@
                 <div id="navbar">
                     {% if request.user.is_authenticated %}
                         <ul class="nav navbar-top-links navbar-right pull-right">
-                            <li>
+                          <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Reports <span class="caret"></span></a>
+                            <ul class="dropdown-menu reports-dropdown">
+                              <li class="dropdown-header">Basic</li>
+                              <li>
+                                <a href="/reports/basic">Europe</a>
+                              </li>
+                              <li>
+                                <a href="/reports/basic">Spain</a>
+                              </li>
+                              <li>
+                                <a href="/reports/basic">Italy</a>
+                              </li>
+                              <li>
+                                <a href="/reports/basic">France</a>
+                              </li>
+                              <li role="separator" class="divider"></li>
+                              <li class="dropdown-header">Advanced</li>
+                              <li>
+                                <a href="/reports/advanced">Europe</a>
+                              </li>
+                              <li>
+                                <a href="/reports/advanced">Spain</a>
+                              </li>
+                              <li>
+                                <a href="/reports/advanced">Italy</a>
+                              </li>
+                              <li>
+                                <a href="/reports/advanced">France</a>
+                              </li>
+                            </ul>
+                          </li>
+                          <li>
                                 <a href="{% url 'account_logout' %}">
                                     <i class="fa fa-sign-out"></i> {% trans "Log Out" %}
                                 </a>
