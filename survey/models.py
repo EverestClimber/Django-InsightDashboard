@@ -145,6 +145,7 @@ class Answer(models.Model):
     survey = models.ForeignKey(Survey)
     data = jsonfield.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_updated = models.BooleanField(db_index=True, default=False)
 
     def __str__(self):
         return "%s - %s Response" % (self.pk, self.created_at)

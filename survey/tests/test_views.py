@@ -1,4 +1,3 @@
-from unittest.mock import MagicMock
 from mixer.backend.django import mixer
 from with_asserts.mixin import AssertHTMLMixin
 import pytest
