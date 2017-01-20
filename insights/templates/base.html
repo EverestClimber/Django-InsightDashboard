@@ -60,8 +60,8 @@
                 <div id="navbar">
 
                     {% if request.user.is_authenticated %}
-                        <ul class="nav navbar-top-links navbar-left">
-                          <li>
+                        <ul class="nav navbar-top-links navbar-left pull-left">
+                          <li class="hidden-xs">
                             <a href="/survey/instructions">{% trans "Instructions" %}</a>
                           </li>
                           <li class="dropdown">
