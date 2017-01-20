@@ -24,6 +24,7 @@
         {% block css %}
 
             <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+            <link href="{% static 'css/plugins/bootstrap-submenu.css' %}" rel="stylesheet">
             <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
 
             <link href="{% static 'css/animate.css' %}" rel="stylesheet">
@@ -59,39 +60,48 @@
                 <div id="navbar">
 
                     {% if request.user.is_authenticated %}
-                        <ul class="nav navbar-top-links navbar-right pull-left">
+                        <ul class="nav navbar-top-links navbar-left">
                           <li>
                             <a href="/survey/instructions">{% trans "Instructions" %}</a>
                           </li>
                           <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Reports <span class="caret"></span></a>
                             <ul class="dropdown-menu reports-dropdown">
-                              <li class="dropdown-header">Basic</li>
-                              <li>
-                                <a href="/reports/basic">Europe</a>
+                              <li class="dropdown-submenu" data-submenu>
+                                <a href="#">Basic</a>
+
+                                <ul class="dropdown-menu">
+                                  <li>
+                                    <a href="/reports/basic">Europe</a>
+                                  </li>
+                                  <li>
+                                    <a href="/reports/basic">Spain</a>
+                                  </li>
+                                  <li>
+                                    <a href="/reports/basic">Italy</a>
+                                  </li>
+                                  <li>
+                                    <a href="/reports/basic">France</a>
+                                  </li>
+                                </ul>
                               </li>
-                              <li>
-                                <a href="/reports/basic">Spain</a>
-                              </li>
-                              <li>
-                                <a href="/reports/basic">Italy</a>
-                              </li>
-                              <li>
-                                <a href="/reports/basic">France</a>
-                              </li>
-                              <li role="separator" class="divider"></li>
-                              <li class="dropdown-header">Advanced</li>
-                              <li>
-                                <a href="/reports/advanced">Europe</a>
-                              </li>
-                              <li>
-                                <a href="/reports/advanced">Spain</a>
-                              </li>
-                              <li>
-                                <a href="/reports/advanced">Italy</a>
-                              </li>
-                              <li>
-                                <a href="/reports/advanced">France</a>
+                              <li class="dropdown-submenu" data-submenu>
+                                <a href="#">Advanced</a>
+
+                                <ul class="dropdown-menu">
+                                  <li>
+                                    <a href="/reports/advanced">Europe</a>
+                                  </li>
+                                  <li>
+                                    <a href="/reports/advanced">Spain</a>
+                                  </li>
+                                  <li>
+                                    <a href="/reports/advanced">Italy</a>
+                                  </li>
+                                  <li>
+                                    <a href="/reports/advanced">France</a>
+                                  </li>
+                                </ul>
                               </li>
                             </ul>
                           </li>

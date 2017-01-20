@@ -258,8 +258,10 @@ div.bootstrap-tagsinput input{
 
 /* ---------- Navbar -----------*/
 
-.dropdown-menu.reports-dropdown {
-  padding-top: 10px;
+@media (min-width: 768px) {
+  .dropdown-submenu > a:after {
+    margin-top: 9px;
+  }
 }
 
 .container.navbar-container {
