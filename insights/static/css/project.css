@@ -264,9 +264,23 @@ div.bootstrap-tagsinput input{
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .top-navigation .navbar-collapse > .nav > li:first-child > a {
     margin-left: 0;
+  }
+  .navbar-collapse.collapse {
+    display: none;
+  }
+  .reports-dropdown {
+    position: static;
+    box-shadow: none;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 350px) {
+  .nav.navbar-top-links li.dropdown {
+    display: block;
   }
 }
 
@@ -282,6 +296,21 @@ div.bootstrap-tagsinput input{
   margin-left: 15px;
 }
 
-.navbar-collapse.collapse.in .dropdown-menu {
-  position: static;
+.collapse {
+  transition: none;
+}
+
+.navbar-collapse.collapse.in{
+  position: absolute;
+  top: 43px;
+  right: 15px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 200px;
+  transition: none;
+  background-color: white;
+  box-shadow: 3px 3px 20px -4px rgba(110,110,110,1);
 }
