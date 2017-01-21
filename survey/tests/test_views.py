@@ -154,7 +154,7 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
         self.response_302(resp)
         assert resp.url == reverse('survey:thanks')
         answer.refresh_from_db()
-        assert answer.data
+        assert answer.body
 
 
 class TestSurveyDefinition(AssertHTMLMixin, TestCase):
@@ -184,7 +184,6 @@ class TestSurveyDefinition(AssertHTMLMixin, TestCase):
         request.COOKIES[InstructionsView.cookie_name] = True
         response = definition_view(request)
         self.response_200(response)
-        print (response.content)
         with self.assertHTML(response, 'a.btn'):
             pass
 
