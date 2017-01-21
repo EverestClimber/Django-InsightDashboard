@@ -1,6 +1,6 @@
 from django.db import models
 from insights.users.models import User, Country
-import jsonfield
+
 
 
 class Region(models.Model):
@@ -143,7 +143,7 @@ class Answer(models.Model):
     organization = models.ForeignKey(Organization)
     hcp_category = models.ForeignKey(HCPCategory, null=True, blank=True)
     survey = models.ForeignKey(Survey)
-    data = jsonfield.JSONField()
+    body = models.TextField(default='')
     created_at = models.DateTimeField(auto_now_add=True)
     is_updated = models.BooleanField(db_index=True, default=False)
 
