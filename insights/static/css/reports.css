@@ -34,7 +34,7 @@
 
 
 @media (max-width: 992px) {
-  .survey-cards > .row > *, .question-3 > .row > *, .question-1 > .row > *  {
+  .survey-cards > .row > *, .question-3 > .row > *, .question-2 > .row > *,  .question-1 > .row > *  {
     margin-bottom: 20px;
   }
 }
@@ -114,7 +114,7 @@
   font-size: 12px;
 }
 
-.question-3, .question-1 {
+.question-3, .question-1, .question-2 {
   margin-top: 70px;
 }
 
@@ -184,7 +184,7 @@
 }
 
 .q1-pie-card .pie-info {
-  margin-top: 45px;
+  margin-top: 60px;
 }
 
 @media (max-width: 768px) {
@@ -193,6 +193,24 @@
     margin-bottom: 25px;
     text-align: center;
   }
+}
+
+.q2-pie-answers {
+  display: flex;
+  justify-content: space-around;
+}
+
+.q2-pie-answer {
+  text-align: center;
+  padding: 0 15px;
+}
+
+.q2-pie-answer:last-child {
+  padding-right: 45px;
+}
+
+.q2-pie-answer .answer {
+  font-size: 20px;
 }
 
 .pie-legend {
