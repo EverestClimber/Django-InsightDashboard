@@ -1,4 +1,3 @@
-from unittest.mock import MagicMock
 from mixer.backend.django import mixer
 from with_asserts.mixin import AssertHTMLMixin
 import pytest
@@ -120,7 +119,6 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         assert survey_response.organization_id == organization.pk
 
 
-
 class TestSurveyPass(AssertHTMLMixin, TestCase):
     fixtures = ['survey.json']
 
@@ -154,7 +152,7 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
         self.response_302(resp)
         assert resp.url == reverse('survey:thanks')
         answer.refresh_from_db()
-        assert answer.data
+        assert answer.body
 
 
 class TestSurveyDefinition(AssertHTMLMixin, TestCase):
@@ -184,7 +182,6 @@ class TestSurveyDefinition(AssertHTMLMixin, TestCase):
         request.COOKIES[InstructionsView.cookie_name] = True
         response = definition_view(request)
         self.response_200(response)
-        print (response.content)
         with self.assertHTML(response, 'a.btn'):
             pass
 

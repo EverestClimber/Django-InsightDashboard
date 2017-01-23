@@ -61,14 +61,14 @@ def start_view(request):
 @login_required
 def pass_view(request, id):
     answer = Answer.objects.select_related('survey').get(pk=id)
-    if answer.data:
+    if answer.body:
         return HttpResponseRedirect(reverse('survey:start'))
 
     if answer.user_id != request.user.pk:
         return HttpResponseRedirect(reverse('survey:start'))
 
     if request.method == 'POST':
-        answer.data = dict(request.POST)
+        answer.body = request.POST.urlencode()
         answer.save()
         return HttpResponseRedirect(reverse('survey:thanks'))
 
