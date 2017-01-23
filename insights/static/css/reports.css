@@ -175,6 +175,26 @@
 
 /* Pie chart */
 
+.report-card.chart-card .pie-percentage {
+  color: #b8103b;
+}
+
+.report-card.chart-card .report-card-text {
+  line-height: initial;
+}
+
+.q1-pie-card .pie-info {
+  margin-top: 45px;
+}
+
+@media (max-width: 768px) {
+  .q1-pie-card .pie-info {
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+}
+
 .pie-legend {
   margin-top: 35px;
 }

@@ -1,4 +1,5 @@
 (function () {
+
   function drawQ1Pie() {
     var q1PieData = {
       labels: [
@@ -18,6 +19,11 @@
           ]
         }]
     };
+
+    var total = q1PieData.datasets[0].data.reduce(function(a,b) {return a + b});
+    var percentage = Math.round(q1PieData.datasets[0].data[1]/total*100);
+
+    $('#q1Percentage').html(percentage + '%');
     drawPie(q1PieData, '#q1Pie', '#q1PieLegend')
   }
 
@@ -34,7 +40,7 @@
         }
       }
     });
-    pieLegend.html(q1Pie.generateLegend());
+    pieLegend.html(pie.generateLegend());
   }
 
   $(document).ready(function() {
