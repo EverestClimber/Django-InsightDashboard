@@ -39,6 +39,24 @@
         {% endblock %}
     {% endcompress %}
 
+    {% compress js %}
+        {% block javascript %}
+            <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
+            <script src="{% static 'js/bootstrap.min.js' %}"></script>
+            <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+            <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+            <!-- Custom and plugin javascript -->
+            <script src="{% static 'js/inspinia.js' %}"></script>
+            <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+            <script src="{% static 'js/plugins/Chart.min.js' %}"></script>
+            <script src="{% static 'js/chartjs-config.js' %}"></script>
+            <script src="{% static 'js/project.js' %}"></script>
+
+
+        {% endblock javascript %}
+    {% endcompress %}
+
 
 </head>
 
@@ -160,24 +178,6 @@
 
 {% block modal %}{% endblock modal %}
 
-{% compress js %}
-    {% block javascript %}
-        <script src="{% static 'js/jquery-2.1.1.js' %}"></script>
-        <script src="{% static 'js/bootstrap.min.js' %}"></script>
-        <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
-        <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
-
-        <!-- Custom and plugin javascript -->
-        <script src="{% static 'js/inspinia.js' %}"></script>
-        <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
-        <script src="{% static 'js/plugins/Chart.min.js' %}"></script>
-        <script src="{% static 'js/chartjs-config.js' %}"></script>
-        <script src="{% static 'js/reports-basic.js' %}"></script>
-        <script src="{% static 'js/project.js' %}"></script>
-
-
-    {% endblock javascript %}
-{% endcompress %}
 <script>
     $(document).ready(function () {
         {% block inlinescript %}{% endblock inlinescript %}
