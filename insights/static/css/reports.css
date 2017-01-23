@@ -54,6 +54,10 @@
   box-shadow: 3px 3px 20px -4px rgba(110,110,110,1)
 }
 
+.report-card.chart-card {
+  padding-bottom: 30px;
+}
+
 .report-card-red {
   border-left: 5px solid #b8103b;
 }
@@ -167,4 +171,29 @@
 .left-1 {
   position: relative;
   left: 1px;
+}
+
+/* Pie chart */
+
+.pie-legend {
+  margin-top: 35px;
+}
+
+.pie-legend ul {
+  list-style: none;
+}
+
+.pie-legend ul {
+  list-style: none;
+  text-align: right;
+}
+
+.pie-legend ul li span {
+  display: inline-block;
+  float: right;
+  position: relative;
+  top: 3px;
+  height: 13px;
+  width: 13px;
+  margin-left: 10px;
 }

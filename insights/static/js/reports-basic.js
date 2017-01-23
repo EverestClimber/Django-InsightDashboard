@@ -10,8 +10,8 @@
           meta.data.forEach(function(element, index) {
             // Draw the text with the specified font
             ctx.fillStyle = 'rgb(255, 255, 255)';
-            var fontSize = 16;
-            var fontStyle = 'normal';
+            var fontSize = 14;
+            var fontStyle = 'bold';
             var fontFamily = 'open sans';
             var fontColor = 'white';
             ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily, fontColor);
@@ -48,8 +48,14 @@
       }]
   };
   var q1PieCtx = $("#q1Pie").get(0).getContext("2d");
+  var q1PieLegend = $('#q1PieLegend');
   var q1Pie = new Chart(q1PieCtx,{
     type: 'pie',
-    data: q1PieData
+    data: q1PieData,
+    options: {
+      legend: false,
+      showTooltips: true
+    }
   });
+  q1PieLegend.html(q1Pie.generateLegend());
 })();
