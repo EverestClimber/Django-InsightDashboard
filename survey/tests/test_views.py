@@ -119,7 +119,6 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         assert survey_response.organization_id == organization.pk
 
 
-
 class TestSurveyPass(AssertHTMLMixin, TestCase):
     fixtures = ['survey.json']
 

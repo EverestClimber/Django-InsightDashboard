@@ -1,11 +1,13 @@
+from datetime import datetime
 from mixer.backend.django import mixer
 import pytest
 from unittest.mock import patch
 
 from django.test import TestCase
+from django.utils import timezone
 
-from survey.models import Answer, Option
-from insights.users.models import User
+from survey.models import Answer, Option, Survey, Organization
+from insights.users.models import User, Country
 
 from ..models import TotalEvaluator, LastEvaluator, SurveyStat, OrganizationStat
 
@@ -15,6 +17,10 @@ pytestmark = pytest.mark.django_db
 class TestTotalEvaluator(TestCase):
     evaluator = TotalEvaluator
     # fixtures = ['survey.json']
+
+    def setUp(self):
+        self.evaluator.survey_stat = {}
+        self.evaluator.organization_stat = {}
 
     def test_get_answers(self):
         mixer.blend(Answer, is_updated=True)
@@ -34,13 +40,19 @@ class TestTotalEvaluator(TestCase):
         assert OrganizationStat.objects.all().count() == 0, 'Cleared'
 
     def test_load_stat(self):
-        mixer.blend(SurveyStat, survey_id=1, country_id=None)
-        mixer.blend(SurveyStat, survey_id=1, country_id=1)
-        mixer.blend(SurveyStat, survey_id=2, country_id=1)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=None, organization_id=1)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=1, organization_id=1)
-        mixer.blend(OrganizationStat, survey_id=2, country_id=1, organization_id=1)
-        mixer.blend(OrganizationStat, survey_id=2, country_id=1, organization_id=2)
+        s1 = mixer.blend(Survey)
+        s2 = mixer.blend(Survey)
+        c1 = mixer.blend(Country)
+        c2 = mixer.blend(Country)
+        o1 = mixer.blend(Organization)
+        o2 = mixer.blend(Organization)
+        mixer.blend(SurveyStat, survey=s1, country=None)
+        mixer.blend(SurveyStat, survey=s1, country=c1)
+        mixer.blend(SurveyStat, survey=s2, country=c1)
+        mixer.blend(OrganizationStat, survey=s1, country_id=None, organization=o1)
+        mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
+        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o1)
+        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o2)
         self.evaluator.load_stat()
         assert len(self.evaluator.survey_stat) == 3
         assert len(self.evaluator.organization_stat) == 4
@@ -49,13 +61,19 @@ class TestTotalEvaluator(TestCase):
     @patch('reports.models.AbstractEvaluator.load_stat')
     @patch('reports.models.AbstractEvaluator.update_stat')
     def test_process_answers(self, update_stat, load_stat, process_answer):
-        mixer.blend(SurveyStat, survey_id=1, country_id=None)
-        mixer.blend(SurveyStat, survey_id=1, country_id=1)
-        mixer.blend(SurveyStat, survey_id=2, country_id=1)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=None, organization_id=1)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=1, organization_id=1)
-        mixer.blend(OrganizationStat, survey_id=2, country_id=1, organization_id=1)
-        mixer.blend(OrganizationStat, survey_id=2, country_id=1, organization_id=2)
+        s1 = mixer.blend(Survey)
+        s2 = mixer.blend(Survey)
+        c1 = mixer.blend(Country)
+        c2 = mixer.blend(Country)
+        o1 = mixer.blend(Organization)
+        o2 = mixer.blend(Organization)
+        mixer.blend(SurveyStat, survey=s1, country=None)
+        mixer.blend(SurveyStat, survey=s1, country=c1)
+        mixer.blend(SurveyStat, survey=s2, country=c1)
+        mixer.blend(OrganizationStat, survey=s1, country=None, organization=o1)
+        mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
+        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o1)
+        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o2)
         mixer.blend(Answer, is_updated=False)
         mixer.blend(Answer, is_updated=False)
         self.evaluator.process_answers()
@@ -65,25 +83,54 @@ class TestTotalEvaluator(TestCase):
 
     @patch('reports.models.AbstractEvaluator.update_survey_stat')
     @patch('reports.models.AbstractEvaluator.update_organization_stat')
-    def test_process_answer(self, organization_stat, survey_stat):
+    def test_process_answer_with_empty_data(self, organization_stat, survey_stat):
         user = mixer.blend(User, country_id=1)
 
-        answer = mixer.blend(Answer, survey_id=1, organization_id=2, user=user, body='')
+        answer = mixer.blend(Answer, user=user, body='')
         self.evaluator.process_answer(answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 
-        answer = mixer.blend(Answer, survey_id=1, organization_id=2, body='111')
+        answer = mixer.blend(Answer, body='111')
         self.evaluator.process_answer(answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 
-        answer = mixer.blend(Answer, survey_id=1, organization_id=2, user=user, body='a=1')
+        answer = mixer.blend(Answer, user=user, body='a=1')
         self.evaluator.process_answer(answer)
-        assert organization_stat.call_count == 1
-        assert survey_stat.call_count == 1
+        survey_stat.assert_called_once_with((answer.survey_id, user.country_id), answer)
+        organization_stat.assert_called_once_with((answer.survey_id, user.country_id, answer.organization_id))
 
+    def test_process_answer(self):
+        d1 = timezone.make_aware(datetime(2017, 1, 1))
+        d2 = timezone.make_aware(datetime(2017, 1, 2))
+        mixer.blend(SurveyStat, survey_id=1, country_id=None, total=2, last=d1)
+        mixer.blend(SurveyStat, survey_id=1, country_id=1, total=2, last=d1)
+        mixer.blend(OrganizationStat, survey_id=1, country_id=None, organization_id=1, total=2)
+        mixer.blend(OrganizationStat, survey_id=1, country_id=1, organization_id=1, total=2)
 
+        self.evaluator.load_stat()
+
+    def test_update_survey_stat(self):
+        d1 = timezone.make_aware(datetime(2017, 1, 1))
+        d2 = timezone.make_aware(datetime(2017, 1, 2))
+        a1 = mixer.blend(Answer)
+        a1.created_at = d1
+        a2 = mixer.blend(Answer)
+        a2.created_at = d2
+        self.evaluator.update_survey_stat((1, 2), a1)
+        self.evaluator.update_survey_stat((1, 2), a2)
+        assert self.evaluator.survey_stat[(1, 2)].total == 2
+        assert self.evaluator.survey_stat[(1, 2)].last == d2
+        assert self.evaluator.survey_stat[(1, None)].total == 2
+        assert self.evaluator.survey_stat[(1, None)].last == d2
+
+    def test_update_organization_stat(self):
+        self.evaluator.update_organization_stat((1, 2, 3))
+        self.evaluator.update_organization_stat((1, 2, 3))
+        self.evaluator.update_organization_stat((1, 2, 4))
+        self.evaluator.update_organization_stat((1, 2, 4))
+        assert self.evaluator.organization_stat[(1, 2, 3)].total == 2
 
 
 class TestLastEvaluator(object):

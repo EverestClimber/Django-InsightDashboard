@@ -52,7 +52,7 @@ class AbstractEvaluator(object):
     def update_survey_stat(cls, surv_key, answer):
         survey_id, country_id = surv_key
         if surv_key not in cls.survey_stat:
-            cls.survey_stat[surv_key] = SurveyStat(survey_id=survey_id, country_id=country_id)
+            cls.survey_stat[surv_key] = SurveyStat(survey_id=survey_id, country_id=country_id, last=answer.created_at)
         cls.survey_stat[surv_key].total += 1
         cls.survey_stat[surv_key].last = max(cls.survey_stat[surv_key].last, answer.created_at)
 
@@ -72,9 +72,9 @@ class AbstractEvaluator(object):
 
         org_key_all = (survey_id, None, organization_id)
         if org_key_all not in cls.organization_stat:
-            cls.organization_stat[org_key] = OrganizationStat(
+            cls.organization_stat[org_key_all] = OrganizationStat(
                 survey_id=survey_id, country_id=None, organization_id=organization_id)
-        cls.organization_stat[org_key].total += 1
+        cls.organization_stat[org_key_all].total += 1
 
     @classmethod
     def process_answer(cls, answer):
@@ -85,7 +85,6 @@ class AbstractEvaluator(object):
             data = queryparser.parse(answer.body)
         except queryparser.MalformedQueryStringError:
             return
-
 
         survey_id = answer.survey_id
         country_id = answer.user.country_id
