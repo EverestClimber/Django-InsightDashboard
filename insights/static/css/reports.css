@@ -197,3 +197,30 @@
   width: 13px;
   margin-left: 10px;
 }
+
+#chartjs-tooltip {
+  opacity: 1;
+  position: absolute;
+  z-index: 1000;
+  background: rgba(0, 0, 0, .7);
+  color: white;
+  border-radius: 3px;
+  -webkit-transition: all .1s ease;
+  transition: all .1s ease;
+  pointer-events: none;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+}
+
+#chartjs-tooltip:before {
+  content: '';
+  height: 0;
+  width: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid rgba(0, 0, 0, .7);
+  position: absolute;
+  top: -5px;
+  left: calc(50% - 2.5px)
+}
+
