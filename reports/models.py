@@ -80,13 +80,19 @@ class AbstractEvaluator(object):
         if surv_key not in cls.survey_stat:
             cls.survey_stat[surv_key] = SurveyStat(survey_id=survey_id, country_id=country_id, last=answer.created_at)
         cls.survey_stat[surv_key].total += 1
-        cls.survey_stat[surv_key].last = max(cls.survey_stat[surv_key].last, answer.created_at)
+        if cls.survey_stat[surv_key].last:
+            cls.survey_stat[surv_key].last = max(cls.survey_stat[surv_key].last, answer.created_at)
+        else:
+            cls.survey_stat[surv_key].last = answer.created_at
 
         surv_key_all = (survey_id, None)
         if surv_key_all not in cls.survey_stat:
             cls.survey_stat[surv_key_all] = SurveyStat(survey_id=survey_id, country_id=None)
         cls.survey_stat[surv_key_all].total += 1
-        cls.survey_stat[surv_key_all].last = max(cls.survey_stat[surv_key].last, answer.created_at)
+        if cls.survey_stat[surv_key_all].last:
+            cls.survey_stat[surv_key_all].last = max(cls.survey_stat[surv_key].last, answer.created_at)
+        else:
+            cls.survey_stat[surv_key_all].last = answer.created_at
 
     @classmethod
     def update_organization_stat(cls, org_key):
