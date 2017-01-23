@@ -49,80 +49,83 @@
     <div id="page-wrapper" class="gray-bg">
         <div class="row border-bottom white-bg">
             <div class="container navbar-container">
-            <nav class="navbar navbar-static-top" role="navigation">
-                <div class="pull-left">
-                    {#                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">#}
-                    {#                    <i class="fa fa-reorder"></i>#}
-                    {#                </button>#}
-                    <a href="{% url 'home' %}" class="brand"><img src="{% static 'img/logo2.png' %}" height="40"
-                                                                  alt="Otsuka"></a>
-                </div>
-                <div class="pull-right">
-                  <button type="button" class="btn btn-default navbar-toggle" data-toggle="collapse" data-target="#navbar" id="navbarToggle">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar">
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <div class="pull-left">
+                        {#                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">#}
+                        {#                    <i class="fa fa-reorder"></i>#}
+                        {#                </button>#}
+                        <a href="{% url 'home' %}" class="brand"><img src="{% static 'img/logo2.png' %}" height="40"
+                                                                      alt="Otsuka"></a>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default navbar-toggle" data-toggle="collapse"
+                                data-target="#navbar" id="navbarToggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbar">
 
-                    {% if request.user.is_authenticated %}
-                        <ul class="nav navbar-top-links navbar-left">
-                          <li class="">
-                            <a href="/survey/instructions">{% trans "Instructions" %}</a>
-                          </li>
-                          <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Reports <span class="caret"></span></a>
-                            <ul class="dropdown-menu reports-dropdown ">
-                              <li class="dropdown-submenu" data-submenu>
-                                <a href="#">Basic</a>
+                        {% if request.user.is_authenticated %}
+                            <ul class="nav navbar-top-links navbar-left">
+                                <li class="">
+                                    <a href="/survey/instructions">{% trans "Instructions" %}</a>
+                                </li>
+                                {% if request.user.is_staff %}
+                                    {% load get_countries from user_tags %}{% get_countries as countries %}
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                           aria-haspopup="true"
+                                           aria-expanded="true">Reports <span class="caret"></span></a>
+                                        <ul class="dropdown-menu reports-dropdown ">
+                                            <li class="dropdown-submenu" data-submenu>
+                                                <a href="#">Basic</a>
 
-                                <ul class="dropdown-menu">
-                                  <li>
-                                    <a href="/reports/basic">Europe</a>
-                                  </li>
-                                  <li>
-                                    <a href="/reports/basic">Spain</a>
-                                  </li>
-                                  <li>
-                                    <a href="/reports/basic">Italy</a>
-                                  </li>
-                                  <li>
-                                    <a href="/reports/basic">France</a>
-                                  </li>
-                                </ul>
-                              </li>
-                              <li class="dropdown-submenu" data-submenu>
-                                <a href="#">Advanced</a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="{% url 'reports:basic' %}">Europe</a>
+                                                    </li>
+                                                    {% for country in countries %}
+                                                    <li>
+                                                        <a href="{% url 'reports:basic_country' country=country.pk %}">
+                                                            {{ country.name }}
+                                                        </a>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown-submenu" data-submenu>
+                                                <a href="#">Advanced</a>
 
-                                <ul class="dropdown-menu">
-                                  <li>
-                                    <a href="/reports/advanced">Europe</a>
-                                  </li>
-                                  <li>
-                                    <a href="/reports/advanced">Spain</a>
-                                  </li>
-                                  <li>
-                                    <a href="/reports/advanced">Italy</a>
-                                  </li>
-                                  <li>
-                                    <a href="/reports/advanced">France</a>
-                                  </li>
-                                </ul>
-                              </li>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="{% url 'reports:advanced' %}">Europe</a>
+                                                    </li>
+                                                    {% for country in countries %}
+                                                    <li>
+                                                        <a href="{% url 'reports:advanced_country' country=country.pk %}">
+                                                            {{ country.name }}
+                                                        </a>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                {% endif %}
+
                             </ul>
-                          </li>
-                        </ul>
 
-                        <ul class="nav navbar-top-links navbar-right">
-                          <li>
-                                <a href="{% url 'account_logout' %}">
-                                    <i class="fa fa-sign-out"></i> {% trans "Log Out" %}
-                                </a>
-                            </li>
-                        </ul>
-                    {% endif %}
+                            <ul class="nav navbar-top-links navbar-right">
+                                <li>
+                                    <a href="{% url 'account_logout' %}">
+                                        <i class="fa fa-sign-out"></i> {% trans "Log Out" %}
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
 
-                </div>
-            </nav>
+                    </div>
+                </nav>
             </div>
         </div>
         <div class="wrapper wrapper-content">
@@ -146,7 +149,8 @@
         <div class="footer">
             <div class="container text-center">
                 {% block over_footer %}{% endblock %}
-                &copy; {% now "Y" %} Otsuka Pharmaceutical Europe Ltd.<br/>Developed by DeepSine in collaboration with BPI S.r.l.
+                &copy; {% now "Y" %} Otsuka Pharmaceutical Europe Ltd.<br/>Developed by DeepSine in collaboration with
+                BPI S.r.l.
             </div>
         </div>
 
