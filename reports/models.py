@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 from querystring_parser import parser as queryparser
 
 from survey.models import Country, Survey, Organization, Answer
@@ -22,6 +23,7 @@ class SurveyStat(Stat):
 
 class OrganizationStat(Stat):
     organization = models.ForeignKey(Organization, null=True)
+    report_order = models.PositiveIntegerField('Order in reports', default=1, blank=True)
 
 
 class AbstractEvaluator(object):
@@ -47,6 +49,30 @@ class AbstractEvaluator(object):
         orgs = OrganizationStat.objects.all()
         for org in orgs:
             cls.organization_stat[(org.survey_id, org.country_id, org.organization_id)] = org
+
+    @classmethod
+    def fill_out(cls):
+        countries = list(Country.objects.all())
+        countries.append(None)
+        organizations = list(Organization.objects.all())
+        for surv in Survey.objects.filter(active=True):
+            for country in countries:
+                if country is None:
+                    country_id = country
+                else:
+                    country_id = country.pk
+                surv_key = (surv.pk, country_id)
+
+                if surv_key not in cls.survey_stat:
+                    cls.survey_stat[surv_key] = SurveyStat(survey=surv, country=country)
+                for org in organizations:
+                    org_key = (surv.pk, country_id, org.pk)
+                    if org_key not in cls.organization_stat:
+                        cls.organization_stat[org_key] = OrganizationStat(
+                            survey=surv, country=country, organization=org, report_order=org.report_order)
+                    else:
+                        if cls.organization_stat[org_key].report_order != org.report_order:
+                            cls.organization_stat[org_key].report_order = org.report_order
 
     @classmethod
     def update_survey_stat(cls, surv_key, answer):
@@ -108,10 +134,14 @@ class AbstractEvaluator(object):
             org_stat.save()
 
 
+
+
+
     @classmethod
     def process_answers(cls):
         cls.clear()
         cls.load_stat()
+        cls.fill_out()
         answers = cls.get_answers()
         for answer in answers:
             cls.process_answer(answer)

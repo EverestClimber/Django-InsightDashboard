@@ -15,6 +15,7 @@ class Region(models.Model):
 class Organization(models.Model):
     name = models.CharField('Organization name', max_length=100)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
+    report_order = models.PositiveIntegerField('Order in reports', default=1, blank=True)
 
     def __str__(self):
         return self.name

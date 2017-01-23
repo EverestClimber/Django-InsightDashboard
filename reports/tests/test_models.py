@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 from django.test import TestCase
 from django.utils import timezone
 
-from survey.models import Answer, Option, Survey, Organization
+from survey.models import Answer, Survey, Organization
 from insights.users.models import User, Country
 
 from ..models import TotalEvaluator, LastEvaluator, SurveyStat, OrganizationStat
@@ -57,10 +57,29 @@ class TestTotalEvaluator(TestCase):
         assert len(self.evaluator.survey_stat) == 3
         assert len(self.evaluator.organization_stat) == 4
 
+    def test_fill_out(self):
+        s1 = mixer.blend(Survey, active=True)
+        c1 = mixer.blend(Country)
+        c2 = mixer.blend(Country)
+        o1 = mixer.blend(Organization)
+        o2 = mixer.blend(Organization)
+        mixer.blend(SurveyStat, survey=s1, country=None)
+        mixer.blend(SurveyStat, survey=s1, country=c1)
+        mixer.blend(OrganizationStat, survey=s1, country_id=None, organization=o1)
+        mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
+        self.evaluator.load_stat()
+        assert len(self.evaluator.survey_stat) == 2
+        assert len(self.evaluator.organization_stat) == 2
+        self.evaluator.fill_out()
+        assert len(self.evaluator.survey_stat) == 3
+        assert len(self.evaluator.organization_stat) == 6
+
+
     @patch('reports.models.AbstractEvaluator.process_answer')
     @patch('reports.models.AbstractEvaluator.load_stat')
+    @patch('reports.models.AbstractEvaluator.fill_out')
     @patch('reports.models.AbstractEvaluator.save')
-    def test_process_answers(self, save, load_stat, process_answer):
+    def test_process_answers(self, save, fill_out, load_stat, process_answer):
         s1 = mixer.blend(Survey)
         s2 = mixer.blend(Survey)
         c1 = mixer.blend(Country)
@@ -78,6 +97,7 @@ class TestTotalEvaluator(TestCase):
         mixer.blend(Answer, is_updated=False)
         self.evaluator.process_answers()
         assert process_answer.call_count == 2
+        fill_out.assert_called_once_with()
         assert load_stat.call_count == 1
         assert save.call_count == 1
 
