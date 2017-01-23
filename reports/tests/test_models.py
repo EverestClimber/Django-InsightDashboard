@@ -1,7 +1,7 @@
 from datetime import datetime
 from mixer.backend.django import mixer
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
 from django.utils import timezone
@@ -59,8 +59,8 @@ class TestTotalEvaluator(TestCase):
 
     @patch('reports.models.AbstractEvaluator.process_answer')
     @patch('reports.models.AbstractEvaluator.load_stat')
-    @patch('reports.models.AbstractEvaluator.update_stat')
-    def test_process_answers(self, update_stat, load_stat, process_answer):
+    @patch('reports.models.AbstractEvaluator.save')
+    def test_process_answers(self, save, load_stat, process_answer):
         s1 = mixer.blend(Survey)
         s2 = mixer.blend(Survey)
         c1 = mixer.blend(Country)
@@ -79,7 +79,7 @@ class TestTotalEvaluator(TestCase):
         self.evaluator.process_answers()
         assert process_answer.call_count == 2
         assert load_stat.call_count == 1
-        assert update_stat.call_count == 1
+        assert save.call_count == 1
 
     @patch('reports.models.AbstractEvaluator.update_survey_stat')
     @patch('reports.models.AbstractEvaluator.update_organization_stat')
@@ -131,6 +131,28 @@ class TestTotalEvaluator(TestCase):
         self.evaluator.update_organization_stat((1, 2, 4))
         self.evaluator.update_organization_stat((1, 2, 4))
         assert self.evaluator.organization_stat[(1, 2, 3)].total == 2
+
+    def test_save(self):
+        ss1 = MagicMock()
+        ss2 = MagicMock()
+        self.evaluator.survey_stat = {
+            (1, 1): ss1,
+            (1, 2): ss2,
+        }
+
+        os1 = MagicMock()
+        os2 = MagicMock()
+        self.evaluator.organization_stat = {
+            (1, 2, 3): os1,
+            (1, 3, 3): os2,
+        }
+
+        self.evaluator.save()
+
+        os1.save.assert_called_once_with()
+        ss1.save.assert_called_once_with()
+        os2.save.assert_called_once_with()
+        ss2.save.assert_called_once_with()
 
 
 class TestLastEvaluator(object):

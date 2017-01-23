@@ -101,8 +101,11 @@ class AbstractEvaluator(object):
 
 
     @classmethod
-    def update_stat(cls):
-        raise NotImplementedError
+    def save(cls):
+        for surv_stat in cls.survey_stat.values():
+            surv_stat.save()
+        for org_stat in cls.organization_stat.values():
+            org_stat.save()
 
 
     @classmethod
@@ -112,7 +115,7 @@ class AbstractEvaluator(object):
         answers = cls.get_answers()
         for answer in answers:
             cls.process_answer(answer)
-        cls.update_stat()
+        cls.save()
 
     def evaluate(self):
         pass
