@@ -49,6 +49,9 @@ class Representation(RepresentationTypeMixin, models.Model):
     label2 = models.CharField('Label 2', max_length=400, default='', blank=True)
     label3 = models.CharField('Label 3', max_length=400, default='', blank=True)
 
+    def __str__(self):
+        return "%s, %s %s %s" % (self.id, self.label1, self.label2, self.label3)
+
 
 class QuestionStat(RepresentationTypeMixin, models.Model):
     country = models.ForeignKey(Country, blank=True, null=True)
