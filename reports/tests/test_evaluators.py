@@ -6,11 +6,11 @@ from unittest.mock import patch, MagicMock
 from django.test import TestCase
 from django.utils import timezone
 
-from survey.models import Answer, Survey, Organization
+from survey.models import Answer, Survey, Organization, Question
 from insights.users.models import User, Country
 
-from ..models import SurveyStat, OrganizationStat
-from ..evaluators import TotalEvaluator, LastEvaluator
+from ..models import SurveyStat, OrganizationStat, QuestionStat, Representation
+from ..evaluators import AbstractEvaluator, TotalEvaluator, LastEvaluator
 
 pytestmark = pytest.mark.django_db
 
@@ -22,6 +22,9 @@ class TestTotalEvaluator(TestCase):
     def setUp(self):
         self.evaluator.survey_stat = {}
         self.evaluator.organization_stat = {}
+        self.evaluator.question_stat = {}
+        self.evaluator.question_representation_link = {}
+        self.evaluator.question_dict = {}
 
     def test_get_answers(self):
         mixer.blend(Answer, is_updated=True)
@@ -34,11 +37,13 @@ class TestTotalEvaluator(TestCase):
         mixer.blend(SurveyStat)
         mixer.blend(OrganizationStat)
         mixer.blend(OrganizationStat)
+        mixer.blend(QuestionStat)
 
         self.evaluator.clear()
 
         assert SurveyStat.objects.all().count() == 0, 'Cleared'
         assert OrganizationStat.objects.all().count() == 0, 'Cleared'
+        assert QuestionStat.objects.all().count() == 0, 'Cleared'
 
     def test_load_stat(self):
         s1 = mixer.blend(Survey)
@@ -54,9 +59,18 @@ class TestTotalEvaluator(TestCase):
         mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
         mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o1)
         mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o2)
+
+        r1 = mixer.blend(Representation, active=True)
+        r2 = mixer.blend(Representation, active=True)
+
+        mixer.blend(QuestionStat, survey=s1, country=None, representation=r1)
+        mixer.blend(QuestionStat, survey=s1, country=c1, representation=r1)
+        mixer.blend(QuestionStat, survey=s1, country=c1, representation=r2)
+
         self.evaluator.load_stat()
         assert len(self.evaluator.survey_stat) == 3
         assert len(self.evaluator.organization_stat) == 4
+        assert len(self.evaluator.question_stat) == 3
 
     def test_fill_out(self):
         s1 = mixer.blend(Survey, active=True)
@@ -64,16 +78,34 @@ class TestTotalEvaluator(TestCase):
         c2 = mixer.blend(Country)
         o1 = mixer.blend(Organization)
         o2 = mixer.blend(Organization)
+        q1 = mixer.blend(Question)
+        q2 = mixer.blend(Question)
+        mixer.blend(Question)
+        r1 = mixer.blend(Representation, active=True, question=[q1])
+        r2 = mixer.blend(Representation, active=True, question=[q2])
+
         mixer.blend(SurveyStat, survey=s1, country=None)
         mixer.blend(SurveyStat, survey=s1, country=c1)
         mixer.blend(OrganizationStat, survey=s1, country_id=None, organization=o1)
         mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
+        mixer.blend(QuestionStat, survey=s1, country=None, representation=r1)
+        mixer.blend(QuestionStat, survey=s1, country=c1, representation=r1)
         self.evaluator.load_stat()
         assert len(self.evaluator.survey_stat) == 2
         assert len(self.evaluator.organization_stat) == 2
+        assert len(self.evaluator.question_stat) == 2
         self.evaluator.fill_out()
         assert len(self.evaluator.survey_stat) == 3
         assert len(self.evaluator.organization_stat) == 6
+        assert len(self.evaluator.question_stat) == 6
+        assert self.evaluator.question_representation_link == {
+            q1.pk: r1.pk,
+            q2.pk: r2.pk
+        }
+        assert self.evaluator.question_dict == {
+            q1.pk: q1,
+            q2.pk: q2
+        }
 
 
     @patch('reports.evaluators.AbstractEvaluator.process_answer')
@@ -168,12 +200,22 @@ class TestTotalEvaluator(TestCase):
             (1, 3, 3): os2,
         }
 
+        qs1 = MagicMock()
+        qs2 = MagicMock()
+        self.evaluator.question_stat = {
+            (1, 2, 3): qs1,
+            (1, 3, 3): qs2,
+        }
+
         self.evaluator.save()
 
         os1.save.assert_called_once_with()
         ss1.save.assert_called_once_with()
+        qs1.save.assert_called_once_with()
         os2.save.assert_called_once_with()
         ss2.save.assert_called_once_with()
+        qs2.save.assert_called_once_with()
+
 
 
 class TestLastEvaluator(object):
@@ -196,3 +238,55 @@ class TestLastEvaluator(object):
 
         assert SurveyStat.objects.all().count() == 2, 'Cleared'
         assert OrganizationStat.objects.all().count() == 2, 'Cleared'
+
+
+class TestTypeProcessor(TestCase):
+    evaluator = TotalEvaluator
+
+    def test_types(self):
+        for name, dsc in Representation.TYPE_CHOICES:
+            assert callable(getattr(self.evaluator, "%s_processor" % name))
+
+        s1 = mixer.blend(Survey, active=True)
+        c1 = mixer.blend(Country)
+
+        q1 = mixer.blend(Question, type=Question.TYPE_TWO_DEPENDEND_FIELDS)
+        q2 = mixer.blend(Question, type=Question.TYPE_YES_NO)
+        q3 = mixer.blend(Question, type=Question.TYPE_YES_NO_JUMPING)
+        q4 = mixer.blend(Question, type=Question.TYPE_MULTISELECT_ORDERED)
+        q5 = mixer.blend(Question, type=Question.TYPE_MULTISELECT_WITH_OTHER)
+        q6 = mixer.blend(Question, type=Question.TYPE_DEPENDEND_QUESTION)
+        q7 = mixer.blend(Question, type=Question.TYPE_CHOICES)
+
+        r1 = mixer.blend(Representation, active=True, question=[q1])
+        r2 = mixer.blend(Representation, active=True, question=[q2])
+        r3 = mixer.blend(Representation, active=True, question=[q3])
+        r4 = mixer.blend(Representation, active=True, question=[q4])
+        r5 = mixer.blend(Representation, active=True, question=[q5])
+        r6 = mixer.blend(Representation, active=True, question=[q6])
+        r7 = mixer.blend(Representation, active=True, question=[q7])
+
+        qs = mixer.blend(QuestionStat)
+        self.evaluator.fill_out()
+
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q2.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q3.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q4.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q5.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q6.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q7.pk, {})
+
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q1.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q2.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q3.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q5.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q6.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q7.pk, {})
+        #
+        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q1.pk, {})
+        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q4.pk, {})
+        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q5.pk, {})
+        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q6.pk, {})
+        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q7.pk, {})
+
+

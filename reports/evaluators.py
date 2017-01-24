@@ -2,13 +2,35 @@ from querystring_parser import parser as queryparser
 
 from django.db import transaction
 
-from survey.models import Country, Survey, Organization, Answer
-from .models import SurveyStat, OrganizationStat
+from survey.models import Country, Survey, Organization, Answer, Question
+from .models import SurveyStat, OrganizationStat, QuestionStat, Representation
 
 class AbstractEvaluator(object):
 
     survey_stat = {}
     organization_stat = {}
+    question_stat = {}
+    question_representation_link = {}
+    question_dict = {}
+
+
+    @classmethod
+    def type_average_percent_processor(cls, question_stat, question_id, question_data):
+        q = cls.question_dict[question_id]
+        if q.type != Question.TYPE_TWO_DEPENDEND_FIELDS:
+            raise ValueError("type_average_percent_processor doesn't process %s", q.type)
+
+    @classmethod
+    def type_yes_no_processor(cls, question_stat, question_id, question_data):
+        q = cls.question_dict[question_id]
+        if q.type != Question.TYPE_YES_NO or q.type != Question.TYPE_YES_NO_JUMPING:
+            raise ValueError("type_average_percent_processor doesn't process %s", q.type)
+
+    @classmethod
+    def type_multiselect_top_processor(cls, question_stat, question_id, question_data):
+        q = cls.question_dict[question_id]
+        if q.type != Question.TYPE_MULTISELECT_ORDERED:
+            raise ValueError("type_average_percent_processor doesn't process %s", q.type)
 
     @staticmethod
     def get_answers():
@@ -29,13 +51,20 @@ class AbstractEvaluator(object):
         for org in orgs:
             cls.organization_stat[(org.survey_id, org.country_id, org.organization_id)] = org
 
+        quests = QuestionStat.objects.all()
+        for quest in quests:
+            cls.question_stat[(quest.survey_id, quest.country_id, quest.representation_id)] = quest
+
     @classmethod
     def fill_out(cls):
         countries = list(Country.objects.all())
         countries.append(None)
         organizations = list(Organization.objects.all())
+        representations = list(Representation.objects.prefetch_related('question').filter(active=True))
+
         for surv in Survey.objects.filter(active=True):
             for country in countries:
+                # Fill out survey stat
                 if country is None:
                     country_id = country
                 else:
@@ -44,6 +73,8 @@ class AbstractEvaluator(object):
 
                 if surv_key not in cls.survey_stat:
                     cls.survey_stat[surv_key] = SurveyStat(survey=surv, country=country)
+
+                # Fill out organizations stat
                 for org in organizations:
                     org_key = (surv.pk, country_id, org.pk)
                     if org_key not in cls.organization_stat:
@@ -52,6 +83,25 @@ class AbstractEvaluator(object):
                     else:
                         if cls.organization_stat[org_key].ordering != org.ordering:
                             cls.organization_stat[org_key].ordering = org.ordering
+
+                # Fill out question stat
+                for repr in representations:
+                    q_key = (surv.pk, country_id, repr.pk)
+                    if q_key not in cls.question_stat:
+                        cls.question_stat[q_key] = QuestionStat(
+                            survey=surv, country=country, representation=repr, ordering=repr.ordering)
+                    else:
+                        if cls.question_stat[q_key].ordering != repr.ordering:
+                            cls.question_stat[q_key].ordering = repr.ordering
+
+                    # Fill out question representation links
+                    questions = repr.question.all()
+                    for q in questions:
+                        cls.question_representation_link[q.pk] = repr.pk
+                        if q.pk not in cls.question_dict:
+                            cls.question_dict[q.pk] = q
+
+
 
     @classmethod
     def update_survey_stat(cls, surv_key, answer):
@@ -117,6 +167,8 @@ class AbstractEvaluator(object):
             surv_stat.save()
         for org_stat in cls.organization_stat.values():
             org_stat.save()
+        for quest_stat in cls.question_stat.values():
+            quest_stat.save()
 
 
 
@@ -146,6 +198,7 @@ class TotalEvaluator(AbstractEvaluator):
     def clear():
         SurveyStat.objects.all().delete()
         OrganizationStat.objects.all().delete()
+        QuestionStat.objects.all().delete()
 
 
 class LastEvaluator(AbstractEvaluator):

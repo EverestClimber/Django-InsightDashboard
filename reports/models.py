@@ -26,6 +26,9 @@ class OrganizationStat(Stat):
     organization = models.ForeignKey(Organization, null=True)
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
 
+    class Meta:
+        ordering = ['ordering', 'id']
+
 
 class RepresentationTypeMixin(models.Model):
     TYPE_AVERAGE_PERCENT = 'type_average_percent'
@@ -47,6 +50,7 @@ class RepresentationTypeMixin(models.Model):
 class Representation(RepresentationTypeMixin, models.Model):
     survey = models.ForeignKey(Survey)
     question = models.ManyToManyField(Question)
+    active = models.BooleanField(blank=True, default=True, db_index=True)
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
     label1 = models.CharField('Label 1', max_length=400, default='', blank=True)
     label2 = models.CharField('Label 2', max_length=400, default='', blank=True)
@@ -60,8 +64,11 @@ class Representation(RepresentationTypeMixin, models.Model):
 
 
 class QuestionStat(RepresentationTypeMixin, models.Model):
-    country = models.ForeignKey(Country, blank=True, null=True)
     survey = models.ForeignKey(Survey, null=True)
+    country = models.ForeignKey(Country, blank=True, null=True)
     representation = models.ForeignKey(Representation)
     data = jsonfield.JSONField()
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
+
+    class Meta:
+        ordering = ['ordering', 'id']
