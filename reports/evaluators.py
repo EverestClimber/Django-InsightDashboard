@@ -1,5 +1,7 @@
 from querystring_parser import parser as queryparser
 
+from django.db import transaction
+
 from survey.models import Country, Survey, Organization, Answer
 from .models import SurveyStat, OrganizationStat
 
@@ -106,7 +108,7 @@ class AbstractEvaluator(object):
         cls.update_organization_stat(org_key)
 
         answer.is_updated = True
-        answer.save()
+        answer.save(update_fields=['is_updated'])
 
 
     @classmethod
@@ -121,6 +123,7 @@ class AbstractEvaluator(object):
 
 
     @classmethod
+    @transaction.atomic
     def process_answers(cls):
         cls.clear()
         cls.load_stat()

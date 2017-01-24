@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from survey.models import Survey
@@ -40,3 +42,8 @@ def update_stat(request):
     evaluator.process_answers()
     return HttpResponse('console.log("stat was successfully updated");', "application/javascript")
 
+
+@staff_member_required
+def recalculate(request):
+    TotalEvaluator.process_answers()
+    return render(request, 'reports/recalculate.html')

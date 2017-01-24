@@ -43,7 +43,7 @@ class RepresentationTypeMixin(object):
 
 class Representation(RepresentationTypeMixin, models.Model):
     survey = models.ForeignKey(Survey)
-    question = models.ForeignKey(Question)
+    question = models.ManyToManyField(Question)
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
     label1 = models.CharField('Label 1', max_length=400, default='', blank=True)
     label2 = models.CharField('Label 2', max_length=400, default='', blank=True)
