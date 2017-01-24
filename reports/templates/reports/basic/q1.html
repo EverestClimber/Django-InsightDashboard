@@ -50,21 +50,26 @@
         axisY: {
           type: Chartist.FixedScaleAxis,
           ticks: [0, 50, 100],
-          labelInterpolationFnc: function(value) {
-            return (value) + '%';
-          }
+          labelInterpolationFnc: setYAxisLabels
         }
-      }).on('draw', function(data) {
-        var barHorizontalCenter, barVerticalCenter, label, value;
-        if(data.type === 'bar') {
-          data.element.attr({
-            style: 'stroke-width: 30px'
-          });
-        }
+      })
+        .on('draw',setBarPercentage)
+        .on('draw', setBarWidth)
+        .on('created', drawBarLabels);
+
+      $(document).on('resize', drawBarLabels);
+
+      function setBarWidth(data) {
         if (data.type === "bar") {
           data.element.attr({
-            style: 'stroke-width: 30px'
+            style: 'stroke-width: 22px'
           });
+        }
+      }
+
+      function setBarPercentage(data) {
+        if (data.type === "bar") {
+          var barHorizontalCenter, barVerticalCenter, label, value;
           barHorizontalCenter = data.x1 + (data.element.width() * .5);
           barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
           value = data.element.attr('ct:value');
@@ -80,9 +85,11 @@
             return data.group.append(label);
           }
         }
-      }).on('created', drawBarLabels);
+      }
 
-      $(document).on('resize', drawBarLabels);
+      function setYAxisLabels(value) {
+        return (value) + '%';
+      }
 
       function drawBarLabels() {
         var $barChartContainer = $('#q1BarChart');
