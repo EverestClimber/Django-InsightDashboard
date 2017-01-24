@@ -27,7 +27,7 @@ class OrganizationStat(Stat):
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
 
 
-class RepresentationTypeMixin(object):
+class RepresentationTypeMixin(models.Model):
     TYPE_AVERAGE_PERCENT = 'type_average_percent'
     TYPE_YES_NO = 'type_yes_no'
     TYPE_MULTISELECT_TOP = 'type_multiselect_top'
@@ -38,7 +38,10 @@ class RepresentationTypeMixin(object):
         (TYPE_MULTISELECT_TOP, 'Top 1 and top 3 representation for ordered multiselect'),
 
     )
-    type = models.CharField('Representation Type', choices=TYPE_CHOICES, max_length=50)
+    type = models.CharField('Representation Type', choices=TYPE_CHOICES, max_length=50, null=True)
+
+    class Meta:
+        abstract = True
 
 
 class Representation(RepresentationTypeMixin, models.Model):
@@ -51,6 +54,9 @@ class Representation(RepresentationTypeMixin, models.Model):
 
     def __str__(self):
         return "%s, %s %s %s" % (self.id, self.label1, self.label2, self.label3)
+
+    class Meta:
+        ordering = ['ordering', 'id']
 
 
 class QuestionStat(RepresentationTypeMixin, models.Model):

@@ -4,7 +4,7 @@ from .models import Representation
 
 @admin.register(Representation)
 class RepresentationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'get_questions', 'ordering', 'label1', 'label2', 'label3')
+    list_display = ('id', 'type', 'get_questions', 'ordering', 'label1', 'label2', 'label3')
     search_fields = ('label1', 'label2', 'label3')
 
 
