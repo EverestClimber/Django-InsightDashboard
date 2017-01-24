@@ -79,6 +79,7 @@
 }
 
 .report-card .report-card-body.bars-body {
+  position: relative;
   margin-top: 0;
   padding-bottom: 65px;
 }
@@ -298,7 +299,7 @@
   top: 4px;
 }
 
-.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-barlabel, .ct-chart .ct-label.ct-horizontal.ct-end {
+.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-barlabel, .ct-bar-labels .ct-bar-label {
   font-family: "open sans";
   font-size: 10px;
   color: #3d3d3d;
@@ -307,15 +308,19 @@
   letter-spacing: 1px;
 }
 
-.ct-chart-bar .ct-label.ct-horizontal.ct-end {
-  display: block;
+.ct-bar-labels .ct-bar-label {
+  text-align: right;
+  position: absolute;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   transform: rotate(-90deg);
-  transform-origin: 100% 0;
-  text-align: right;
-  max-height: 1em;
-  min-width: 100px;
-  max-width: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transform-origin: center center;
+}
+
+.ct-chart-bar .ct-label.ct-horizontal.ct-end {
+  display: none;
 }

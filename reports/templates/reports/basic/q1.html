@@ -28,6 +28,7 @@
           </div>
           <div class="report-card-body bars-body">
             <div id="q1BarChart" class="ct-chart"></div>
+            <div id="q1BarLabels" class="ct-bar-labels"></div>
           </div>
         </div>
       </div>
@@ -39,7 +40,7 @@
     $(document).ready(function() {
       var labels = ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'];
       var series = [50, 78, 36, 84, 25, 63];
-      new Chartist.Bar('#q1BarChart', {
+      var barChart = new Chartist.Bar('#q1BarChart', {
         labels: labels,
         series: [series]
       }, {
@@ -60,11 +61,6 @@
             style: 'stroke-width: 30px'
           });
         }
-        if (data.type === 'label' && labels.indexOf(data.text) != -1) {
-          var dX = data.width / 2 + (100 - data.width);
-          data.element.attr({ x: data.element.attr('x') - dX - 3.5});
-          data.element.attr({ y: parseInt(data.element.attr('y')) + 5})
-        }
         if (data.type === "bar") {
           data.element.attr({
             style: 'stroke-width: 30px'
@@ -84,7 +80,29 @@
             return data.group.append(label);
           }
         }
-      });
+      }).on('created', drawBarLabels);
+
+      $(document).on('resize', drawBarLabels);
+
+      function drawBarLabels() {
+        var $barChartContainer = $('#q1BarChart');
+        var barChartContainerPosition = $barChartContainer.offset();
+        var $labels = $('#q1BarLabels');
+        var $bars = $barChartContainer.find('.ct-bar');
+        $bars.each(function(i, bar) {
+          var $bar = $(bar);
+          var barPosition = $bar.offset();
+          var $label = $('<div class="ct-bar-label">' + barChart.data.labels[i] + '</div>');
+          $labels.append($label);
+          var barHeight = bar.getBBox().height;
+          var barWidth = bar.getBBox().width;
+          var labelTop = barPosition.top - barChartContainerPosition.top + barHeight + 10;
+          var labelLeft = barPosition.left - barChartContainerPosition.left + barWidth/2 - $label.width()/2;
+          $label.css('top', labelTop);
+          $label.css('left', labelLeft);
+          $label.css('height', $label.width());
+        });
+      }
     });
   })();
 </script>
