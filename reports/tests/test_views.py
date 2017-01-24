@@ -61,25 +61,29 @@ class TestReports(TestCase):
         req = RequestFactory().get(reverse('reports:basic_europe'))
         req.user = AnonymousUser()
         resp = ReportsView.as_view()(req)
-        assert resp.status_code == 302, 'Should redirect to auth'
+        # assert resp.status_code == 302, 'Should redirect to auth'
+        assert resp.status_code == 200, 'Allowed'
 
     def test_non_staff(self):
         req = RequestFactory().get(reverse('reports:basic_europe'))
         req.user = mixer.blend(User)
         resp = ReportsView.as_view()(req)
-        assert resp.status_code == 302, 'Should redirect to auth'
+        # assert resp.status_code == 302, 'Should redirect to auth'
+        assert resp.status_code == 200, 'Allowed'
 
     def test_anonimous_advanced(self):
         req = RequestFactory().get(reverse('reports:advanced_europe'))
         req.user = AnonymousUser()
         resp = ReportsView.as_view()(req)
-        assert resp.status_code == 302, 'Should redirect to auth'
+        # assert resp.status_code == 302, 'Should redirect to auth'
+        assert resp.status_code == 200, 'Allowed'
 
     def test_non_staff_advanced(self):
         req = RequestFactory().get(reverse('reports:advanced_europe'))
         req.user = mixer.blend(User)
         resp = ReportsView.as_view()(req)
-        assert resp.status_code == 302, 'Should redirect to auth'
+        # assert resp.status_code == 302, 'Should redirect to auth'
+        assert resp.status_code == 200, 'Allowed'
 
     def test_staff_basic(self):
         req = RequestFactory().get(reverse('reports:basic_europe'))

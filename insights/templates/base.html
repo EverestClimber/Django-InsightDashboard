@@ -88,49 +88,47 @@
                                 <li class="">
                                     <a href="/survey/instructions">{% trans "Instructions" %}</a>
                                 </li>
-                                {% if request.user.is_staff %}
-                                    {% load get_countries from user_tags %}{% get_countries as countries %}
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                           aria-haspopup="true"
-                                           aria-expanded="true">Reports <span class="caret"></span></a>
-                                        <ul class="dropdown-menu reports-dropdown ">
-                                            <li class="dropdown-submenu" data-submenu>
-                                                <a href="#">Basic</a>
 
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a href="{% url 'reports:basic_europe' %}">Europe</a>
-                                                    </li>
-                                                    {% for country in countries %}
-                                                    <li>
-                                                        <a href="{% url 'reports:basic_country' country=country.pk %}">
-                                                            {{ country.name }}
-                                                        </a>
-                                                    </li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </li>
-                                            <li class="dropdown-submenu" data-submenu>
-                                                <a href="#">Advanced</a>
+                                {% load get_countries from user_tags %}{% get_countries as countries %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                       aria-haspopup="true"
+                                       aria-expanded="true">Reports <span class="caret"></span></a>
+                                    <ul class="dropdown-menu reports-dropdown ">
+                                        <li class="dropdown-submenu" data-submenu>
+                                            <a href="#">Basic</a>
 
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a href="{% url 'reports:advanced_europe' %}">Europe</a>
-                                                    </li>
-                                                    {% for country in countries %}
-                                                    <li>
-                                                        <a href="{% url 'reports:advanced_country' country=country.pk %}">
-                                                            {{ country.name }}
-                                                        </a>
-                                                    </li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                {% endif %}
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="{% url 'reports:basic_europe' %}">Europe</a>
+                                                </li>
+                                                {% for country in countries %}
+                                                <li>
+                                                    <a href="{% url 'reports:basic_country' country=country.pk %}">
+                                                        {{ country.name }}
+                                                    </a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown-submenu" data-submenu>
+                                            <a href="#">Advanced</a>
 
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="{% url 'reports:advanced_europe' %}">Europe</a>
+                                                </li>
+                                                {% for country in countries %}
+                                                <li>
+                                                    <a href="{% url 'reports:advanced_country' country=country.pk %}">
+                                                        {{ country.name }}
+                                                    </a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
 
                             <ul class="nav navbar-top-links navbar-right">
