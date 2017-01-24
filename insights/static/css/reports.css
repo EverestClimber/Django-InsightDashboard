@@ -78,6 +78,11 @@
   margin-bottom: 40px;
 }
 
+.report-card .report-card-body.bars-body {
+  margin-top: 0;
+  padding-bottom: 65px;
+}
+
 .report-card-head .head-delim {
   display: inline-block;
   height: 1px;
@@ -293,7 +298,7 @@
   top: 4px;
 }
 
-.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-barlabel {
+.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-barlabel, .ct-chart .ct-label.ct-horizontal.ct-end {
   font-family: "open sans";
   font-size: 10px;
   color: #3d3d3d;
@@ -302,10 +307,15 @@
   letter-spacing: 1px;
 }
 
-.ct-chart .ct-label.ct-horizontal.ct-end {
-  font-family: "open sans";
-  font-size: 10px;
-  color: #3d3d3d;
-  font-weight: normal;
-  letter-spacing: 1px;
+.ct-chart-bar .ct-label.ct-horizontal.ct-end {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: rotate(-90deg);
+  transform-origin: 100% 0;
+  text-align: right;
+  max-height: 1em;
+  min-width: 100px;
+  max-width: 100px;
 }

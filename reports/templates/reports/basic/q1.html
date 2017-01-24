@@ -26,7 +26,7 @@
             <div class="title">BY COUNTRY</div>
             <div class="head-delim"></div>
           </div>
-          <div class="report-card-body">
+          <div class="report-card-body bars-body">
             <div id="q1BarChart" class="ct-chart"></div>
           </div>
         </div>
@@ -37,11 +37,11 @@
 <script>
   (function() {
     $(document).ready(function() {
-      var q1bars = new Chartist.Bar('#q1BarChart', {
-        labels: ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'],
-        series: [
-          [50, 78, 36, 84, 25, 63]
-        ]
+      var labels = ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'];
+      var series = [50, 78, 36, 84, 25, 63];
+      new Chartist.Bar('#q1BarChart', {
+        labels: labels,
+        series: [series]
       }, {
         stackBars: false,
         high: 100,
@@ -59,6 +59,11 @@
           data.element.attr({
             style: 'stroke-width: 30px'
           });
+        }
+        if (data.type === 'label' && labels.indexOf(data.text) != -1) {
+          var dX = data.width / 2 + (100 - data.width);
+          data.element.attr({ x: data.element.attr('x') - dX - 3.5});
+          data.element.attr({ y: parseInt(data.element.attr('y')) + 5})
         }
         if (data.type === "bar") {
           data.element.attr({
