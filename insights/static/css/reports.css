@@ -265,25 +265,47 @@
 /* Chartist */
 
 .ct-chart .ct-bar:nth-of-type(6n+1) {
-  stroke: #71A28A;
+  stroke: #5ca8d8;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+2) {
-  stroke: #FF6414;
+  stroke: #7cc3ec;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+3) {
-  stroke: #EFB200;
+  stroke: #b1dcf7;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+4) {
-  stroke: #91A453;
+  stroke: #c1ddef;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+5) {
-  stroke: #EFB200;
+  stroke: #8ec5e8;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+6) {
-  stroke: #91A453;
+  stroke: #8ec5e8;
+}
+
+.ct-chart .ct-label.ct-vertical.ct-start {
+  position: relative;
+  top: 4px;
+}
+
+.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-barlabel {
+  font-family: "open sans";
+  font-size: 10px;
+  color: #3d3d3d;
+  fill: #3d3d3d;
+  font-weight: bolder;
+  letter-spacing: 1px;
+}
+
+.ct-chart .ct-label.ct-horizontal.ct-end {
+  font-family: "open sans";
+  font-size: 10px;
+  color: #3d3d3d;
+  font-weight: normal;
+  letter-spacing: 1px;
 }

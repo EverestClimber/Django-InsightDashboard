@@ -37,7 +37,7 @@
 <script>
   (function() {
     $(document).ready(function() {
-      new Chartist.Bar('#q1BarChart', {
+      var q1bars = new Chartist.Bar('#q1BarChart', {
         labels: ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'],
         series: [
           [50, 78, 36, 84, 25, 63]
@@ -54,10 +54,30 @@
           }
         }
       }).on('draw', function(data) {
+        var barHorizontalCenter, barVerticalCenter, label, value;
         if(data.type === 'bar') {
           data.element.attr({
             style: 'stroke-width: 30px'
           });
+        }
+        if (data.type === "bar") {
+          data.element.attr({
+            style: 'stroke-width: 30px'
+          });
+          barHorizontalCenter = data.x1 + (data.element.width() * .5);
+          barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
+          value = data.element.attr('ct:value');
+          if (value !== '0') {
+            label = new Chartist.Svg('text');
+            label.text(value + '%');
+            label.addClass("ct-barlabel");
+            label.attr({
+              x: barHorizontalCenter,
+              y: barVerticalCenter,
+              'text-anchor': 'middle'
+            });
+            return data.group.append(label);
+          }
         }
       });
     });
