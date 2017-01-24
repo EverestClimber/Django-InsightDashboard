@@ -49,8 +49,11 @@
         low: 0,
         axisY: {
           type: Chartist.FixedScaleAxis,
-          ticks: [0, 50, 100],
+          ticks: [0, 25, 50, 75, 100],
           labelInterpolationFnc: setYAxisLabels
+        },
+        axisX: {
+          showGrid: false
         }
       })
         .on('draw',setBarPercentage)
@@ -88,7 +91,7 @@
       }
 
       function setYAxisLabels(value) {
-        return (value) + '%';
+        return value % 50 == 0 ? value + '%' : '';
       }
 
       function drawBarLabels() {

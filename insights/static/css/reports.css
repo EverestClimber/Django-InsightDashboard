@@ -294,6 +294,12 @@
   stroke: #8ec5e8;
 }
 
+.ct-chart .ct-grid {
+  stroke: #cacaca;
+  stroke-width: 0.5px;
+  stroke-dasharray: 5px;
+}
+
 .ct-chart .ct-label.ct-vertical.ct-start {
   position: relative;
   top: 4px;
