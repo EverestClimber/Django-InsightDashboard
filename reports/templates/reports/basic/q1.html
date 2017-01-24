@@ -27,11 +27,35 @@
             <div class="head-delim"></div>
           </div>
           <div class="report-card-body">
-
+            <div id="q1BarChart" class="ct-chart"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- и здесь же его скрипты для графиков -->
+<script>
+  (function() {
+    $(document).ready(function() {
+      new Chartist.Bar('#q1BarChart', {
+        labels: ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'],
+        series: [
+          [800000, 1200000, 1400000, 1300000, 200000, 50000]
+        ]
+      }, {
+        stackBars: false,
+        axisY: {
+          labelInterpolationFnc: function(value) {
+            return (value / 1000) + 'k';
+          }
+        }
+      }).on('draw', function(data) {
+        if(data.type === 'bar') {
+          data.element.attr({
+            style: 'stroke-width: 30px'
+          });
+        }
+      });
+    });
+  })();
+</script>

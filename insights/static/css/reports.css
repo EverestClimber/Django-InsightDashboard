@@ -262,3 +262,28 @@
   left: calc(50% - 2.5px)
 }
 
+/* Chartist */
+
+.ct-chart .ct-bar:nth-of-type(6n+1) {
+  stroke: #71A28A;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+2) {
+  stroke: #FF6414;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+3) {
+  stroke: #EFB200;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+4) {
+  stroke: #91A453;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+5) {
+  stroke: #EFB200;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+6) {
+  stroke: #91A453;
+}
