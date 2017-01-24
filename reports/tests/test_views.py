@@ -61,8 +61,7 @@ class TestReports(TestCase):
         req = RequestFactory().get(reverse('reports:basic_europe'))
         req.user = AnonymousUser()
         resp = ReportsView.as_view()(req)
-        # assert resp.status_code == 302, 'Should redirect to auth'
-        assert resp.status_code == 200, 'Allowed'
+        assert resp.status_code == 302, 'Should redirect to auth'
 
     def test_non_staff(self):
         req = RequestFactory().get(reverse('reports:basic_europe'))
@@ -75,8 +74,7 @@ class TestReports(TestCase):
         req = RequestFactory().get(reverse('reports:advanced_europe'))
         req.user = AnonymousUser()
         resp = ReportsView.as_view()(req)
-        # assert resp.status_code == 302, 'Should redirect to auth'
-        assert resp.status_code == 200, 'Allowed'
+        assert resp.status_code == 302, 'Should redirect to auth'
 
     def test_non_staff_advanced(self):
         req = RequestFactory().get(reverse('reports:advanced_europe'))
