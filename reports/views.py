@@ -25,7 +25,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
         kwargs['survey_stat'] = SurveyStat.objects.filter(survey=survey, country_id=country_id).last()
         kwargs['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=country_id)\
-            .order_by('report_order')
+            .order_by('ordering')
 
         return super(self.__class__, self).get_context_data(**kwargs)
 

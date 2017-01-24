@@ -2,7 +2,6 @@ from django.db import models
 from insights.users.models import User, Country
 
 
-
 class Region(models.Model):
     name = models.CharField('Region name', max_length=100)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
@@ -15,7 +14,7 @@ class Region(models.Model):
 class Organization(models.Model):
     name = models.CharField('Organization name', max_length=100)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
-    report_order = models.PositiveIntegerField('Order in reports', default=1, blank=True)
+    ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True)
 
     def __str__(self):
         return self.name
@@ -99,7 +98,6 @@ class Option(models.Model):
 
     class Meta:
         ordering = ['question_id', 'ordering', 'created_at']
-
 
     def __str__(self):
         return self.value

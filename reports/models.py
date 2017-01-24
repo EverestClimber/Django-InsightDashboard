@@ -102,10 +102,10 @@ class AbstractEvaluator(object):
                     org_key = (surv.pk, country_id, org.pk)
                     if org_key not in cls.organization_stat:
                         cls.organization_stat[org_key] = OrganizationStat(
-                            survey=surv, country=country, organization=org, report_order=org.report_order)
+                            survey=surv, country=country, organization=org, ordering=org.ordering)
                     else:
-                        if cls.organization_stat[org_key].report_order != org.report_order:
-                            cls.organization_stat[org_key].report_order = org.report_order
+                        if cls.organization_stat[org_key].ordering != org.ordering:
+                            cls.organization_stat[org_key].ordering = org.ordering
 
     @classmethod
     def update_survey_stat(cls, surv_key, answer):
