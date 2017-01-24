@@ -5,7 +5,8 @@ from django.views.generic import TemplateView
 
 from survey.models import Survey
 
-from .models import SurveyStat, OrganizationStat, LastEvaluator, TotalEvaluator
+from .models import SurveyStat, OrganizationStat
+from .evaluators import LastEvaluator, TotalEvaluator
 
 
 class ReportsView(LoginRequiredMixin, TemplateView):

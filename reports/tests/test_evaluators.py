@@ -9,7 +9,8 @@ from django.utils import timezone
 from survey.models import Answer, Survey, Organization
 from insights.users.models import User, Country
 
-from ..models import TotalEvaluator, LastEvaluator, SurveyStat, OrganizationStat
+from ..models import SurveyStat, OrganizationStat
+from ..evaluators import TotalEvaluator, LastEvaluator
 
 pytestmark = pytest.mark.django_db
 
@@ -75,10 +76,10 @@ class TestTotalEvaluator(TestCase):
         assert len(self.evaluator.organization_stat) == 6
 
 
-    @patch('reports.models.AbstractEvaluator.process_answer')
-    @patch('reports.models.AbstractEvaluator.load_stat')
-    @patch('reports.models.AbstractEvaluator.fill_out')
-    @patch('reports.models.AbstractEvaluator.save')
+    @patch('reports.evaluators.AbstractEvaluator.process_answer')
+    @patch('reports.evaluators.AbstractEvaluator.load_stat')
+    @patch('reports.evaluators.AbstractEvaluator.fill_out')
+    @patch('reports.evaluators.AbstractEvaluator.save')
     def test_process_answers(self, save, fill_out, load_stat, process_answer):
         s1 = mixer.blend(Survey)
         s2 = mixer.blend(Survey)
@@ -101,8 +102,8 @@ class TestTotalEvaluator(TestCase):
         assert load_stat.call_count == 1
         assert save.call_count == 1
 
-    @patch('reports.models.AbstractEvaluator.update_survey_stat')
-    @patch('reports.models.AbstractEvaluator.update_organization_stat')
+    @patch('reports.evaluators.AbstractEvaluator.update_survey_stat')
+    @patch('reports.evaluators.AbstractEvaluator.update_organization_stat')
     def test_process_answer_with_empty_data(self, organization_stat, survey_stat):
         user = mixer.blend(User, country_id=1)
 
