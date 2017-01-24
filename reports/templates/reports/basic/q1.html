@@ -89,6 +89,9 @@
         var barChartContainerPosition = $barChartContainer.offset();
         var $labels = $('#q1BarLabels');
         var $bars = $barChartContainer.find('.ct-bar');
+
+        $labels.empty();
+
         $bars.each(function(i, bar) {
           var $bar = $(bar);
           var barPosition = $bar.offset();
