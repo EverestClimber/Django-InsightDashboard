@@ -359,6 +359,10 @@
 }
 
 .horizontal-bar-chart {
+
+}
+
+.labeled-bars {
   display: flex;
   flex-direction: row;
 }
@@ -377,23 +381,45 @@
   text-align: left;
 }
 
-.y-labels .h-chart-label {
+.y-labels .h-chart-y-label {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.y-labels .h-chart-label, .horizontal-bars .bar {
+.y-labels .h-chart-y-label, .horizontal-bars .bar {
   height: 22px;
   margin-bottom: 5px;
 }
 
 .x-labels {
+  width: 100%;
+  margin-top: 3px;
+  display: flex;
+  flex-direction: row;
+}
 
+.x-labels .h-chart-x-label {
+  width: 20%;
+  text-align: right;
+}
+
+.x-labels .h-chart-x-label > span {
+  display: inline-block;
+  transform: translate(50%, 0);
+}
+
+.x-labels .h-chart-x-label:first-child > span {
+  transform: translate(0, 0);
+}
+
+.x-labels .h-chart-x-label:first-child {
+  width: 0;
+  overflow: visible;
 }
 
 .horizontal-bars {
-  flex-grow: 2;
+  flex-grow: 10;
 }
 
 .horizontal-bars .bar {
