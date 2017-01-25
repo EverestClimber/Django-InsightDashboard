@@ -5,7 +5,7 @@ from querystring_parser import parser as queryparser
 from django.db import transaction
 
 from survey.models import Country, Survey, Organization, Answer, Question
-from .models import SurveyStat, OrganizationStat, QuestionStat, Representation
+from .models import SurveyStat, OrganizationStat, QuestionStat, Representation, OptionDict
 
 logger = logging.getLogger(__name__)
 
@@ -134,6 +134,88 @@ class AbstractEvaluator(object):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_MULTISELECT_ORDERED:
             raise ValueError("type_multiselect_top_processor doesn't process %s", q.type)
+
+        if not question_data or '' not in question_data:
+            return
+
+        options = question_data['']
+        if not options:
+            return
+
+        top3 = []
+
+        for i, opt in enumerate(options):
+            opt = opt.strip()
+            if not opt:
+                continue
+
+            lower = opt.lower()
+            OptionDict.register(lower, opt)
+
+            if not i:
+                top1 = lower
+
+            if lower not in top3:
+                top3.append(lower)
+            if len(top3) == 3:
+                break
+
+        r = cls.question_representation_link[question_id]
+        org_id = answer.organization_id
+        country_id = answer.user.country_id
+        survey_id = answer.survey_id
+        k0 = (survey_id, None, r.pk)
+        k1 = (survey_id, country_id, r.pk)
+
+        for k in [k0, k1]:
+            data = cls.question_stat[k].data
+            if not data:
+                data.update({
+                    'cnt': 0,
+                    'top1': {},
+                    'top3': {},
+                    'org': {},
+                })
+
+            data['cnt'] += 1
+
+            if org_id not in data['org']:
+                data['org'][org_id] = {
+                    'cnt': 0,
+                    'top1': {},
+                    'top3': {},
+                }
+
+            data['org'][org_id]['cnt'] += 1
+
+            if top1 in data['top1']:
+                data['top1'][top1] += 1
+            else:
+                data['top1'][top1] = 1
+
+            if top1 in data['org'][org_id]['top1']:
+                data['org'][org_id]['top1'][top1] += 1
+            else:
+                data['org'][org_id]['top1'][top1] = 1
+
+
+            for top_i in top3:
+                if top_i in data['top3']:
+                    data['top3'][top_i] += 1
+                else:
+                    data['top3'][top_i] = 1
+
+                if top_i in data['org'][org_id]['top3']:
+                    data['org'][org_id]['top3'][top_i] += 1
+                else:
+                    data['org'][org_id]['top3'][top_i] = 1
+
+
+
+
+
+
+
 
     @staticmethod
     def get_answers():

@@ -3,7 +3,7 @@ import jsonfield
 from django.db import models
 
 
-from survey.models import Country, Survey, Organization, Answer, Question
+from survey.models import Country, Survey, Organization, Answer, Question, Option
 
 
 class Stat(models.Model):
@@ -72,3 +72,52 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
 
     class Meta:
         ordering = ['ordering', 'id']
+
+
+class OptionDict(models.Model):
+    lower = models.CharField(max_length=200, unique=True)
+    original = models.CharField(max_length=200)
+
+    data = {}
+    is_loaded = False
+
+    @classmethod
+    def clear(cls):
+        cls.data = {}
+        cls.is_loaded = False
+
+    @classmethod
+    def _load(cls):
+        for od in cls.objects.all():
+            cls.data[od.lower] = od
+        cls.is_loaded = True
+
+        for opt in Option.objects.all():
+            lower = opt.value.lower()
+            if lower not in cls.data:
+                new_dict = cls(lower=lower, original=opt.value)
+                new_dict.save()
+                cls.data[lower] = new_dict
+            elif opt.value != cls.data[lower].original:
+                cls.data[lower].original = opt.value
+                cls.data[lower].save()
+
+
+    @classmethod
+    def get(cls, name):
+        if not cls.is_loaded:
+            cls._load()
+        if name in cls.data:
+            return cls.data[name].original
+        else:
+            return name
+
+    @classmethod
+    def register(cls, lower, original):
+        if not cls.is_loaded:
+            cls._load()
+
+        if lower not in cls.data:
+            new_dict = cls(lower=lower, original=original)
+            new_dict.save()
+            cls.data[lower] = new_dict

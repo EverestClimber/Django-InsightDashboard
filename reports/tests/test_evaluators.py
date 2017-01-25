@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from datetime import datetime
 from mixer.backend.django import mixer
 import pytest
@@ -8,11 +7,11 @@ from unittest.mock import patch, MagicMock
 from django.test import TestCase
 from django.utils import timezone
 
-from survey.models import Answer, Survey, Organization, Question, Region
+from survey.models import Answer, Survey, Organization, Question, Region, Option
 from insights.users.models import User, Country
 
-from ..models import SurveyStat, OrganizationStat, QuestionStat, Representation
-from ..evaluators import AbstractEvaluator, TotalEvaluator, LastEvaluator
+from ..models import SurveyStat, OrganizationStat, QuestionStat, Representation, OptionDict
+from ..evaluators import TotalEvaluator, LastEvaluator
 
 pytestmark = pytest.mark.django_db
 
@@ -244,6 +243,7 @@ class TestTotalEvaluator(TestCase):
             16: 'xxx'
         }
 
+
 class TestLastEvaluator(object):
     evaluator = LastEvaluator
 
@@ -275,6 +275,7 @@ class TestTypeProcessor(TestCase):
         self.evaluator.question_stat = {}
         self.evaluator.question_representation_link = {}
         self.evaluator.question_dict = {}
+        OptionDict.clear()
 
     def test_types(self):
         for name, dsc in Representation.TYPE_CHOICES:
@@ -445,3 +446,66 @@ class TestTypeProcessor(TestCase):
 
         assert data['org_cnt'][self.org.pk] == 2
         assert data['org_yes'][self.org.pk] == 1
+
+    def test_type_multiselect_top_processor(self):
+        self.init_models(Question.TYPE_MULTISELECT_ORDERED, Representation.TYPE_MULTISELECT_TOP)
+        qid = self.q.pk
+        a1 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2&data[{0}][]=x3&data[{0}][]=x4'.format(qid), user=self.u1, region=self.reg11)
+        a2 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2'.format(qid), user=self.u11, region=self.reg12)
+        a3 = self.create_answer(body='data[{0}][]=x2&data[{0}][]=x3'.format(qid), user=self.u2, region=self.reg21)
+
+        self.evaluator.type_multiselect_top_processor(qid, {'': ['x1', 'x2', 'x3', 'x4', ''], 'other': ''}, a1)
+        self.evaluator.type_multiselect_top_processor(qid, {'': ['X1', 'x2', ''], 'other': ''}, a2)
+        self.evaluator.type_multiselect_top_processor(qid, {'': ['x2', 'X3', 'x3', ''], 'other': ''}, a3)
+
+        k0 = (self.surv.pk, None, self.r.pk)
+        k1 = (self.surv.pk, self.c1.pk, self.r.pk)
+        data = self.evaluator.question_stat[k0].data
+        assert data['cnt'] == 3
+        assert data['top1'] == {
+            'x1': 2,
+            'x2': 1
+        }
+        assert data['top3'] == {
+            'x1': 2,
+            'x2': 3,
+            'x3': 2
+        }
+        assert data['org'] == {
+            self.org.pk: {
+                'cnt': 3,
+                'top1': {
+                    'x1': 2,
+                    'x2': 1
+                },
+                'top3': {
+                    'x1': 2,
+                    'x2': 3,
+                    'x3': 2
+                }
+            }
+        }
+
+        data = self.evaluator.question_stat[k1].data
+        assert data['cnt'] == 2
+        assert data['top1'] == {
+            'x1': 2,
+        }
+        assert data['top3'] == {
+            'x1': 2,
+            'x2': 2,
+            'x3': 1
+        }
+        assert data['org'] == {
+            self.org.pk: {
+                'cnt': 2,
+                'top1': {
+                    'x1': 2,
+                },
+                'top3': {
+                    'x1': 2,
+                    'x2': 2,
+                    'x3': 1,
+                }
+            }
+        }
