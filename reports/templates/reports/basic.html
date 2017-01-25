@@ -93,19 +93,19 @@
   function drawQ1Pie() {
     var q1PieData = {
       labels: [
-        "No abuse",
-        "Substance abuse"
+        "Substance abuse",
+        "No abuse"
       ],
       datasets: [
         {
-          data: [128, 72],
+          data: [72, 128],
           backgroundColor: [
-            "#328ec9",
-            "#b8103b"
+            "#b8103b",
+            "#328ec9"
           ],
           hoverBackgroundColor: [
-            "#328ec9",
-            "#b8103b"
+            "#b8103b",
+            "#328ec9"
           ]
         }]
     };
@@ -140,8 +140,8 @@
     var yesNum = q2PieData.datasets[0].data[0];
     var noNum = q2PieData.datasets[0].data[1];
 
-    $('#q2PieYes').css('color', q2PieData.datasets[0].backgroundColor[0]).html(yesNum);
-    $('#q2PieNo').css('color', q2PieData.datasets[0].backgroundColor[1]).html(noNum);
+    $('#q2PieNo').css('color', q2PieData.datasets[0].backgroundColor[0]).html(yesNum);
+    $('#q2PieYes').css('color', q2PieData.datasets[0].backgroundColor[1]).html(noNum);
 
     drawPie(q2PieData, '#q2Pie', '#q2PieLegend')
   }
