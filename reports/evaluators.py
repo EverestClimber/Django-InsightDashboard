@@ -76,8 +76,58 @@ class AbstractEvaluator(object):
     @classmethod
     def type_yes_no_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
-        if q.type != Question.TYPE_YES_NO or q.type != Question.TYPE_YES_NO_JUMPING:
+        if q.type != Question.TYPE_YES_NO and q.type != Question.TYPE_YES_NO_JUMPING:
             raise ValueError("type_yes_no_processor doesn't process %s", q.type)
+
+        result = question_data.strip()
+
+        if result == 'Yes':
+            yes = 1
+        elif result == 'No':
+            yes = 0
+        else:
+            return
+
+        org_id = answer.organization_id
+        reg_id = answer.region_id
+        country_id = answer.user.country_id
+        survey_id = answer.survey_id
+
+        r = cls.question_representation_link[question_id]
+
+        k0 = (survey_id, None, r.pk)
+        k1 = (survey_id, country_id, r.pk)
+        regs = [(k0, country_id), (k1, reg_id)]
+
+        for k, current_reg_id in regs:
+            data = cls.question_stat[k].data
+            if not data:
+                data.update({
+                    'main_yes': 0,
+                    'main_cnt': 0,
+                    'reg_yes': {},
+                    'reg_cnt': {},
+                    'org_yes': {},
+                    'org_cnt': {}
+                })
+
+            data = cls.question_stat[k].data
+            data['main_yes'] += yes
+            data['main_cnt'] += 1
+            if current_reg_id in data['reg_yes']:
+                data['reg_yes'][current_reg_id] += yes
+                data['reg_cnt'][current_reg_id] += 1
+            else:
+                data['reg_yes'][current_reg_id] = yes
+                data['reg_cnt'][current_reg_id] = 1
+
+            if org_id in data['org_yes']:
+                data['org_yes'][org_id] += yes
+                data['org_cnt'][org_id] += 1
+            else:
+                data['org_yes'][org_id] = yes
+                data['org_cnt'][org_id] = 1
+
 
     @classmethod
     def type_multiselect_top_processor(cls, question_id, question_data, answer):
