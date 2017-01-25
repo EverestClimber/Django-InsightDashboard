@@ -216,7 +216,22 @@ class TestTotalEvaluator(TestCase):
         ss2.save.assert_called_once_with()
         qs2.save.assert_called_once_with()
 
+    def test_parse_query_string(self):
+        results = self.evaluator.parse_query_string('data%5B12%5D%5B%5D=&data%5B4%5D%5B%5D=Age&data%5B4%5D%5B%5D=Preference+of+the+patients&data%5B4%5D%5B%5D=Efficacy+profile&data%5B4%5D%5B%5D=&csrfmiddlewaretoken=C7UlUxD6GI60dwB3PnGtA9en518LhHhRfqQwzXRb6pMVAs9jgaMIgWK0mq2AH8a6&data%5B14%5D%5B%5D=&data%5B3%5D%5Bother%5D=&data%5B7%5D=No&data%5B9%5D%5Badditional%5D=&data%5B2%5D=Yes&data%5B3%5D%5B%5D=Ari-oral&data%5B3%5D%5B%5D=Resperidol-oral&data%5B3%5D%5B%5D=Ari-LAI&data%5B3%5D%5B%5D=&data%5B11%5D%5Bother%5D=&data%5B9%5D%5Bmain%5D=&data%5B6%5D%5B%5D=Age&data%5B6%5D%5B%5D=Mechanism+of+Action&data%5B6%5D%5B%5D=Preference+of+the+patients&data%5B6%5D%5B%5D=&data%5B16%5D=xxx&data%5B11%5D%5B%5D=&data%5B14%5D%5Bother%5D=&data%5B1%5D%5Bmain%5D=10&data%5B4%5D%5Bother%5D=&data%5B12%5D%5Bother%5D=&data%5B6%5D%5Bother%5D=&data%5B1%5D%5Badditional%5D=')
+        assert results['data'] == {
 
+            1: {'main': '10', 'additional': ''},
+            2: 'Yes',
+            3: {'': ['Ari-oral', 'Resperidol-oral', 'Ari-LAI', ''], 'other': ''},
+            4: {'': ['Age', 'Preference of the patients', 'Efficacy profile', ''], 'other': ''},
+            6: {'': ['Age', 'Mechanism of Action', 'Preference of the patients', ''], 'other': ''},
+            7: 'No',
+            9: {'main': '', 'additional': ''},
+            11: {'': '', 'other': ''},
+            12: {'': '', 'other': ''},
+            14: {'': '', 'other': ''},
+            16: 'xxx'
+        }
 
 class TestLastEvaluator(object):
     evaluator = LastEvaluator
@@ -266,27 +281,29 @@ class TestTypeProcessor(TestCase):
         r6 = mixer.blend(Representation, active=True, question=[q6])
         r7 = mixer.blend(Representation, active=True, question=[q7])
 
+        a = mixer.blend(Answer, survey=s1)
+
         qs = mixer.blend(QuestionStat)
         self.evaluator.fill_out()
 
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q2.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q3.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q4.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q5.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q6.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q7.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q2.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q3.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q4.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q5.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q6.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q7.pk, {}, a)
 
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q1.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q2.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q3.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q5.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q6.pk, {})
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q7.pk, {})
-        #
-        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q1.pk, {})
-        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q4.pk, {})
-        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q5.pk, {})
-        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q6.pk, {})
-        # self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q7.pk, {})
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q1.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q2.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q3.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q5.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q6.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q7.pk, {}, a)
+
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q1.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q4.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q5.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q6.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q7.pk, {}, a)
 
 

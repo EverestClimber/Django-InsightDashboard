@@ -1,9 +1,13 @@
+import logging
 from querystring_parser import parser as queryparser
 
 from django.db import transaction
 
 from survey.models import Country, Survey, Organization, Answer, Question
 from .models import SurveyStat, OrganizationStat, QuestionStat, Representation
+
+logger = logging.getLogger(__name__)
+
 
 class AbstractEvaluator(object):
 
@@ -15,22 +19,22 @@ class AbstractEvaluator(object):
 
 
     @classmethod
-    def type_average_percent_processor(cls, question_stat, question_id, question_data):
+    def type_average_percent_processor(cls, question_stat, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_TWO_DEPENDEND_FIELDS:
             raise ValueError("type_average_percent_processor doesn't process %s", q.type)
 
     @classmethod
-    def type_yes_no_processor(cls, question_stat, question_id, question_data):
+    def type_yes_no_processor(cls, question_stat, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_YES_NO or q.type != Question.TYPE_YES_NO_JUMPING:
-            raise ValueError("type_average_percent_processor doesn't process %s", q.type)
+            raise ValueError("type_yes_no_processor doesn't process %s", q.type)
 
     @classmethod
-    def type_multiselect_top_processor(cls, question_stat, question_id, question_data):
+    def type_multiselect_top_processor(cls, question_stat, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_MULTISELECT_ORDERED:
-            raise ValueError("type_average_percent_processor doesn't process %s", q.type)
+            raise ValueError("type_multiselect_top_processor doesn't process %s", q.type)
 
     @staticmethod
     def get_answers():
@@ -137,14 +141,20 @@ class AbstractEvaluator(object):
                 survey_id=survey_id, country_id=None, organization_id=organization_id)
         cls.organization_stat[org_key_all].total += 1
 
+    @staticmethod
+    def parse_query_string(string):
+        return queryparser.parse(string)
+
+
     @classmethod
     def process_answer(cls, answer):
         if not answer.body:
             return
 
         try:
-            data = queryparser.parse(answer.body)
+            data = cls.parse_query_string(answer.body)
         except queryparser.MalformedQueryStringError:
+            logger.warning("Data cann't be parsed: %s" % answer.body)
             return
 
         survey_id = answer.survey_id
@@ -182,7 +192,12 @@ class AbstractEvaluator(object):
         cls.fill_out()
         answers = cls.get_answers()
         for answer in answers:
-            cls.process_answer(answer)
+            try:
+                cls.process_answer(answer)
+            except Exception as e:
+                logger.warning("Answer can't be processed. Exception: %s" % e)
+
+
         cls.save()
 
     def evaluate(self):
