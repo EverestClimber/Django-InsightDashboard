@@ -443,18 +443,6 @@
   background-color: #328ec9;
 }
 
-.chart-legend.h-bar-legend {
-  font-weight: bolder;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
 .report-card-body.horizontal-bar-chart-body {
   margin-top: 0;
-}
-
-@media (max-width: 992px) {
-  .report-card-body.horizontal-bar-chart-body {
-    padding-bottom: 40px;
-  }
 }
