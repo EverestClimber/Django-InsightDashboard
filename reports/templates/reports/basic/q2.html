@@ -68,6 +68,102 @@
 
   <script>
     (function() {
+
+      function drawHorizontalBarChart(chartId, chartData) {
+        var $horizontalBarChart = $(chartId);
+
+        drawYLabels($horizontalBarChart, chartData);
+        drawBars($horizontalBarChart, chartData);
+        adjustXLabels($horizontalBarChart, chartData);
+        initTooltips($horizontalBarChart);
+
+        function drawBars($chart, data) {
+          var $bars = $chart.find('.horizontal-bars');
+
+          data.forEach(function (item) {
+            var $bar = $('<div class="bar"></div>');
+
+            var $positivePortionText = $('<span>' + item.positiveNum + '</span>');
+            var $negativePortionText = $('<span>' + item.negativeNum + '</span>');
+
+            var $positivePortion = $(
+              '<div class="portion blue" ' +
+              'data-toggle="tooltip" ' +
+              'data-placement="top"' +
+              ' title="' + item.positiveNum + '">' +
+              '</div>'
+            ).html($positivePortionText);
+
+            var $negativePortion = $(
+              '<div class="portion red" ' +
+              'data-toggle="tooltip" ' +
+              'data-placement="top"' +
+              ' title="' + item.negativeNum + '">' +
+              '</div>'
+            ).html($negativePortionText);
+
+            var positiveWidth = _calcPositiveWidth(item);
+
+            var negativeWidth = 100 - positiveWidth;
+
+            $negativePortion.css('width', negativeWidth + '%');
+            $positivePortion.css('width', positiveWidth + '%');
+
+            $bar.append($positivePortion);
+            $bar.append($negativePortion);
+            $bars.append($bar);
+
+            _hideTextIfOverflows($negativePortion, $negativePortionText);
+            _hideTextIfOverflows($positivePortion, $positivePortionText);
+          });
+        }
+
+        function drawYLabels($chart, data) {
+          var $yLabels = $chart.find('.y-labels');
+
+          data.forEach(function (item) {
+            var $label = $('<div class="h-chart-y-label">' + item.label + '</div>');
+            $yLabels.append($label);
+          });
+        }
+
+        function adjustXLabels($chart, data) {
+          var $xLabels = $chart.find('.x-labels');
+          var xLabelsPaddingLeft = $chart.find('.y-labels').outerWidth();
+
+          $xLabels.css('padding-left', xLabelsPaddingLeft);
+        }
+
+        function initTooltips($chart) {
+          $chart.find('[data-toggle="tooltip"]').tooltip()
+        }
+
+        function _hideTextIfOverflows($container, $text) {
+          if (!_isEnoughSpaceForText($container, $text)) {
+            $container.empty();
+          }
+        }
+
+        function _isEnoughSpaceForText($container, $text) {
+          return $container.outerWidth() > $text.outerWidth();
+        }
+
+        function _calcPositiveWidth(item) {
+          var MIN_WIDTH = 1;
+          var MAX_WIDTH = 99;
+
+          var positiveWidth = item.positiveNum / (item.positiveNum + item.negativeNum) * 100;
+          if (positiveWidth > MAX_WIDTH) {
+            positiveWidth = MAX_WIDTH;
+          } else if (positiveWidth < MIN_WIDTH) {
+            positiveWidth = MIN_WIDTH;
+          }
+
+          return positiveWidth;
+
+        }
+      }
+
       $(document).ready(function() {
         var q2BarsData = [
           {
@@ -101,91 +197,7 @@
             negativeNum: 20
           }
         ];
-
-        var $q2HorizontalBarChart = $('#q2HorizontalBarChart');
-
-        drawYLabels($q2HorizontalBarChart, q2BarsData);
-        drawBars($q2HorizontalBarChart, q2BarsData);
-        adjustXLabels($q2HorizontalBarChart, q2BarsData);
-        initTooltips($q2HorizontalBarChart);
-
-        function drawBars($chart, data) {
-          var $bars = $chart.find('.horizontal-bars');
-
-          data.forEach(function(item) {
-            var $bar = $('<div class="bar"></div>');
-
-            var MIN_WIDTH = 1;
-            var MAX_WIDTH = 99;
-
-            var $positivePortionText = $('<span>' + item.positiveNum + '</span>');
-            var $negativePortionText = $('<span>' + item.negativeNum + '</span>');
-
-            var $positivePortion = $(
-              '<div class="portion blue" ' +
-              'data-toggle="tooltip" ' +
-              'data-placement="top"' +
-              ' title="' + item.positiveNum + '">' +
-              '</div>'
-            ).html($positivePortionText);
-
-            var $negativePortion = $(
-              '<div class="portion red" ' +
-              'data-toggle="tooltip" ' +
-              'data-placement="top"' +
-              ' title="' + item.negativeNum + '">' +
-              '</div>'
-            ).html($negativePortionText);
-
-            var positiveWidth = item.positiveNum / (item.positiveNum + item.negativeNum) * 100;
-            if (positiveWidth > MAX_WIDTH) {
-              positiveWidth = MAX_WIDTH;
-            } else if (positiveWidth < MIN_WIDTH) {
-              positiveWidth = MIN_WIDTH;
-            }
-            var negativeWidth = 100 - positiveWidth;
-
-            $negativePortion.css('width', negativeWidth + '%');
-            $positivePortion.css('width', positiveWidth + '%');
-
-            $bar.append($positivePortion);
-            $bar.append($negativePortion);
-            $bars.append($bar);
-
-            _hideTextIfOverflows($negativePortion, $negativePortionText);
-            _hideTextIfOverflows($positivePortion, $positivePortionText);
-          });
-        }
-
-        function drawYLabels($chart, data) {
-          var $yLabels = $chart.find('.y-labels');
-
-          data.forEach(function(item) {
-            var $label = $('<div class="h-chart-y-label">' + item.label + '</div>');
-            $yLabels.append($label);
-          });
-        }
-
-        function adjustXLabels($chart, data) {
-          var $xLabels = $chart.find('.x-labels');
-          var xLabelsPaddingLeft = $chart.find('.y-labels').outerWidth();
-
-          $xLabels.css('padding-left', xLabelsPaddingLeft);
-        }
-
-        function initTooltips($chart) {
-          $chart.find('[data-toggle="tooltip"]').tooltip()
-        }
-
-        function _hideTextIfOverflows($container, $text) {
-          if (!_isEnoughSpaceForText($container, $text)) {
-            $container.empty();
-          }
-        }
-
-        function _isEnoughSpaceForText($container, $text) {
-          return $container.outerWidth() > $text.outerWidth();
-        }
+        drawHorizontalBarChart('#q2HorizontalBarChart', q2BarsData);
       });
     })();
   </script>
