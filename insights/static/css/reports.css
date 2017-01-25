@@ -201,6 +201,17 @@
   }
 }
 
+@media (max-width: 992px) and (min-width: 768px){
+  .pie {
+    padding-left: 140px;
+    padding-right: 140px;
+  }
+  .pie-legend {
+    position: relative;
+    right: -120px;
+  }
+}
+
 .q2-pie-answers {
   display: flex;
   justify-content: space-around;
