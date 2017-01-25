@@ -271,27 +271,27 @@
 /* Chartist */
 
 .ct-chart .ct-bar:nth-of-type(6n+1) {
-  stroke: #5ca8d8;
+  stroke: #c50032;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+2) {
-  stroke: #7cc3ec;
+  stroke: #e04578;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+3) {
-  stroke: #b1dcf7;
+  stroke: #e597ae;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+4) {
-  stroke: #c1ddef;
+  stroke: #e7b2c2;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+5) {
-  stroke: #8ec5e8;
+  stroke: #e597ae;
 }
 
 .ct-chart .ct-bar:nth-of-type(6n+6) {
-  stroke: #8ec5e8;
+  stroke: #e7b2c2;
 }
 
 .ct-chart .ct-grid {
