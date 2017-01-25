@@ -19,19 +19,19 @@ class AbstractEvaluator(object):
 
 
     @classmethod
-    def type_average_percent_processor(cls, question_stat, question_id, question_data, answer):
+    def type_average_percent_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_TWO_DEPENDEND_FIELDS:
             raise ValueError("type_average_percent_processor doesn't process %s", q.type)
 
     @classmethod
-    def type_yes_no_processor(cls, question_stat, question_id, question_data, answer):
+    def type_yes_no_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_YES_NO or q.type != Question.TYPE_YES_NO_JUMPING:
             raise ValueError("type_yes_no_processor doesn't process %s", q.type)
 
     @classmethod
-    def type_multiselect_top_processor(cls, question_stat, question_id, question_data, answer):
+    def type_multiselect_top_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_MULTISELECT_ORDERED:
             raise ValueError("type_multiselect_top_processor doesn't process %s", q.type)
@@ -101,7 +101,7 @@ class AbstractEvaluator(object):
                     # Fill out question representation links
                     questions = repr.question.all()
                     for q in questions:
-                        cls.question_representation_link[q.pk] = repr.pk
+                        cls.question_representation_link[q.pk] = repr
                         if q.pk not in cls.question_dict:
                             cls.question_dict[q.pk] = q
 
@@ -149,13 +149,26 @@ class AbstractEvaluator(object):
     @classmethod
     def process_answer(cls, answer):
         if not answer.body:
-            return
+            raise KeyError("There is no answers data")
 
-        try:
-            data = cls.parse_query_string(answer.body)
-        except queryparser.MalformedQueryStringError:
-            logger.warning("Data cann't be parsed: %s" % answer.body)
-            return
+        results = cls.parse_query_string(answer.body)
+        if 'data' not in results:
+            raise KeyError("There is data in post results")
+
+        data = results['data']
+        if type(data) != dict:
+            raise KeyError("Answer data should be dict")
+
+        for qid, question_data in data.items():
+            if qid not in cls.question_dict:
+                logger.warning("Question %s is not expected" % qid)
+                continue
+            if qid not in cls.question_representation_link:
+                logger.warning("Question %s is not connected to any of representations" % qid)
+                continue
+            repr = cls.question_representation_link[qid]
+            processor = "%s_processor" % repr.type
+            getattr(cls, processor)(qid, question_data, answer)
 
         survey_id = answer.survey_id
         country_id = answer.user.country_id

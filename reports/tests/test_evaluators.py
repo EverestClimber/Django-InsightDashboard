@@ -1,6 +1,7 @@
 from datetime import datetime
 from mixer.backend.django import mixer
 import pytest
+from querystring_parser.parser import MalformedQueryStringError
 from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
@@ -99,8 +100,8 @@ class TestTotalEvaluator(TestCase):
         assert len(self.evaluator.organization_stat) == 6
         assert len(self.evaluator.question_stat) == 6
         assert self.evaluator.question_representation_link == {
-            q1.pk: r1.pk,
-            q2.pk: r2.pk
+            q1.pk: r1,
+            q2.pk: r2
         }
         assert self.evaluator.question_dict == {
             q1.pk: q1,
@@ -140,19 +141,28 @@ class TestTotalEvaluator(TestCase):
         user = mixer.blend(User, country_id=1)
 
         answer = mixer.blend(Answer, user=user, body='')
-        self.evaluator.process_answer(answer)
+        self.assertRaises(KeyError, self.evaluator.process_answer, answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 
         answer = mixer.blend(Answer, body='111')
-        self.evaluator.process_answer(answer)
+        self.assertRaises(MalformedQueryStringError, self.evaluator.process_answer, answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 
         answer = mixer.blend(Answer, user=user, body='a=1')
+        self.assertRaises(KeyError, self.evaluator.process_answer, answer)
+
+        answer = mixer.blend(Answer, user=user, body='data=1')
+        self.assertRaises(KeyError, self.evaluator.process_answer, answer)
+
+        answer = mixer.blend(Answer, user=user, body='data[111]=Yes')
         self.evaluator.process_answer(answer)
+
         survey_stat.assert_called_once_with((answer.survey_id, user.country_id), answer)
         organization_stat.assert_called_once_with((answer.survey_id, user.country_id, answer.organization_id))
+
+
 
     def test_process_answer(self):
         d1 = timezone.make_aware(datetime(2017, 1, 1))
@@ -286,24 +296,24 @@ class TestTypeProcessor(TestCase):
         qs = mixer.blend(QuestionStat)
         self.evaluator.fill_out()
 
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q2.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q3.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q4.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q5.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q6.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, qs, q7.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, q2.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, q3.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, q4.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, q5.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, q6.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_average_percent_processor, q7.pk, {}, a)
 
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q1.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q2.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q3.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q5.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q6.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, qs, q7.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, q1.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, q2.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, q3.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, q5.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, q6.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_multiselect_top_processor, q7.pk, {}, a)
 
-        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q1.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q4.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q5.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q6.pk, {}, a)
-        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, qs, q7.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, q1.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, q4.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, q5.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, q6.pk, {}, a)
+        self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, q7.pk, {}, a)
 
 
