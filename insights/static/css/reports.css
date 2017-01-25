@@ -240,20 +240,20 @@
   font-size: 20px;
 }
 
-.pie-legend {
+.chart-legend {
   margin-top: 35px;
 }
 
-.pie-legend ul {
+.chart-legend ul {
   list-style: none;
 }
 
-.pie-legend ul {
+.chart-legend ul {
   list-style: none;
   text-align: right;
 }
 
-.pie-legend ul li span {
+.chart-legend ul li span {
   display: inline-block;
   float: right;
   position: relative;
@@ -441,4 +441,14 @@
 
 .horizontal-bars .bar .portion.blue {
   background-color: #328ec9;
+}
+
+.chart-legend.h-bar-legend {
+  font-weight: bolder;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.report-card-body.horizontal-bar-chart-body {
+  margin-top: 0;
 }
