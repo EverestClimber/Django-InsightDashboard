@@ -351,3 +351,68 @@
 .ct-chart-bar .ct-label.ct-horizontal.ct-end {
   display: none;
 }
+
+/* Horizontal bar chart */
+
+.report-card-body.horizontal-bar-chart-body {
+
+}
+
+.horizontal-bar-chart {
+  display: flex;
+  flex-direction: row;
+}
+
+.x-labels, .y-labels {
+  font-family: "open sans";
+  font-size: 10px;
+  color: #3d3d3d;
+  fill: #3d3d3d;
+  font-weight: bolder;
+  letter-spacing: 1px;
+}
+
+.y-labels {
+  padding-right: 8px;
+  text-align: left;
+}
+
+.y-labels .h-chart-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.y-labels .h-chart-label, .horizontal-bars .bar {
+  height: 22px;
+  margin-bottom: 5px;
+}
+
+.x-labels {
+
+}
+
+.horizontal-bars {
+  flex-grow: 2;
+}
+
+.horizontal-bars .bar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.horizontal-bars .bar .portion {
+  height: 100%;
+  color: white;
+  font-weight: bolder;
+  text-align: center;
+}
+
+.horizontal-bars .bar .portion.red {
+  background-color: #b8102c;
+}
+
+.horizontal-bars .bar .portion.blue {
+  background-color: #328ec9;
+}
