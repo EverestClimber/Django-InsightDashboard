@@ -211,6 +211,15 @@
     position: relative;
     right: -120px;
   }
+
+  .pie-info {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
+  .pie-info .pie-notice {
+    font-size: 22px;
+  }
 }
 
 .q2-pie-answers {
