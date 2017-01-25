@@ -1,4 +1,5 @@
 import logging
+
 from querystring_parser import parser as queryparser
 
 from django.db import transaction
@@ -23,6 +24,54 @@ class AbstractEvaluator(object):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_TWO_DEPENDEND_FIELDS:
             raise ValueError("type_average_percent_processor doesn't process %s", q.type)
+
+        main_str = question_data['main'].strip()
+        if not main_str:
+            return
+
+        main_float = float(main_str)
+        org_id = answer.organization_id
+        reg_id = answer.region_id
+        country_id = answer.user.country_id
+        survey_id = answer.survey_id
+
+        r = cls.question_representation_link[question_id]
+
+        k0 = (survey_id, None, r.pk)
+        k1 = (survey_id, country_id, r.pk)
+        regs = [(k0, country_id), (k1, reg_id)]
+
+        for k, current_reg_id in regs:
+            data = cls.question_stat[k].data
+            if not data:
+                data.update({
+                    'main_sum': 0.0,
+                    'main_cnt': 0,
+                    'reg_sum': {},
+                    'reg_cnt': {},
+                    'org_sum': {},
+                    'org_cnt': {}
+                })
+
+            data = cls.question_stat[k].data
+            data['main_sum'] += main_float
+            data['main_cnt'] += 1
+            if current_reg_id in data['reg_sum']:
+                data['reg_sum'][current_reg_id] += main_float
+                data['reg_cnt'][current_reg_id] += 1
+            else:
+                data['reg_sum'][current_reg_id] = main_float
+                data['reg_cnt'][current_reg_id] = 1
+
+            if org_id in data['org_sum']:
+                data['org_sum'][org_id] += main_float
+                data['org_cnt'][org_id] += 1
+            else:
+                data['org_sum'][org_id] = main_float
+                data['org_cnt'][org_id] = 1
+
+
+
 
     @classmethod
     def type_yes_no_processor(cls, question_id, question_data, answer):

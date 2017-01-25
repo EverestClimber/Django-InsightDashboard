@@ -21,8 +21,11 @@
           </div>
           <div class="report-card-body">
             <div class="report-card-text-lg">
-              <div class="report-card-text-lesser left-1">{{ survey_stat.last|time:"H:i" }} CET</div>
-              {{ survey_stat.last|date:"d b o" | upper}}
+              {% if survey_stat.last %}
+                <div class="report-card-text-lesser left-1">{{ survey_stat.last|time:"H:i" }} CET</div>
+                {{ survey_stat.last|date:"d b o" | upper}}
+              {% endif %}
+
             </div>
             <div class="report-card-text">
               Number of surveys received

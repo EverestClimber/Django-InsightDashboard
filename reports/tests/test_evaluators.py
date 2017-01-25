@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import datetime
 from mixer.backend.django import mixer
 import pytest
@@ -7,7 +8,7 @@ from unittest.mock import patch, MagicMock
 from django.test import TestCase
 from django.utils import timezone
 
-from survey.models import Answer, Survey, Organization, Question
+from survey.models import Answer, Survey, Organization, Question, Region
 from insights.users.models import User, Country
 
 from ..models import SurveyStat, OrganizationStat, QuestionStat, Representation
@@ -316,4 +317,83 @@ class TestTypeProcessor(TestCase):
         self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, q6.pk, {}, a)
         self.assertRaises(ValueError, self.evaluator.type_yes_no_processor, q7.pk, {}, a)
 
+    def init_models(self, question_type, representation_type):
+        self.surv = mixer.blend(Survey, active=True)
+        self.c1 = mixer.blend(Country)
+        self.c2 = mixer.blend(Country)
+        self.c3 = mixer.blend(Country)
+        self.u1 = mixer.blend(User, country=self.c1)
+        self.u11 = mixer.blend(User, country=self.c1)
+        self.u2 = mixer.blend(User, country=self.c2)
+        self.u3 = mixer.blend(User, country=self.c3)
+        self.reg11 = mixer.blend(Region, country=self.c1)
+        self.reg12 = mixer.blend(Region, country=self.c1)
+        self.reg13 = mixer.blend(Region, country=self.c1)
+        self.reg21 = mixer.blend(Region, country=self.c2)
+        self.reg31 = mixer.blend(Region, country=self.c3)
+        self.org = mixer.blend(Organization)
+        self.q = mixer.blend(Question, type=question_type)
+        self.r = mixer.blend(Representation, question=[self.q], type=representation_type)
 
+        self.evaluator.survey_stat = {}
+        self.evaluator.organization_stat = {}
+        self.evaluator.question_stat = {}
+        self.evaluator.question_representation_link = {}
+        self.evaluator.question_dict = {}
+
+        self.evaluator.load_stat()
+        self.evaluator.fill_out()
+
+    def create_answer(self, **kwargs):
+        if 'survey' not in kwargs:
+            kwargs['survey'] = self.surv
+        if 'region' not in kwargs:
+            kwargs['region'] = self.reg11
+        if 'user' not in kwargs:
+            kwargs['user'] = self.u1
+        if 'org' not in kwargs:
+            kwargs['organization'] = self.org
+        if 'is_updated' not in kwargs:
+            kwargs['is_update'] = False
+        return mixer.blend(Answer, **kwargs)
+
+    def test_type_average_percent_processor(self):
+
+        self.init_models(Question.TYPE_TWO_DEPENDEND_FIELDS, Representation.TYPE_AVERAGE_PERCENT)
+        qid = self.q.pk
+        a1 = self.create_answer(body='data[%s][main]=40' % qid, user=self.u1, region=self.reg11)
+        a2 = self.create_answer(body='data[%s][main]=20' % qid, user=self.u11, region=self.reg12)
+        a3 = self.create_answer(body='data[%s][main]=30' % qid, user=self.u2, region=self.reg21)
+
+        self.evaluator.type_average_percent_processor(qid, {'main': '40', 'additional': ''}, a1)
+        self.evaluator.type_average_percent_processor(qid, {'main': '20', 'additional': ''}, a2)
+        self.evaluator.type_average_percent_processor(qid, {'main': '30', 'additional': ''}, a3)
+
+        k0 = (self.surv.pk, None, self.r.pk)
+        k1 = (self.surv.pk, self.c1.pk, self.r.pk)
+
+        data = self.evaluator.question_stat[k0].data
+        assert data['main_cnt'] == 3
+        self.assertAlmostEqual(data['main_sum'],  90.0)
+
+        assert data['reg_cnt'][self.c1.pk] == 2
+        self.assertAlmostEqual(data['reg_sum'][self.c1.pk],  60.0)
+
+        assert data['reg_cnt'][self.c2.pk] == 1
+        self.assertAlmostEqual(data['reg_sum'][self.c2.pk],  30.0)
+
+        assert data['org_cnt'][self.org.pk] == 3
+        self.assertAlmostEqual(data['org_sum'][self.org.pk],  90.0)
+
+        data = self.evaluator.question_stat[k1].data
+        assert data['main_cnt'] == 2
+        self.assertAlmostEqual(data['main_sum'],  60.0)
+
+        assert data['reg_cnt'][self.reg11.pk] == 1
+        self.assertAlmostEqual(data['reg_sum'][self.reg11.pk],  40.0)
+
+        assert data['reg_cnt'][self.reg12.pk] == 1
+        self.assertAlmostEqual(data['reg_sum'][self.reg12.pk],  20.0)
+
+        assert data['org_cnt'][self.org.pk] == 2
+        self.assertAlmostEqual(data['org_sum'][self.org.pk],  60.0)
