@@ -426,6 +426,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
 }
 
 .horizontal-bars .bar .portion {
@@ -433,6 +434,7 @@
   color: white;
   font-weight: bolder;
   text-align: center;
+  cursor: default;
 }
 
 .horizontal-bars .bar .portion.red {
@@ -445,4 +447,10 @@
 
 .report-card-body.horizontal-bar-chart-body {
   margin-top: 0;
+}
+
+@media (min-width: 992px) {
+  .report-card-body.horizontal-bar-chart-body {
+    margin-top: 10px;
+  }
 }

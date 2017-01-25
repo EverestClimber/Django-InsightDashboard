@@ -87,7 +87,7 @@
           },
           {
             label: 'SPAIN',
-            positiveNum: 225,
+            positiveNum: 99999999999,
             negativeNum: 80
           },
           {
@@ -107,6 +107,7 @@
         drawYLabels($q2HorizontalBarChart, q2BarsData);
         drawBars($q2HorizontalBarChart, q2BarsData);
         adjustXLabels($q2HorizontalBarChart, q2BarsData);
+        initTooltips($q2HorizontalBarChart);
 
         function drawBars($chart, data) {
           var $bars = $chart.find('.horizontal-bars');
@@ -114,10 +115,32 @@
           data.forEach(function(item) {
             var $bar = $('<div class="bar"></div>');
 
-            var $positivePortion = $('<div class="portion blue">' + item.positiveNum + '</div>');
-            var $negativePortion = $('<div class="portion red">' + item.negativeNum + '</div>');
+            var MIN_WIDTH = 3;
+            var MAX_WIDTH = 97;
+
+            var $positivePortion = $(
+              '<div class="portion blue" ' +
+              'data-toggle="tooltip" ' +
+              'data-placement="top"' +
+              ' title="' + item.positiveNum + '">'
+              + item.positiveNum  +
+              '</div>'
+            );
+            var $negativePortion = $(
+              '<div class="portion red" ' +
+              'data-toggle="tooltip" ' +
+              'data-placement="top"' +
+              ' title="' + item.negativeNum + '">'
+              + item.negativeNum +
+              '</div>'
+            );
 
             var positiveWidth = item.positiveNum / (item.positiveNum + item.negativeNum) * 100;
+            if (positiveWidth > MAX_WIDTH) {
+              positiveWidth = MAX_WIDTH;
+            } else if (positiveWidth < MIN_WIDTH) {
+              positiveWidth = MIN_WIDTH;
+            }
             var negativeWidth = 100 - positiveWidth;
 
             $negativePortion.css('width', negativeWidth + '%');
@@ -143,6 +166,10 @@
           var xLabelsPaddingLeft = $chart.find('.y-labels').outerWidth();
 
           $xLabels.css('padding-left', xLabelsPaddingLeft);
+        }
+
+        function initTooltips($chart) {
+          $chart.find('[data-toggle="tooltip"]').tooltip()
         }
       });
     })();
