@@ -115,25 +115,27 @@
           data.forEach(function(item) {
             var $bar = $('<div class="bar"></div>');
 
-            var MIN_WIDTH = 3;
-            var MAX_WIDTH = 97;
+            var MIN_WIDTH = 1;
+            var MAX_WIDTH = 99;
+
+            var $positivePortionText = $('<span>' + item.positiveNum + '</span>');
+            var $negativePortionText = $('<span>' + item.negativeNum + '</span>');
 
             var $positivePortion = $(
               '<div class="portion blue" ' +
               'data-toggle="tooltip" ' +
               'data-placement="top"' +
-              ' title="' + item.positiveNum + '">'
-              + item.positiveNum  +
+              ' title="' + item.positiveNum + '">' +
               '</div>'
-            );
+            ).html($positivePortionText);
+
             var $negativePortion = $(
               '<div class="portion red" ' +
               'data-toggle="tooltip" ' +
               'data-placement="top"' +
-              ' title="' + item.negativeNum + '">'
-              + item.negativeNum +
+              ' title="' + item.negativeNum + '">' +
               '</div>'
-            );
+            ).html($negativePortionText);
 
             var positiveWidth = item.positiveNum / (item.positiveNum + item.negativeNum) * 100;
             if (positiveWidth > MAX_WIDTH) {
@@ -149,6 +151,9 @@
             $bar.append($positivePortion);
             $bar.append($negativePortion);
             $bars.append($bar);
+
+            _hideTextIfOverflows($negativePortion, $negativePortionText);
+            _hideTextIfOverflows($positivePortion, $positivePortionText);
           });
         }
 
@@ -170,6 +175,16 @@
 
         function initTooltips($chart) {
           $chart.find('[data-toggle="tooltip"]').tooltip()
+        }
+
+        function _hideTextIfOverflows($container, $text) {
+          if (!_isEnoughSpaceForText($container, $text)) {
+            $container.empty();
+          }
+        }
+
+        function _isEnoughSpaceForText($container, $text) {
+          return $container.outerWidth() > $text.outerWidth();
         }
       });
     })();
