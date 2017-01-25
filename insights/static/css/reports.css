@@ -181,8 +181,9 @@
 
 /* Pie chart */
 
-.report-card.chart-card .pie-percentage {
+.report-card.chart-card .report-card-text-lg.pie-percentage {
   color: #b8103b;
+  font-size: 34px;
 }
 
 .report-card.chart-card .report-card-text {
