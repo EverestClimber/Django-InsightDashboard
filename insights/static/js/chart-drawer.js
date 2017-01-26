@@ -34,40 +34,11 @@
       var $bars = $chart.find('.horizontal-bars');
 
       data.forEach(function (item) {
-        var $bar = $('<div class="bar"></div>');
-
-        var $positivePortionText = $('<span>' + item.positiveNum + '</span>');
-        var $negativePortionText = $('<span>' + item.negativeNum + '</span>');
-
-        var $positivePortion = $(
-          '<div class="portion blue" ' +
-          'data-toggle="tooltip" ' +
-          'data-placement="top"' +
-          ' title="' + item.positiveNum + '">' +
-          '</div>'
-        ).html($positivePortionText);
-
-        var $negativePortion = $(
-          '<div class="portion red" ' +
-          'data-toggle="tooltip" ' +
-          'data-placement="top"' +
-          ' title="' + item.negativeNum + '">' +
-          '</div>'
-        ).html($negativePortionText);
-
-        var positiveWidth = _calcPositiveWidth(item);
-
-        var negativeWidth = 100 - positiveWidth;
-
-        $negativePortion.css('width', negativeWidth + '%');
-        $positivePortion.css('width', positiveWidth + '%');
-
-        $bar.append($positivePortion);
-        $bar.append($negativePortion);
-        $bars.append($bar);
-
-        _hideTextIfOverflows($negativePortion, $negativePortionText);
-        _hideTextIfOverflows($positivePortion, $positivePortionText);
+        if (item.positiveNum !== null && item.negativeNum !== null) {
+          _drawNonEmptyBar($bars, item);
+        } else {
+          _drawEmptyBar($bars, item);
+        }
       });
     }
 
@@ -89,6 +60,58 @@
 
     function initTooltips($chart) {
       $chart.find('[data-toggle="tooltip"]').tooltip()
+    }
+
+    function _drawNonEmptyBar($bars, item) {
+      var $bar = $('<div class="bar"></div>');
+
+      var $positivePortionText = $('<span>' + item.positiveNum + '</span>');
+      var $negativePortionText = $('<span>' + item.negativeNum + '</span>');
+
+      var $positivePortion = $(
+        '<div class="portion blue" ' +
+        'data-toggle="tooltip" ' +
+        'data-placement="top"' +
+        ' title="' + item.positiveNum + '">' +
+        '</div>'
+      ).html($positivePortionText);
+
+      var $negativePortion = $(
+        '<div class="portion red" ' +
+        'data-toggle="tooltip" ' +
+        'data-placement="top"' +
+        ' title="' + item.negativeNum + '">' +
+        '</div>'
+      ).html($negativePortionText);
+
+      var positiveWidth = _calcPositiveWidth(item);
+
+      var negativeWidth = 100 - positiveWidth;
+
+      $negativePortion.css('width', negativeWidth + '%');
+      $positivePortion.css('width', positiveWidth + '%');
+
+      $bar.append($positivePortion);
+      $bar.append($negativePortion);
+      $bars.append($bar);
+
+      _hideTextIfOverflows($negativePortion, $negativePortionText);
+      _hideTextIfOverflows($positivePortion, $positivePortionText);
+    }
+
+    function _drawEmptyBar($bars, item) {
+      var $bar = $('<div class="bar"></div>');
+
+      var $emptyPortion = $(
+        '<div class="portion empty" ' +
+        'data-toggle="tooltip" ' +
+        'data-placement="top"' +
+        ' title="n/a">' +
+        '</div>'
+      ).html('n/a');
+
+      $bar.append($emptyPortion);
+      $bars.append($bar);
     }
 
     function _hideTextIfOverflows($container, $text) {
