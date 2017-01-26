@@ -7,9 +7,9 @@
   };
 
   function drawPie(pieData, pieId, legendId) {
-    var pieCtx = $(pieId).get(0).getContext("2d");
-    var pieLegend = $(legendId);
-    var pie = new Chart(pieCtx,{
+    var $pieCtx = $(pieId).get(0).getContext("2d");
+    var $pieLegend = $(legendId);
+    var pie = new Chart($pieCtx,{
       type: 'pie',
       data: pieData,
       options: {
@@ -19,7 +19,22 @@
         }
       }
     });
-    pieLegend.html(pie.generateLegend());
+    $pieLegend.html(pie.generateLegend());
+    _filterLegend();
+
+    function _filterLegend() {
+      var $lis = $pieLegend.find('ul > li');
+
+      $lis.each(function(index, li) {
+        if (pieData.datasets[0].data[index] == 0) {
+          $(li).empty();
+        }
+      });
+
+      if (pieData.hideLastLegendItem) {
+        $lis.last().empty();
+      }
+    }
   }
 
   function drawHorizontalBarChart(chartId, chartData) {
