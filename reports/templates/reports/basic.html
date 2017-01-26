@@ -114,7 +114,7 @@
     var percentage = Math.round(q1PieData.datasets[0].data[1]/total*100);
 
     $('#q1Percentage').html(percentage + '%');
-    drawPie(q1PieData, '#q1Pie', '#q1PieLegend')
+    ChartDrawer.drawPie(q1PieData, '#q1Pie', '#q1PieLegend')
   }
 
   function drawQ2Pie() {
@@ -143,23 +143,7 @@
     $('#q2PieNo').css('color', q2PieData.datasets[0].backgroundColor[0]).html(yesNum);
     $('#q2PieYes').css('color', q2PieData.datasets[0].backgroundColor[1]).html(noNum);
 
-    drawPie(q2PieData, '#q2Pie', '#q2PieLegend')
-  }
-
-  function drawPie(pieData, pieId, legendId) {
-    var pieCtx = $(pieId).get(0).getContext("2d");
-    var pieLegend = $(legendId);
-    var pie = new Chart(pieCtx,{
-      type: 'pie',
-      data: pieData,
-      options: {
-        legend: false,
-        tooltips: {
-          enabled: false
-        }
-      }
-    });
-    pieLegend.html(pie.generateLegend());
+    ChartDrawer.drawPie(q2PieData, '#q2Pie', '#q2PieLegend')
   }
 
   $(document).ready(function() {
