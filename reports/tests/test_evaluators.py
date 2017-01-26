@@ -108,6 +108,9 @@ class TestTotalEvaluator(TestCase):
             q2.pk: q2
         }
 
+        for qs in self.evaluator.question_stat.values():
+            assert qs.type == qs.representation.type
+
 
     @patch('reports.evaluators.AbstractEvaluator.process_answer')
     @patch('reports.evaluators.AbstractEvaluator.load_stat')

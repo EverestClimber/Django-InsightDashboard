@@ -274,7 +274,7 @@ class AbstractEvaluator(object):
                     q_key = (surv.pk, country_id, repr.pk)
                     if q_key not in cls.question_stat:
                         cls.question_stat[q_key] = QuestionStat(
-                            survey=surv, country=country, representation=repr, ordering=repr.ordering)
+                            survey=surv, country=country, representation=repr, ordering=repr.ordering, type=repr.type)
                     else:
                         if cls.question_stat[q_key].ordering != repr.ordering:
                             cls.question_stat[q_key].ordering = repr.ordering
