@@ -172,21 +172,20 @@
 
     function setBarPercentage(data) {
       if (data.type === "bar") {
+        console.log(data.element.attr('ct:value'));
         var barHorizontalCenter, barVerticalCenter, label, value;
         barHorizontalCenter = data.x1 + (data.element.width() * .5);
         barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
         value = data.element.attr('ct:value');
-        if (value !== '0') {
-          label = new Chartist.Svg('text');
-          label.text(value + '%');
-          label.addClass("ct-barlabel");
-          label.attr({
-            x: barHorizontalCenter,
-            y: barVerticalCenter,
-            'text-anchor': 'middle'
-          });
-          return data.group.append(label);
-        }
+        label = new Chartist.Svg('text');
+        label.text(value + '%');
+        label.addClass("ct-barlabel");
+        label.attr({
+          x: barHorizontalCenter,
+          y: barVerticalCenter,
+          'text-anchor': 'middle'
+        });
+        return data.group.append(label);
       }
     }
 
