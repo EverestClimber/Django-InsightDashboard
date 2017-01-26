@@ -6,9 +6,11 @@ class Region(models.Model):
     name = models.CharField('Region name', max_length=100)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
+    ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
 
     def __str__(self):
         return self.name
+        ordering = ['ordering', 'id']
 
 
 class Organization(models.Model):
@@ -16,10 +18,11 @@ class Organization(models.Model):
     name_plural = models.CharField('Organization name in plural form', max_length=100),
     name_plural_short = models.CharField('Short organization name in plural form', max_length=100),
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
-    ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True)
+    ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
 
     def __str__(self):
         return self.name
+        ordering = ['ordering', 'id']
 
 
 # class HCPCategory(models.Model):

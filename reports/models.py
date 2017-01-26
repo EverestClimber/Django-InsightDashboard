@@ -68,10 +68,31 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     country = models.ForeignKey(Country, blank=True, null=True)
     representation = models.ForeignKey(Representation)
     data = jsonfield.JSONField()
+    vars = jsonfield.JSONField()
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
 
     class Meta:
         ordering = ['ordering', 'id']
+
+    def update_type_average_percent(self):
+        pass
+
+    def update_type_yes_no(self):
+        pass
+
+    def update_type_multiselect_top(self):
+        pass
+
+    def update_vars(self):
+        if not self.type:
+            raise KeyError('Empty type')
+
+        getattr(self, 'update_%s' % self.type)()
+
+    @classmethod
+    def clear(cls):
+        pass
+
 
 
 class OptionDict(models.Model):

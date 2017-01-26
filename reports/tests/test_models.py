@@ -3,8 +3,9 @@ import pytest
 
 from django.test import TestCase
 
-from survey.models import Option
-from ..models import OptionDict
+from survey.models import Option, Region, Organization
+from insights.users.models import User, Country
+from ..models import OptionDict, QuestionStat
 
 pytestmark = pytest.mark.django_db
 
@@ -37,3 +38,80 @@ class TestOptionDict(TestCase):
 
         assert OptionDict.get('xx') == 'xx'
 
+
+class TestQuestionStat(TestCase):
+    def test_updators(self):
+        q = QuestionStat()
+        for name, _ in QuestionStat.TYPE_CHOICES:
+            assert callable(getattr(q, 'update_%s' % name))
+
+    def setUp(self):
+        self.c1 = mixer.blend(Country)
+        self.c2 = mixer.blend(Country)
+        self.c3 = mixer.blend(Country)
+
+        self.reg1 = mixer.blend(Region, country=self.c1)
+        self.reg2 = mixer.blend(Region, country=self.c1)
+        self.reg3 = mixer.blend(Region, country=self.c1)
+
+        self.org1 = mixer.blend(Organization)
+        self.org2 = mixer.blend(Organization)
+        self.org3 = mixer.blend(Organization)
+
+
+        QuestionStat.clear()
+
+    def test_update_type_average_percent(self):
+        data = {
+            'main_sum': 90.0,
+            'main_cnt': 3,
+
+            'reg_sum': {1: 60.0, 2: 30.0},
+            'reg_cnt': {1: 2, 2: 1},
+
+            'org_sum': {1: 90.0},
+            'org_cnt': {1: 3},
+        }
+        qs0 = mixer.blend(QuestionStat, country=None, data=data, type=QuestionStat.TYPE_AVERAGE_PERCENT)
+        qs0.update_vars()
+
+        qs1 = mixer.blend(QuestionStat, country=self.c1, data=data, type=QuestionStat.TYPE_AVERAGE_PERCENT)
+        qs1.update_vars()
+
+    def test_update_type_yes_no(self):
+        data = {
+            'main_yes': 2,
+            'main_cnt': 3,
+
+            'reg_yes': {1: 1, 2: 1},
+            'reg_cnt': {1: 2, 2: 1},
+
+            'org_yes': {1: 2},
+            'org_cnt': {1: 3},
+        }
+
+        qs0 = mixer.blend(QuestionStat, country=None, data=data, type=QuestionStat.TYPE_YES_NO)
+        qs0.update_vars()
+
+        qs1 = mixer.blend(QuestionStat, country=self.c1, data=data, type=QuestionStat.TYPE_YES_NO)
+        qs1.update_vars()
+
+    def test_update_type_multiselect_top(self):
+        data = {
+            'top1': {'x2': 1, 'x1': 2},
+            'top3': {'x3': 2, 'x2': 3, 'x1': 2},
+            'cnt': 3,
+            'org': {
+                1: {
+                    'top1': {'x2': 1, 'x1': 2},
+                    'top3': {'x3': 2, 'x2': 3, 'x1': 2},
+                    'cnt': 3
+                }
+            }
+        }
+
+        qs0 = mixer.blend(QuestionStat, country=None, data=data, type=QuestionStat.TYPE_MULTISELECT_TOP)
+        qs0.update_vars()
+
+        qs1 = mixer.blend(QuestionStat, country=self.c1, data=data, type=QuestionStat.TYPE_MULTISELECT_TOP)
+        qs1.update_vars()
