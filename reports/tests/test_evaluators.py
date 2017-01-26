@@ -89,8 +89,8 @@ class TestTotalEvaluator(TestCase):
         mixer.blend(SurveyStat, survey=s1, country=c1)
         mixer.blend(OrganizationStat, survey=s1, country_id=None, organization=o1)
         mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
-        mixer.blend(QuestionStat, survey=s1, country=None, representation=r1)
-        mixer.blend(QuestionStat, survey=s1, country=c1, representation=r1)
+        mixer.blend(QuestionStat, survey=s1, country=None, representation=r1, type=r1.type)
+        mixer.blend(QuestionStat, survey=s1, country=c1, representation=r1, type=r1.type)
         self.evaluator.load_stat()
         assert len(self.evaluator.survey_stat) == 2
         assert len(self.evaluator.organization_stat) == 2
@@ -387,27 +387,27 @@ class TestTypeProcessor(TestCase):
         assert data['main_cnt'] == 3
         self.assertAlmostEqual(data['main_sum'],  90.0)
 
-        assert data['reg_cnt'][self.c1.pk] == 2
-        self.assertAlmostEqual(data['reg_sum'][self.c1.pk],  60.0)
+        assert data['reg_cnt'][str(self.c1.pk)] == 2
+        self.assertAlmostEqual(data['reg_sum'][str(self.c1.pk)],  60.0)
 
-        assert data['reg_cnt'][self.c2.pk] == 1
-        self.assertAlmostEqual(data['reg_sum'][self.c2.pk],  30.0)
+        assert data['reg_cnt'][str(self.c2.pk)] == 1
+        self.assertAlmostEqual(data['reg_sum'][str(self.c2.pk)],  30.0)
 
-        assert data['org_cnt'][self.org.pk] == 3
-        self.assertAlmostEqual(data['org_sum'][self.org.pk],  90.0)
+        assert data['org_cnt'][str(self.org.pk)] == 3
+        self.assertAlmostEqual(data['org_sum'][str(self.org.pk)],  90.0)
 
         data = self.evaluator.question_stat[k1].data
         assert data['main_cnt'] == 2
         self.assertAlmostEqual(data['main_sum'],  60.0)
 
-        assert data['reg_cnt'][self.reg11.pk] == 1
-        self.assertAlmostEqual(data['reg_sum'][self.reg11.pk],  40.0)
+        assert data['reg_cnt'][str(self.reg11.pk)] == 1
+        self.assertAlmostEqual(data['reg_sum'][str(self.reg11.pk)],  40.0)
 
-        assert data['reg_cnt'][self.reg12.pk] == 1
-        self.assertAlmostEqual(data['reg_sum'][self.reg12.pk],  20.0)
+        assert data['reg_cnt'][str(self.reg12.pk)] == 1
+        self.assertAlmostEqual(data['reg_sum'][str(self.reg12.pk)],  20.0)
 
-        assert data['org_cnt'][self.org.pk] == 2
-        self.assertAlmostEqual(data['org_sum'][self.org.pk],  60.0)
+        assert data['org_cnt'][str(self.org.pk)] == 2
+        self.assertAlmostEqual(data['org_sum'][str(self.org.pk)],  60.0)
 
 
     def test_type_yes_no_processor(self):
@@ -428,27 +428,27 @@ class TestTypeProcessor(TestCase):
         assert data['main_cnt'] == 3
         assert data['main_yes'] == 2
 
-        assert data['reg_cnt'][self.c1.pk] == 2
-        assert data['reg_yes'][self.c1.pk] == 1
+        assert data['reg_cnt'][str(self.c1.pk)] == 2
+        assert data['reg_yes'][str(self.c1.pk)] == 1
 
-        assert data['reg_cnt'][self.c2.pk] == 1
-        assert data['reg_yes'][self.c2.pk] == 1
+        assert data['reg_cnt'][str(self.c2.pk)] == 1
+        assert data['reg_yes'][str(self.c2.pk)] == 1
 
-        assert data['org_cnt'][self.org.pk] == 3
-        assert data['org_yes'][self.org.pk] == 2
+        assert data['org_cnt'][str(self.org.pk)] == 3
+        assert data['org_yes'][str(self.org.pk)] == 2
 
         data = self.evaluator.question_stat[k1].data
         assert data['main_cnt'] == 2
         assert data['main_yes'] == 1
 
-        assert data['reg_cnt'][self.reg11.pk] == 1
-        assert data['reg_yes'][self.reg11.pk] == 1
+        assert data['reg_cnt'][str(self.reg11.pk)] == 1
+        assert data['reg_yes'][str(self.reg11.pk)] == 1
 
-        assert data['reg_cnt'][self.reg12.pk] == 1
-        assert data['reg_yes'][self.reg12.pk] == 0
+        assert data['reg_cnt'][str(self.reg12.pk)] == 1
+        assert data['reg_yes'][str(self.reg12.pk)] == 0
 
-        assert data['org_cnt'][self.org.pk] == 2
-        assert data['org_yes'][self.org.pk] == 1
+        assert data['org_cnt'][str(self.org.pk)] == 2
+        assert data['org_yes'][str(self.org.pk)] == 1
 
     def test_type_multiselect_top_processor(self):
         self.init_models(Question.TYPE_MULTISELECT_ORDERED, Representation.TYPE_MULTISELECT_TOP)
@@ -475,7 +475,7 @@ class TestTypeProcessor(TestCase):
             'x3': 2
         }
         assert data['org'] == {
-            self.org.pk: {
+            str(self.org.pk): {
                 'cnt': 3,
                 'top1': {
                     'x1': 2,
@@ -500,7 +500,7 @@ class TestTypeProcessor(TestCase):
             'x3': 1
         }
         assert data['org'] == {
-            self.org.pk: {
+            str(self.org.pk): {
                 'cnt': 2,
                 'top1': {
                     'x1': 2,

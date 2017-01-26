@@ -30,7 +30,7 @@ class AbstractEvaluator(object):
             return
 
         main_float = float(main_str)
-        org_id = answer.organization_id
+        org_key = str(answer.organization_id)
         reg_id = answer.region_id
         country_id = answer.user.country_id
         survey_id = answer.survey_id
@@ -41,7 +41,8 @@ class AbstractEvaluator(object):
         k1 = (survey_id, country_id, r.pk)
         regs = [(k0, country_id), (k1, reg_id)]
 
-        for k, current_reg_id in regs:
+        for k, cur_reg_id in regs:
+            reg_key = str(cur_reg_id)
             data = cls.question_stat[k].data
             if not data:
                 data.update({
@@ -56,19 +57,19 @@ class AbstractEvaluator(object):
             data = cls.question_stat[k].data
             data['main_sum'] += main_float
             data['main_cnt'] += 1
-            if current_reg_id in data['reg_sum']:
-                data['reg_sum'][current_reg_id] += main_float
-                data['reg_cnt'][current_reg_id] += 1
+            if reg_key in data['reg_sum']:
+                data['reg_sum'][reg_key] += main_float
+                data['reg_cnt'][reg_key] += 1
             else:
-                data['reg_sum'][current_reg_id] = main_float
-                data['reg_cnt'][current_reg_id] = 1
+                data['reg_sum'][reg_key] = main_float
+                data['reg_cnt'][reg_key] = 1
 
-            if org_id in data['org_sum']:
-                data['org_sum'][org_id] += main_float
-                data['org_cnt'][org_id] += 1
+            if org_key in data['org_sum']:
+                data['org_sum'][org_key] += main_float
+                data['org_cnt'][org_key] += 1
             else:
-                data['org_sum'][org_id] = main_float
-                data['org_cnt'][org_id] = 1
+                data['org_sum'][org_key] = main_float
+                data['org_cnt'][org_key] = 1
 
 
 
@@ -88,7 +89,7 @@ class AbstractEvaluator(object):
         else:
             return
 
-        org_id = answer.organization_id
+        org_key = str(answer.organization_id)
         reg_id = answer.region_id
         country_id = answer.user.country_id
         survey_id = answer.survey_id
@@ -99,7 +100,8 @@ class AbstractEvaluator(object):
         k1 = (survey_id, country_id, r.pk)
         regs = [(k0, country_id), (k1, reg_id)]
 
-        for k, current_reg_id in regs:
+        for k, cur_reg_id in regs:
+            reg_key = str(cur_reg_id)
             data = cls.question_stat[k].data
             if not data:
                 data.update({
@@ -114,19 +116,19 @@ class AbstractEvaluator(object):
             data = cls.question_stat[k].data
             data['main_yes'] += yes
             data['main_cnt'] += 1
-            if current_reg_id in data['reg_yes']:
-                data['reg_yes'][current_reg_id] += yes
-                data['reg_cnt'][current_reg_id] += 1
+            if reg_key in data['reg_yes']:
+                data['reg_yes'][reg_key] += yes
+                data['reg_cnt'][reg_key] += 1
             else:
-                data['reg_yes'][current_reg_id] = yes
-                data['reg_cnt'][current_reg_id] = 1
+                data['reg_yes'][reg_key] = yes
+                data['reg_cnt'][reg_key] = 1
 
-            if org_id in data['org_yes']:
-                data['org_yes'][org_id] += yes
-                data['org_cnt'][org_id] += 1
+            if org_key in data['org_yes']:
+                data['org_yes'][org_key] += yes
+                data['org_cnt'][org_key] += 1
             else:
-                data['org_yes'][org_id] = yes
-                data['org_cnt'][org_id] = 1
+                data['org_yes'][org_key] = yes
+                data['org_cnt'][org_key] = 1
 
 
     @classmethod
@@ -161,7 +163,7 @@ class AbstractEvaluator(object):
                 break
 
         r = cls.question_representation_link[question_id]
-        org_id = answer.organization_id
+        org_key = str(answer.organization_id)
         country_id = answer.user.country_id
         survey_id = answer.survey_id
         k0 = (survey_id, None, r.pk)
@@ -179,24 +181,24 @@ class AbstractEvaluator(object):
 
             data['cnt'] += 1
 
-            if org_id not in data['org']:
-                data['org'][org_id] = {
+            if org_key not in data['org']:
+                data['org'][org_key] = {
                     'cnt': 0,
                     'top1': {},
                     'top3': {},
                 }
 
-            data['org'][org_id]['cnt'] += 1
+            data['org'][org_key]['cnt'] += 1
 
             if top1 in data['top1']:
                 data['top1'][top1] += 1
             else:
                 data['top1'][top1] = 1
 
-            if top1 in data['org'][org_id]['top1']:
-                data['org'][org_id]['top1'][top1] += 1
+            if top1 in data['org'][org_key]['top1']:
+                data['org'][org_key]['top1'][top1] += 1
             else:
-                data['org'][org_id]['top1'][top1] = 1
+                data['org'][org_key]['top1'][top1] = 1
 
 
             for top_i in top3:
@@ -205,10 +207,10 @@ class AbstractEvaluator(object):
                 else:
                     data['top3'][top_i] = 1
 
-                if top_i in data['org'][org_id]['top3']:
-                    data['org'][org_id]['top3'][top_i] += 1
+                if top_i in data['org'][org_key]['top3']:
+                    data['org'][org_key]['top3'][top_i] += 1
                 else:
-                    data['org'][org_id]['top3'][top_i] = 1
+                    data['org'][org_key]['top3'][top_i] = 1
 
 
 

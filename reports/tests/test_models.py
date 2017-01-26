@@ -68,11 +68,11 @@ class TestQuestionStat(TestCase):
             'main_sum': 90.0,
             'main_cnt': 3,
 
-            'reg_sum': {1: 60.0, 2: 30.0},
-            'reg_cnt': {1: 2, 2: 1},
+            'reg_sum': {'1': 60.0, '2': 30.0},
+            'reg_cnt': {'1': 2, '2': 1},
 
-            'org_sum': {1: 90.0},
-            'org_cnt': {1: 3},
+            'org_sum': {'1': 90.0},
+            'org_cnt': {'1': 3},
         }
         qs0 = mixer.blend(QuestionStat,
                           representation=self.r,
@@ -93,11 +93,11 @@ class TestQuestionStat(TestCase):
             'main_yes': 2,
             'main_cnt': 3,
 
-            'reg_yes': {1: 1, 2: 1},
-            'reg_cnt': {1: 2, 2: 1},
+            'reg_yes': {'1': 1, '2': 1},
+            'reg_cnt': {'1': 2, '2': 1},
 
-            'org_yes': {1: 2},
-            'org_cnt': {1: 3},
+            'org_yes': {'1': 2},
+            'org_cnt': {'1': 3},
         }
 
         qs0 = mixer.blend(QuestionStat,
@@ -120,7 +120,7 @@ class TestQuestionStat(TestCase):
             'top3': {'x3': 2, 'x2': 3, 'x1': 2},
             'cnt': 3,
             'org': {
-                1: {
+                '1': {
                     'top1': {'x2': 1, 'x1': 2},
                     'top3': {'x3': 2, 'x2': 3, 'x1': 2},
                     'cnt': 3

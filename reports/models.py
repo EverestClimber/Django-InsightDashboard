@@ -3,7 +3,9 @@ import jsonfield
 from django.db import models
 
 
-from survey.models import Country, Survey, Organization, Answer, Question, Option
+from insights.users.models import Country
+from survey.models import Survey, Organization, Answer, Question, Option, Region
+
 
 
 class Stat(models.Model):
@@ -72,12 +74,39 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
 
     report_type = 'basic'
+    regions_cache = {}
 
     class Meta:
         ordering = ['ordering', 'id']
 
+
+    @classmethod
+    def get_regions(cls, country_id):
+        if country_id in cls.regions_cache:
+            return cls.regions_cache[country_id]
+
+        if country_id:
+            regions = list(Region.objects.filter(country_id=country_id))
+        else:
+            regions = list(Country.objects.all())
+        cls.regions_cache[country_id] = regions
+        return regions
+
     def update_type_average_percent(self):
-        pass
+        regions = self.get_regions(self.country_id)
+        self.vars['bar_labels'] = []
+        self.vars['bar_series'] = []
+
+        data = self.data
+
+        for reg in regions:
+            reg_key = str(reg.pk)
+            if reg_key in data['reg_cnt']:
+                val = int(round(data['reg_sum'][reg_key] / data['reg_cnt'][reg_key]))
+            else:
+                val = -1
+            self.vars['bar_labels'].append(reg.name.upper())
+            self.vars['bar_series'].append(val)
 
     def update_type_yes_no(self):
         pass
@@ -86,13 +115,16 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         pass
 
     def update_vars(self):
+        if not self.data:
+            return
+
         self.vars['question_text'] = self.representation.question.first().text
         if self.country_id:
             self.vars['header_europe_total'] = '%s total' % self.country.name
-            self.vars['header_by_country'] = 'BY COUNTRY'
+            self.vars['header_by_country'] = 'BY REGION'
         else:
             self.vars['header_europe_total'] = 'Europe total'
-            self.vars['header_by_country'] = 'BY REGION'
+            self.vars['header_by_country'] = 'BY COUNTRY'
 
         if not self.type:
             raise KeyError('Empty type')
@@ -105,6 +137,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     @classmethod
     def clear(cls):
         cls.report_type = 'basic'
+        cls.regions_cache = {}
 
 
 
