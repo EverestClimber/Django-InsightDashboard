@@ -11,7 +11,7 @@ class RegionAdmin(admin.ModelAdmin):
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_at')
+    list_display = ('id', 'ordering', 'name', 'name_plural', 'name_plural_short', 'label1', 'created_at')
     search_fields = ['name']
 
 
