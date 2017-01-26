@@ -186,6 +186,10 @@
   left: 1px;
 }
 
+.mb-30 {
+  margin-bottom: 30px;
+}
+
 /* Pie chart */
 
 .report-card.chart-card .report-card-text-lg.pie-percentage {
