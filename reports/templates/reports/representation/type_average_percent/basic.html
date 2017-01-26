@@ -14,7 +14,7 @@
             <div class="col-md-6 pie-info">
               <div class="pie-percentage report-card-text-lg" id="q{{ i }}Percentage"></div>
               <div class="pie-notice report-card-text">
-                total percentage of patients with SCZ that have abused drugs
+                {{ stat.vars.label1 }}
               </div>
             </div>
             <div class="pie q{{ i }}-pie col-md-6">
@@ -44,13 +44,10 @@
 
     function drawQ{{ i }}Pie() {
       var q{{ i }}PieData = {
-        labels: [
-          "Substance abuse",
-          "No abuse"
-        ],
+        labels: {{ stat.vars.pie_labels | safe }},
         datasets: [
           {
-            data: [72, 128],
+            data: {{ stat.vars.pie_data }},
             backgroundColor: [
               "#b8103b",
               "#328ec9"

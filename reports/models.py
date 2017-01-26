@@ -108,6 +108,11 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             self.vars['bar_labels'].append(reg.name.upper())
             self.vars['bar_series'].append(val)
 
+        self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
+        pers = int(round(self.data['main_sum'] / self.data['main_cnt']))
+        self.vars['pie_data'] = [pers, 100-pers]
+        self.vars['label1'] = self.representation.label1
+
     def update_type_yes_no(self):
         pass
 

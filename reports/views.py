@@ -33,7 +33,11 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         kwargs['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=country_id)
 
         QuestionStat.report_type = kwargs['report_type']
-        kwargs['question_stat'] = QuestionStat.objects.filter(survey=survey, country_id=country_id)
+
+        kwargs['question_stat'] = []
+        for qs in QuestionStat.objects.filter(survey=survey, country_id=country_id):
+            if (qs.vars):
+                kwargs['question_stat'].append(qs)
 
         return super(self.__class__, self).get_context_data(**kwargs)
 
