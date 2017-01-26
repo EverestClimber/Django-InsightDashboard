@@ -172,7 +172,6 @@
 
     function setBarPercentage(data) {
       if (data.type === "bar") {
-        console.log(data.element.attr('ct:value'));
         var barHorizontalCenter, barVerticalCenter, label, value;
         barHorizontalCenter = data.x1 + (data.element.width() * .5);
         barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;

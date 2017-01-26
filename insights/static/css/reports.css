@@ -255,6 +255,10 @@
   margin-top: 35px;
 }
 
+.chart-legend.last-hidden ul li:last-child {
+  display: none;
+}
+
 .chart-legend ul {
   list-style: none;
 }
