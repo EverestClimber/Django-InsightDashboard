@@ -34,7 +34,7 @@
 
 
 @media (max-width: 992px) {
-  .survey-cards > .row > *, .question-3 > .row > *, .question-2 > .row > *,  .question-1 > .row > *  {
+  .survey-cards > .row > *, .question-container > .row > *  {
     margin-bottom: 20px;
   }
 }
@@ -78,6 +78,12 @@
   margin-bottom: 40px;
 }
 
+.report-card .report-card-body.bars-body {
+  position: relative;
+  margin-top: 0;
+  padding-bottom: 65px;
+}
+
 .report-card-head .head-delim {
   display: inline-block;
   height: 1px;
@@ -114,8 +120,15 @@
   font-size: 12px;
 }
 
-.question-3, .question-1, .question-2 {
+.question-container {
   margin-top: 70px;
+}
+
+.question-title {
+  letter-spacing: 1px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 
 .report-card.report-card-table .report-card-head {
@@ -173,10 +186,15 @@
   left: 1px;
 }
 
+.mb-30 {
+  margin-bottom: 30px;
+}
+
 /* Pie chart */
 
-.report-card.chart-card .pie-percentage {
+.report-card.chart-card .report-card-text-lg.pie-percentage {
   color: #b8103b;
+  font-size: 34px;
 }
 
 .report-card.chart-card .report-card-text {
@@ -192,6 +210,26 @@
     margin-top: 0;
     margin-bottom: 25px;
     text-align: center;
+  }
+}
+
+@media (max-width: 992px) and (min-width: 768px){
+  .pie {
+    padding-left: 140px;
+    padding-right: 140px;
+  }
+  .pie-legend {
+    position: relative;
+    right: -120px;
+  }
+
+  .pie-info {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
+  .pie-info .pie-notice {
+    font-size: 22px;
   }
 }
 
@@ -213,20 +251,20 @@
   font-size: 20px;
 }
 
-.pie-legend {
+.chart-legend {
   margin-top: 35px;
 }
 
-.pie-legend ul {
+.chart-legend ul {
   list-style: none;
 }
 
-.pie-legend ul {
+.chart-legend ul {
   list-style: none;
   text-align: right;
 }
 
-.pie-legend ul li span {
+.chart-legend ul li span {
   display: inline-block;
   float: right;
   position: relative;
@@ -262,3 +300,168 @@
   left: calc(50% - 2.5px)
 }
 
+/* Chartist */
+
+.ct-chart .ct-bar:nth-of-type(6n+1) {
+  stroke: #c50032;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+2) {
+  stroke: #e04578;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+3) {
+  stroke: #e597ae;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+4) {
+  stroke: #e7b2c2;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+5) {
+  stroke: #e597ae;
+}
+
+.ct-chart .ct-bar:nth-of-type(6n+6) {
+  stroke: #e7b2c2;
+}
+
+.ct-chart .ct-grid {
+  stroke: #cacaca;
+  stroke-width: 0.5px;
+  stroke-dasharray: 5px;
+}
+
+.ct-chart .ct-label.ct-vertical.ct-start {
+  position: relative;
+  top: 4px;
+}
+
+.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-barlabel, .ct-bar-labels .ct-bar-label {
+  font-family: "open sans";
+  font-size: 10px;
+  color: #3d3d3d;
+  fill: #3d3d3d;
+  font-weight: bolder;
+  letter-spacing: 1px;
+}
+
+.ct-bar-labels .ct-bar-label {
+  text-align: right;
+  position: absolute;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: rotate(-90deg);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transform-origin: center center;
+}
+
+.ct-chart-bar .ct-label.ct-horizontal.ct-end {
+  display: none;
+}
+
+/* Horizontal bar chart */
+
+.report-card-body.horizontal-bar-chart-body {
+
+}
+
+.horizontal-bar-chart {
+
+}
+
+.labeled-bars {
+  display: flex;
+  flex-direction: row;
+}
+
+.x-labels, .y-labels {
+  font-family: "open sans";
+  font-size: 10px;
+  color: #3d3d3d;
+  fill: #3d3d3d;
+  font-weight: bolder;
+  letter-spacing: 1px;
+}
+
+.y-labels {
+  padding-right: 8px;
+  text-align: left;
+}
+
+.y-labels .h-chart-y-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.y-labels .h-chart-y-label, .horizontal-bars .bar {
+  height: 22px;
+  margin-bottom: 5px;
+}
+
+.x-labels {
+  width: 100%;
+  margin-top: 3px;
+  display: flex;
+  flex-direction: row;
+}
+
+.x-labels .h-chart-x-label {
+  width: 20%;
+  text-align: right;
+}
+
+.x-labels .h-chart-x-label > span {
+  display: inline-block;
+  transform: translate(50%, 0);
+}
+
+.x-labels .h-chart-x-label:first-child > span {
+  transform: translate(0, 0);
+}
+
+.x-labels .h-chart-x-label:first-child {
+  width: 0;
+  overflow: visible;
+}
+
+.horizontal-bars {
+  flex-grow: 10;
+}
+
+.horizontal-bars .bar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.horizontal-bars .bar .portion {
+  height: 100%;
+  color: white;
+  font-weight: bolder;
+  text-align: center;
+  cursor: default;
+}
+
+.horizontal-bars .bar .portion.red {
+  background-color: #b8102c;
+}
+
+.horizontal-bars .bar .portion.blue {
+  background-color: #328ec9;
+}
+
+.report-card-body.horizontal-bar-chart-body {
+  margin-top: 0;
+}
+
+@media (min-width: 992px) {
+  .report-card-body.horizontal-bar-chart-body {
+    margin-top: 10px;
+  }
+}

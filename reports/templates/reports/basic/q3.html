@@ -1,4 +1,51 @@
-  <div class="question-3">
+  <div class="question-3 question-container">
+    <div class="question-title">
+      <div class="question-title-number">Question 3:</div>
+      <div>
+        What are the top 3 antipsychotics you use for the treatment of SCZ in Patients with SCZ and
+        Substance Abuse in maintenance setting?
+      </div>
+    </div>
+    <div class="row equal-heights mb-30">
+      <div class="col-sm-12 col-md-6">
+        <div class="report-card chart-card q1-pie-card report-card-red">
+          <div class="report-card-head">
+            <div class="title">EUROPE TOTAL</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body row">
+            <div class="pie q3-pie col-md-6">
+              <canvas id="q3LeftPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
+              <div id="q3LeftPieLegend" class="chart-legend pie-legend"></div>
+            </div>
+            <div class="col-md-6 pie-info">
+              <div class="pie-notice report-card-text">
+                number of answers for each option across the whole survey
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="report-card chart-card q1-pie-card report-card-red">
+          <div class="report-card-head">
+            <div class="title">EUROPE TOTAL</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body row">
+            <div class="pie q3-pie col-md-6">
+              <canvas id="q3RightPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
+              <div id="q3RightPieLegend" class="chart-legend pie-legend"></div>
+            </div>
+            <div class="col-md-6 pie-info">
+              <div class="pie-notice report-card-text">
+                number of answers for each option across the whole survey
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row tables-row equal-heights">
       <div class="col-sm-6">
         <div class="report-card report-card-table">
@@ -110,3 +157,56 @@
       </div>
     </div>
   </div>
+
+  <script>
+    function drawQ3LeftPie() {
+      var q3LeftPieData = {
+        labels: [
+          "Substance abuse",
+          "No abuse"
+        ],
+        datasets: [
+          {
+            data: [72, 128],
+            backgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ]
+          }]
+      };
+
+      ChartDrawer.drawPie(q3LeftPieData, '#q3LeftPie', '#q3LeftPieLegend');
+    }
+
+    function drawQ3RightPie() {
+      var q3RightPieData = {
+        labels: [
+          "Substance abuse",
+          "No abuse"
+        ],
+        datasets: [
+          {
+            data: [72, 128],
+            backgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ]
+          }]
+      };
+
+      ChartDrawer.drawPie(q3RightPieData, '#q3RightPie', '#q3RightPieLegend');
+    }
+
+    $(document).ready(function() {
+      drawQ3LeftPie();
+      drawQ3RightPie();
+    });
+  </script>

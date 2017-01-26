@@ -1,6 +1,10 @@
-  <div class="question-2">
+  <div class="question-2 question-container">
+    <div class="question-title">
+      <div class="question-title-number">Question 2:</div>
+      <div>Do you treat patients with SCZ and Substance Abuse differently to other patients with SCZ?</div>
+    </div>
     <div class="row equal-heights">
-      <div class="col-sm-6">
+      <div class="col-sm-12 col-md-6">
         <div class="report-card chart-card q1-pie-card report-card-red">
           <div class="report-card-head">
             <div class="title">EUROPE TOTAL</div>
@@ -10,20 +14,20 @@
             <div class="col-md-6 pie-info">
               <div class="report-card-text-lg q2-pie-answers" id="q2Percentage">
                 <div class="q2-pie-answer">
-                  <div id="q2PieYes" class="q2-pie-yes">
-                    1894
-                  </div>
-                  <span class="answer">Yes</span>
-                </div>
-                <div class="q2-pie-answer">
                   <div id="q2PieNo" class="q2-pie-no">
                     1894
                   </div>
                   <span class="answer">No</span>
                 </div>
+                <div class="q2-pie-answer">
+                  <div id="q2PieYes" class="q2-pie-yes">
+                    1894
+                  </div>
+                  <span class="answer">Yes</span>
+                </div>
               </div>
               <div class="pie-notice report-card-text">
-                number of answers for each option accross the whole survey
+                number of answers for each option across the whole survey
               </div>
             </div>
             <div class="pie q1-pie col-md-6">
@@ -33,16 +37,108 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-12 col-md-6">
         <div class="report-card chart-card report-card-blue">
           <div class="report-card-head">
             <div class="title">BY COUNTRY</div>
             <div class="head-delim"></div>
           </div>
-          <div class="report-card-body">
-
+          <div class="report-card-body horizontal-bar-chart-body">
+            <div class="horizontal-bar-chart" id="q2HorizontalBarChart">
+              <div class="labeled-bars">
+                <div class="y-labels"></div>
+                <div class="horizontal-bars"></div>
+              </div>
+              <div class="x-labels">
+                <div class="h-chart-x-label"><span>0</span></div>
+                <div class="h-chart-x-label"><span>20%</span></div>
+                <div class="h-chart-x-label"><span>40%</span></div>
+                <div class="h-chart-x-label"><span>60%</span></div>
+                <div class="h-chart-x-label"><span>80%</span></div>
+                <div class="h-chart-x-label"><span>100%</span></div>
+              </div>
+              <div class="chart-legend h-bar-legend">
+                <ul>
+                  <li><span style="background-color:#b8103b"></span>No</li>
+                  <li><span style="background-color:#328ec9"></span>Yes</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    function drawQ2Pie() {
+      var q2PieData = {
+        labels: [
+          "No difference",
+          "Treats differently"
+        ],
+        datasets: [
+          {
+            data: [128, 72],
+            backgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ]
+          }]
+      };
+
+      var yesNum = q2PieData.datasets[0].data[0];
+      var noNum = q2PieData.datasets[0].data[1];
+
+      $('#q2PieNo').css('color', q2PieData.datasets[0].backgroundColor[0]).html(yesNum);
+      $('#q2PieYes').css('color', q2PieData.datasets[0].backgroundColor[1]).html(noNum);
+
+      ChartDrawer.drawPie(q2PieData, '#q2Pie', '#q2PieLegend')
+    }
+
+    function drawQ2Bars() {
+      var q2BarsData = [
+        {
+          label: 'GERMANY',
+          positiveNum: 225,
+          negativeNum: 40
+        },
+        {
+          label: 'ITALY',
+          positiveNum: 225,
+          negativeNum: 80
+        },
+        {
+          label: 'FRANCE',
+          positiveNum: 225,
+          negativeNum: 80
+        },
+        {
+          label: 'SPAIN',
+          positiveNum: 99999999999,
+          negativeNum: 80
+        },
+        {
+          label: 'NETHERLANDS',
+          positiveNum: 225,
+          negativeNum: 80
+        },
+        {
+          label: 'LUXEMBURG',
+          positiveNum: 80,
+          negativeNum: 20
+        }
+      ];
+      ChartDrawer.drawHorizontalBarChart('#q2HorizontalBarChart', q2BarsData);
+    }
+    (function() {
+      $(document).ready(function() {
+        drawQ2Pie();
+        drawQ2Bars();
+      });
+    })();
+  </script>
