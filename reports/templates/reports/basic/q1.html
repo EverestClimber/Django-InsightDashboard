@@ -1,4 +1,8 @@
-  <div class="question-1">
+  <div class="question-1 question">
+    <div class="question-title">
+      <div class="question-title-number">Question 1:</div>
+      <div>How many of your patients under 35 years old with SCZ have Substance Abuse?</div>
+    </div>
     <div class="row equal-heights">
       <div class="col-sm-12 col-md-6">
         <div class="report-card chart-card q1-pie-card report-card-red">
@@ -37,13 +41,46 @@
 
 <script>
   (function() {
-    $(document).ready(function() {
+
+    function drawQ1Pie() {
+      var q1PieData = {
+        labels: [
+          "Substance abuse",
+          "No abuse"
+        ],
+        datasets: [
+          {
+            data: [72, 128],
+            backgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ]
+          }]
+      };
+
+      var total = q1PieData.datasets[0].data.reduce(function(a,b) {return a + b});
+      var percentage = Math.round(q1PieData.datasets[0].data[1]/total*100);
+
+      $('#q1Percentage').html(percentage + '%');
+      ChartDrawer.drawPie(q1PieData, '#q1Pie', '#q1PieLegend')
+    }
+
+    function drawQ1Bars() {
       var q1BarsData = {
         labels: ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'],
         series: [50, 78, 36, 84, 25, 63]
       };
 
       ChartDrawer.drawVerticalBarChart('#q1BarChart', '#q1BarLabels', q1BarsData);
+    }
+
+    $(document).ready(function() {
+      drawQ1Pie();
+      drawQ1Bars();
     });
   })();
 </script>

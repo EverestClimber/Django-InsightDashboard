@@ -34,7 +34,7 @@
 
 
 @media (max-width: 992px) {
-  .survey-cards > .row > *, .question-3 > .row > *, .question-2 > .row > *,  .question-1 > .row > *  {
+  .survey-cards > .row > *, .question > .row > *  {
     margin-bottom: 20px;
   }
 }
@@ -120,8 +120,15 @@
   font-size: 12px;
 }
 
-.question-3, .question-1, .question-2 {
+.question {
   margin-top: 70px;
+}
+
+.question-title {
+  letter-spacing: 1px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 
 .report-card.report-card-table .report-card-head {

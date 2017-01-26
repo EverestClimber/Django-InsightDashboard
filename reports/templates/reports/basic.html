@@ -90,33 +90,6 @@
 <script>
     (function () {
 
-  function drawQ1Pie() {
-    var q1PieData = {
-      labels: [
-        "Substance abuse",
-        "No abuse"
-      ],
-      datasets: [
-        {
-          data: [72, 128],
-          backgroundColor: [
-            "#b8103b",
-            "#328ec9"
-          ],
-          hoverBackgroundColor: [
-            "#b8103b",
-            "#328ec9"
-          ]
-        }]
-    };
-
-    var total = q1PieData.datasets[0].data.reduce(function(a,b) {return a + b});
-    var percentage = Math.round(q1PieData.datasets[0].data[1]/total*100);
-
-    $('#q1Percentage').html(percentage + '%');
-    ChartDrawer.drawPie(q1PieData, '#q1Pie', '#q1PieLegend')
-  }
-
   function drawQ2Pie() {
     var q2PieData = {
       labels: [
@@ -147,7 +120,6 @@
   }
 
   $(document).ready(function() {
-    drawQ1Pie();
     drawQ2Pie();
   })
 })();
