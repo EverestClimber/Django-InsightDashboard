@@ -201,12 +201,12 @@
   line-height: initial;
 }
 
-.q1-pie-card .pie-info {
+.pie-card .pie-info {
   margin-top: 60px;
 }
 
 @media (max-width: 768px) {
-  .q1-pie-card .pie-info {
+  .pie-card .pie-info {
     margin-top: 0;
     margin-bottom: 25px;
     text-align: center;
@@ -262,21 +262,21 @@
   }
 }
 
-.q2-pie-answers {
+.pie-answers {
   display: flex;
   justify-content: space-around;
 }
 
-.q2-pie-answer {
+.pie-answer {
   text-align: center;
   padding: 0 15px;
 }
 
-.q2-pie-answer:last-child {
+.pie-answer:last-child {
   padding-right: 45px;
 }
 
-.q2-pie-answer .answer {
+.pie-answer .answer {
   font-size: 20px;
 }
 

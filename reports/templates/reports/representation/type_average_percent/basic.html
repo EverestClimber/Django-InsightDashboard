@@ -1,3 +1,4 @@
+{% block representation %}
   <div class="question-{{ i }} question-container">
     <div class="question-title">
       <div class="question-title-number">Question {{ i }}:</div>
@@ -5,7 +6,7 @@
     </div>
     <div class="row equal-heights">
       <div class="col-sm-12 col-md-6">
-        <div class="report-card chart-card q{{ i }}-pie-card report-card-red">
+        <div class="report-card chart-card pie-card report-card-red">
           <div class="report-card-head">
             <div class="title">{{ stat.vars.header_europe_total | upper }}</div>
             <div class="head-delim"></div>
@@ -84,4 +85,4 @@
     });
   })();
 </script>
-{{ stat.data }}
+{% endblock %}

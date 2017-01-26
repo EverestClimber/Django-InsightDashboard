@@ -114,7 +114,27 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['label1'] = self.representation.label1
 
     def update_type_yes_no(self):
-        pass
+        data = self.data
+        self.vars['bar_labels'] = []
+        self.vars['bar_positive_nums'] = []
+        self.vars['bar_negative_nums'] = []
+        regions = self.get_regions(self.country_id)
+        for reg in regions:
+            reg_key = str(reg.pk)
+            if reg_key in data['reg_cnt']:
+                positive_num = data['reg_yes'][reg_key]
+                negative_num = data['reg_cnt'][reg_key] - data['reg_yes'][reg_key]
+            else:
+                positive_num = -1
+                negative_num = -1
+            self.vars['bar_labels'].append(reg.name)
+            self.vars['bar_positive_nums'].append(positive_num)
+            self.vars['bar_negative_nums'].append(negative_num)
+
+        self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
+        self.vars['pie_data'] = [data['main_cnt'] - data['main_yes'], data['main_yes']]
+        self.vars['label1'] = self.representation.label1
+
 
     def update_type_multiselect_top(self):
         pass
