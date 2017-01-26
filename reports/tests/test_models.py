@@ -3,9 +3,9 @@ import pytest
 
 from django.test import TestCase
 
-from survey.models import Option, Region, Organization
+from survey.models import Option, Region, Organization, Question
 from insights.users.models import User, Country
-from ..models import OptionDict, QuestionStat
+from ..models import OptionDict, QuestionStat, Representation
 
 pytestmark = pytest.mark.django_db
 
@@ -58,6 +58,8 @@ class TestQuestionStat(TestCase):
         self.org2 = mixer.blend(Organization)
         self.org3 = mixer.blend(Organization)
 
+        self.q = mixer.blend(Question)
+        self.r = mixer.blend(Representation, question=[self.q])
 
         QuestionStat.clear()
 
@@ -72,10 +74,18 @@ class TestQuestionStat(TestCase):
             'org_sum': {1: 90.0},
             'org_cnt': {1: 3},
         }
-        qs0 = mixer.blend(QuestionStat, country=None, data=data, type=QuestionStat.TYPE_AVERAGE_PERCENT)
+        qs0 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=None,
+                          type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs0.update_vars()
 
-        qs1 = mixer.blend(QuestionStat, country=self.c1, data=data, type=QuestionStat.TYPE_AVERAGE_PERCENT)
+        qs1 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=self.c1,
+                          type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs1.update_vars()
 
     def test_update_type_yes_no(self):
@@ -90,10 +100,18 @@ class TestQuestionStat(TestCase):
             'org_cnt': {1: 3},
         }
 
-        qs0 = mixer.blend(QuestionStat, country=None, data=data, type=QuestionStat.TYPE_YES_NO)
+        qs0 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=None,
+                          type=QuestionStat.TYPE_YES_NO)
         qs0.update_vars()
 
-        qs1 = mixer.blend(QuestionStat, country=self.c1, data=data, type=QuestionStat.TYPE_YES_NO)
+        qs1 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=self.c1,
+                          type=QuestionStat.TYPE_YES_NO)
         qs1.update_vars()
 
     def test_update_type_multiselect_top(self):
@@ -110,8 +128,16 @@ class TestQuestionStat(TestCase):
             }
         }
 
-        qs0 = mixer.blend(QuestionStat, country=None, data=data, type=QuestionStat.TYPE_MULTISELECT_TOP)
+        qs0 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=None,
+                          type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs0.update_vars()
 
-        qs1 = mixer.blend(QuestionStat, country=self.c1, data=data, type=QuestionStat.TYPE_MULTISELECT_TOP)
+        qs1 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=self.c1,
+                          type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs1.update_vars()

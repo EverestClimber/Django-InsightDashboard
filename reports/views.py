@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 
 from survey.models import Survey
 
-from .models import SurveyStat, OrganizationStat
+from .models import SurveyStat, OrganizationStat, QuestionStat
 from .evaluators import LastEvaluator, TotalEvaluator
 
 
@@ -26,9 +26,14 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         else:
             country_id = None
 
+        print (kwargs)
+
+
         kwargs['survey_stat'] = SurveyStat.objects.filter(survey=survey, country_id=country_id).last()
-        kwargs['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=country_id)\
-            .order_by('ordering')
+        kwargs['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=country_id)
+
+        QuestionStat.report_type = kwargs['report_type']
+        kwargs['question_stat'] = QuestionStat.objects.filter(survey=survey, country_id=country_id)
 
         return super(self.__class__, self).get_context_data(**kwargs)
 

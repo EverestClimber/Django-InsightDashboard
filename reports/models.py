@@ -71,6 +71,8 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     vars = jsonfield.JSONField()
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
 
+    report_type = 'basic'
+
     class Meta:
         ordering = ['ordering', 'id']
 
@@ -84,14 +86,25 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         pass
 
     def update_vars(self):
+        self.vars['question_text'] = self.representation.question.first().text
+        if self.country_id:
+            self.vars['header_europe_total'] = '%s total' % self.country.name
+            self.vars['header_by_country'] = 'BY COUNTRY'
+        else:
+            self.vars['header_europe_total'] = 'Europe total'
+            self.vars['header_by_country'] = 'BY REGION'
+
         if not self.type:
             raise KeyError('Empty type')
 
         getattr(self, 'update_%s' % self.type)()
 
+    def get_template_name(self):
+        return "reports/representation/%s/%s.html" % (self.type, self.__class__.report_type)
+
     @classmethod
     def clear(cls):
-        pass
+        cls.report_type = 'basic'
 
 
 
