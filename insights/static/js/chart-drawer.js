@@ -34,7 +34,7 @@
       var $bars = $chart.find('.horizontal-bars');
 
       data.forEach(function (item) {
-        if (item.positiveNum !== null && item.negativeNum !== null) {
+        if (item.positiveNum !== -1 && item.negativeNum !== -1) {
           _drawNonEmptyBar($bars, item);
         } else {
           _drawEmptyBar($bars, item);
@@ -178,7 +178,11 @@
         barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
         value = data.element.attr('ct:value');
         label = new Chartist.Svg('text');
-        label.text(value + '%');
+        if (value == '-1') {
+          label.text('n/a');
+        } else {
+          label.text(value + '%');
+        }
         label.addClass("ct-barlabel");
         label.attr({
           x: barHorizontalCenter,
