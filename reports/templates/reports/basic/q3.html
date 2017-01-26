@@ -16,7 +16,7 @@
           <div class="report-card-body row">
             <div class="pie q3-pie col-md-6">
               <canvas id="q3LeftPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
-              <div id="q3LeftPieLegend" class="chart-legend pie-legend"></div>
+              <div id="q3LeftPieLegend" class="chart-legend last-hidden pie-legend"></div>
             </div>
             <div class="col-md-6 pie-info">
               <div class="pie-notice report-card-text">
@@ -35,7 +35,7 @@
           <div class="report-card-body row">
             <div class="pie q3-pie col-md-6">
               <canvas id="q3RightPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
-              <div id="q3RightPieLegend" class="chart-legend pie-legend"></div>
+              <div id="q3RightPieLegend" class="chart-legend last-hidden pie-legend"></div>
             </div>
             <div class="col-md-6 pie-info">
               <div class="pie-notice report-card-text">
@@ -162,19 +162,25 @@
     function drawQ3LeftPie() {
       var q3LeftPieData = {
         labels: [
-          "Substance abuse",
-          "No abuse"
+          "#1 Risperandol - LAI",
+          "#2 Risperandol - Lai",
+          "#3 Clozame - Ola",
+          'Other'
         ],
         datasets: [
           {
-            data: [72, 128],
+            data: [50, 30, 20, 10],
             backgroundColor: [
               "#b8103b",
-              "#328ec9"
+              "#f28d9e",
+              '#f9c6ce',
+              '#f9f9f9'
             ],
             hoverBackgroundColor: [
               "#b8103b",
-              "#328ec9"
+              "#f28d9e",
+              '#f9c6ce',
+              '#f9f9f9'
             ]
           }]
       };
@@ -185,19 +191,25 @@
     function drawQ3RightPie() {
       var q3RightPieData = {
         labels: [
-          "Substance abuse",
-          "No abuse"
+          "#1 Halopendol - LAI",
+          "#2 Halopendol - Ola",
+          "#3 Halopendol - Lai",
+          'Other'
         ],
         datasets: [
           {
-            data: [72, 128],
+            data: [50, 30, 20, 10],
             backgroundColor: [
               "#b8103b",
-              "#328ec9"
+              "#328ec9",
+              '#84bbdf',
+              '#f9f9f9'
             ],
             hoverBackgroundColor: [
               "#b8103b",
-              "#328ec9"
+              "#328ec9",
+              '#84bbdf',
+              '#f9f9f9'
             ]
           }]
       };

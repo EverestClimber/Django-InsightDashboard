@@ -255,6 +255,10 @@
   margin-top: 35px;
 }
 
+.chart-legend.last-hidden ul li:last-child {
+  display: none;
+}
+
 .chart-legend ul {
   list-style: none;
 }
@@ -378,7 +382,7 @@
   flex-direction: row;
 }
 
-.x-labels, .y-labels {
+.x-labels, .y-labels{
   font-family: "open sans";
   font-size: 10px;
   color: #3d3d3d;
@@ -454,6 +458,13 @@
 
 .horizontal-bars .bar .portion.blue {
   background-color: #328ec9;
+}
+
+.horizontal-bars .bar .portion.empty {
+  background-color: white;
+  width: 100%;
+  font-size: 13px;
+  color: #3d3d3d;
 }
 
 .report-card-body.horizontal-bar-chart-body {

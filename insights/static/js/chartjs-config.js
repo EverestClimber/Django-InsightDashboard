@@ -8,8 +8,12 @@
         var total = dataset.data.reduce(function(a,b) {return a + b});
         if (!meta.hidden) {
           meta.data.forEach(function(element, index) {
-            // Draw the text with the specified font
-            ctx.fillStyle = 'rgb(255, 255, 255)';
+            //Check for almost white background TODO: change this comparison - too fragile
+            if (element._model.backgroundColor == '#f9f9f9') {
+              ctx.fillStyle = 'rgb(61, 61, 61)';
+            } else {
+              ctx.fillStyle = 'rgb(255, 255, 255)';
+            }
             var fontSize = 14;
             var fontStyle = 'bold';
             var fontFamily = 'open sans';
