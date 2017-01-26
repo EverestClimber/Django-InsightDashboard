@@ -1,4 +1,8 @@
-  <div class="question-2 question">
+  <div class="question-2 question-container">
+    <div class="question-title">
+      <div class="question-title-number">Question 2:</div>
+      <div>Do you treat patients with SCZ and Substance Abuse differently to other patients with SCZ?</div>
+    </div>
     <div class="row equal-heights">
       <div class="col-sm-12 col-md-6">
         <div class="report-card chart-card q1-pie-card report-card-red">
@@ -67,41 +71,74 @@
   </div>
 
   <script>
+    function drawQ2Pie() {
+      var q2PieData = {
+        labels: [
+          "No difference",
+          "Treats differently"
+        ],
+        datasets: [
+          {
+            data: [128, 72],
+            backgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ]
+          }]
+      };
+
+      var yesNum = q2PieData.datasets[0].data[0];
+      var noNum = q2PieData.datasets[0].data[1];
+
+      $('#q2PieNo').css('color', q2PieData.datasets[0].backgroundColor[0]).html(yesNum);
+      $('#q2PieYes').css('color', q2PieData.datasets[0].backgroundColor[1]).html(noNum);
+
+      ChartDrawer.drawPie(q2PieData, '#q2Pie', '#q2PieLegend')
+    }
+
+    function drawQ2Bars() {
+      var q2BarsData = [
+        {
+          label: 'GERMANY',
+          positiveNum: 225,
+          negativeNum: 40
+        },
+        {
+          label: 'ITALY',
+          positiveNum: 225,
+          negativeNum: 80
+        },
+        {
+          label: 'FRANCE',
+          positiveNum: 225,
+          negativeNum: 80
+        },
+        {
+          label: 'SPAIN',
+          positiveNum: 99999999999,
+          negativeNum: 80
+        },
+        {
+          label: 'NETHERLANDS',
+          positiveNum: 225,
+          negativeNum: 80
+        },
+        {
+          label: 'LUXEMBURG',
+          positiveNum: 80,
+          negativeNum: 20
+        }
+      ];
+      ChartDrawer.drawHorizontalBarChart('#q2HorizontalBarChart', q2BarsData);
+    }
     (function() {
       $(document).ready(function() {
-        var q2BarsData = [
-          {
-            label: 'GERMANY',
-            positiveNum: 225,
-            negativeNum: 40
-          },
-          {
-            label: 'ITALY',
-            positiveNum: 225,
-            negativeNum: 80
-          },
-          {
-            label: 'FRANCE',
-            positiveNum: 225,
-            negativeNum: 80
-          },
-          {
-            label: 'SPAIN',
-            positiveNum: 99999999999,
-            negativeNum: 80
-          },
-          {
-            label: 'NETHERLANDS',
-            positiveNum: 225,
-            negativeNum: 80
-          },
-          {
-            label: 'LUXEMBURG',
-            positiveNum: 80,
-            negativeNum: 20
-          }
-        ];
-        ChartDrawer.drawHorizontalBarChart('#q2HorizontalBarChart', q2BarsData);
+        drawQ2Pie();
+        drawQ2Bars();
       });
     })();
   </script>

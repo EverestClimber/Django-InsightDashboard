@@ -34,7 +34,7 @@
 
 
 @media (max-width: 992px) {
-  .survey-cards > .row > *, .question > .row > *  {
+  .survey-cards > .row > *, .question-container > .row > *  {
     margin-bottom: 20px;
   }
 }
@@ -120,7 +120,7 @@
   font-size: 12px;
 }
 
-.question {
+.question-container {
   margin-top: 70px;
 }
 
