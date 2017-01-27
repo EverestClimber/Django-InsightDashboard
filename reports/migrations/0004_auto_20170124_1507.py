@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('ordering', models.PositiveIntegerField(blank=True, db_index=True, default=1, verbose_name='Ordering in reports')),
                 ('country', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='users.Country')),
             ],
-            bases=(reports.models.RepresentationTypeMixin, models.Model),
+            bases=(models.Model),
         ),
         migrations.CreateModel(
             name='Representation',
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='survey.Question')),
                 ('survey', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='survey.Survey')),
             ],
-            bases=(reports.models.RepresentationTypeMixin, models.Model),
+            bases=(models.Model),
         ),
         migrations.RemoveField(
             model_name='organizationstat',
