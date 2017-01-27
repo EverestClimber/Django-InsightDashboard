@@ -112,7 +112,6 @@ class TestTotalEvaluator(TestCase):
         for qs in self.evaluator.question_stat.values():
             assert qs.type == qs.representation.type
 
-
     @patch('reports.evaluators.AbstractEvaluator.process_answer')
     @patch('reports.evaluators.AbstractEvaluator.load_stat')
     @patch('reports.evaluators.AbstractEvaluator.fill_out')
@@ -165,8 +164,6 @@ class TestTotalEvaluator(TestCase):
 
         survey_stat.assert_called_once_with((answer.survey_id, user.country_id), answer)
         organization_stat.assert_called_once_with((answer.survey_id, user.country_id, answer.organization_id))
-
-
 
     def test_process_answer(self):
         d1 = timezone.make_aware(datetime(2017, 1, 1))
@@ -256,7 +253,6 @@ class TestLastEvaluator(object):
         mixer.blend(Answer, is_updated=False)
         answers = self.evaluator.get_answers()
         assert len(answers) == 1, 'Should return just one last record'
-
 
     def test_clear(self):
         mixer.blend(SurveyStat)
@@ -410,7 +406,6 @@ class TestTypeProcessor(TestCase):
         assert data['org_cnt'][str(self.org.pk)] == 2
         self.assertAlmostEqual(data['org_sum'][str(self.org.pk)],  60.0)
 
-
     def test_type_yes_no_processor(self):
         self.init_models(Question.TYPE_YES_NO, Representation.TYPE_YES_NO)
         qid = self.q.pk
@@ -454,7 +449,8 @@ class TestTypeProcessor(TestCase):
     def test_type_multiselect_top_processor(self):
         self.init_models(Question.TYPE_MULTISELECT_ORDERED, Representation.TYPE_MULTISELECT_TOP)
         qid = self.q.pk
-        a1 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2&data[{0}][]=x3&data[{0}][]=x4'.format(qid), user=self.u1, region=self.reg11)
+        a1 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2&data[{0}][]=x3&data[{0}][]=x4'.format(qid),
+                                user=self.u1, region=self.reg11)
         a2 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2'.format(qid), user=self.u11, region=self.reg12)
         a3 = self.create_answer(body='data[{0}][]=x2&data[{0}][]=x3'.format(qid), user=self.u2, region=self.reg21)
 
