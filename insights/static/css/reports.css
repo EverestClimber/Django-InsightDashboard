@@ -74,6 +74,11 @@
   border-top: 5px solid #b8103b;
 }
 
+.report-card-table.report-card-gray {
+  border-top: 5px solid #464646;
+  border-left: none;
+}
+
 .report-card-head {
   margin-bottom: 40px;
 }
@@ -135,6 +140,14 @@
   margin-bottom: 30px;
 }
 
+.report-table > thead > tr > th {
+  font-weight: bolder;
+  font-size: 12px;
+  padding-top: 0;
+  padding-bottom: 5px;
+  vertical-align: middle;
+}
+
 .report-table > tbody > tr > td {
   padding: 4px 8px;
   vertical-align: middle;
@@ -179,6 +192,19 @@
 
 .report-table > tbody > tr.report-table-third-blue {
   background-color: #84bbdf;
+}
+
+.report-table > tbody > tr.report-table-first-gray {
+  background-color: #464646;
+  color: white;
+}
+
+.report-table > tbody > tr.report-table-second-gray {
+  background-color: #929292;
+}
+
+.report-table > tbody > tr.report-table-third-gray {
+  background-color: #cdcccc;
 }
 
 .left-1 {
