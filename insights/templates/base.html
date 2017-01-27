@@ -114,27 +114,41 @@
                                                 {% endfor %}
                                             </ul>
                                         </li>
-                                        <li class="dropdown-submenu" data-submenu>
-                                            <a href="#">Advanced</a>
-
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a href="{% url 'reports:advanced_europe' %}">Europe</a>
-                                                </li>
-                                                {% for country in countries %}
-                                                <li>
-                                                    <a href="{% url 'reports:advanced_country' country=country.pk %}">
-                                                        {{ country.name }}
-                                                    </a>
-                                                </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
+{#                                        <li class="dropdown-submenu" data-submenu>#}
+{#                                            <a href="#">Advanced</a>#}
+{##}
+{#                                            <ul class="dropdown-menu">#}
+{#                                                <li>#}
+{#                                                    <a href="{% url 'reports:advanced_europe' %}">Europe</a>#}
+{#                                                </li>#}
+{#                                                {% for country in countries %}#}
+{#                                                <li>#}
+{#                                                    <a href="{% url 'reports:advanced_country' country=country.pk %}">#}
+{#                                                        {{ country.name }}#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                                {% endfor %}#}
+{#                                            </ul>#}
+{#                                        </li>#}
                                     </ul>
                                 </li>
                             </ul>
 
                             <ul class="nav navbar-top-links navbar-right">
+                                {% if request.user.is_superuser %}
+                                  <li class="dropdown">
+                                    <a href="#"
+                                       class="dropdown-toggle"
+                                       data-toggle="dropdown"
+                                       role="button"
+                                       aria-haspopup="true"
+                                       aria-expanded="false">Utils <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                      <li><a href="{% url 'reports:recalculate' %}">Recalculate answers</a></li>
+                                      <li><a href="{% url 'reports:update_vars' %}">Update vars</a></li>
+                                    </ul>
+                                  </li>
+                                {% endif %}
                                 <li>
                                     <a href="{% url 'account_logout' %}">
                                         <i class="fa fa-sign-out"></i> {% trans "Log Out" %}

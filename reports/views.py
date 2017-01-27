@@ -56,3 +56,10 @@ def update_stat(request):
 def recalculate(request):
     TotalEvaluator.process_answers()
     return render(request, 'reports/recalculate.html')
+
+@staff_member_required
+def update_vars(request):
+    for q in QuestionStat.objects.all():
+        q.update_vars()
+        q.save()
+    return render(request, 'reports/update_vars.html')

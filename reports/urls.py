@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.conf.urls import url
 
-from .views import ReportsView, update_stat, recalculate
+from .views import ReportsView, update_stat, recalculate, update_vars
 
 
 urlpatterns = [
@@ -14,8 +14,8 @@ urlpatterns = [
     url(r'^basic/europe$', ReportsView.as_view(), {'report_type': 'basic'}, name='basic_europe'),
     url(r'^basic/(?P<country>\d+)$', ReportsView.as_view(), {'report_type': 'basic'}, name='basic_country'),
 
-    url(r'update-stat/$', update_stat, name='update_stat'),
-    url(r'recalculate/$', recalculate, name='recalculate'),
+    url(r'^update-stat/$', update_vars, name='update_vars'),
+    url(r'^recalculate/$', recalculate, name='recalculate'),
 
 
 ]
