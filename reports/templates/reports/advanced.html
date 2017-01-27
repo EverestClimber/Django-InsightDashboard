@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 
 
+
 {% block content %}
-<h1>Advanced Report</h1>
+<div class="report">
+  <div id="chartjs-tooltip">
+    <table></table>
+  </div>
 
+  {% include 'reports/survey-overview.html' %}
 
+  {% include 'reports/advanced/gray-components.html' %}
+
+</div>
 {% endblock content %}

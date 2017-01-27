@@ -355,6 +355,18 @@
   stroke: #e7b2c2;
 }
 
+.report-card-gray .ct-chart .ct-bar:nth-of-type(3n+1) {
+  stroke: #464646;
+}
+
+.report-card-gray .ct-chart .ct-bar:nth-of-type(3n+2) {
+  stroke: #929292;
+}
+
+.report-card-gray .ct-chart .ct-bar:nth-of-type(3n+3) {
+  stroke: #cdcccc;
+}
+
 .ct-chart .ct-grid {
   stroke: #cacaca;
   stroke-width: 0.5px;
