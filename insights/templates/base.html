@@ -78,12 +78,15 @@
                         <a href="{% url 'home' %}" class="brand"><img src="{% static 'img/logo2.png' %}" height="40"
                                                                       alt="Otsuka"></a>
                     </div>
-                    <div class="pull-right">
-                        <button type="button" class="btn btn-default navbar-toggle" data-toggle="collapse"
-                                data-target="#navbar" id="navbarToggle">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                    </div>
+
+                    {% if request.user.is_authenticated %}
+                      <div class="pull-right">
+                          <button type="button" class="btn btn-default navbar-toggle" data-toggle="collapse"
+                                  data-target="#navbar" id="navbarToggle">
+                              <i class="fa fa-bars"></i>
+                          </button>
+                      </div>
+                    {% endif %}
                     <div class="collapse navbar-collapse" id="navbar">
 
                         {% if request.user.is_authenticated %}
