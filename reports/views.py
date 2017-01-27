@@ -26,9 +26,6 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         else:
             country_id = None
 
-        print (kwargs)
-
-
         kwargs['survey_stat'] = SurveyStat.objects.filter(survey=survey, country_id=country_id).last()
         kwargs['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=country_id)
 

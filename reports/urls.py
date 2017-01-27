@@ -14,7 +14,8 @@ urlpatterns = [
     url(r'^basic/europe$', ReportsView.as_view(), {'report_type': 'basic'}, name='basic_europe'),
     url(r'^basic/(?P<country>\d+)$', ReportsView.as_view(), {'report_type': 'basic'}, name='basic_country'),
 
-    url(r'^update-stat/$', update_vars, name='update_vars'),
+    url(r'^update-vars/$', update_vars, name='update_vars'),
+    url(r'update-stat/$', update_stat, name='update_stat'),
     url(r'^recalculate/$', recalculate, name='recalculate'),
 
 

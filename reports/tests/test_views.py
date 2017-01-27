@@ -11,7 +11,7 @@ from survey.models import Survey, Organization
 
 from ..models import SurveyStat, OrganizationStat
 from ..evaluators import TotalEvaluator
-from ..views import update_stat, ReportsView
+from ..views import update_stat, ReportsView, update_vars, recalculate
 
 pytestmark = pytest.mark.django_db
 
@@ -67,52 +67,75 @@ class TestReports(TestCase):
     def test_non_staff(self):
         req = RequestFactory().get(reverse('reports:basic_europe'))
         req.user = mixer.blend(User)
-        resp = ReportsView.as_view()(req)
+        resp = ReportsView.as_view()(req, report_type='basic')
         # assert resp.status_code == 302, 'Should redirect to auth'
         assert resp.status_code == 200, 'Allowed'
 
     def test_anonimous_advanced(self):
         req = RequestFactory().get(reverse('reports:advanced_europe'))
         req.user = AnonymousUser()
-        resp = ReportsView.as_view()(req)
+        resp = ReportsView.as_view()(req, report_type='advanced')
         assert resp.status_code == 302, 'Should redirect to auth'
 
     def test_non_staff_advanced(self):
         req = RequestFactory().get(reverse('reports:advanced_europe'))
         req.user = mixer.blend(User)
-        resp = ReportsView.as_view()(req)
+        resp = ReportsView.as_view()(req, report_type='advanced')
         # assert resp.status_code == 302, 'Should redirect to auth'
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_basic(self):
         req = RequestFactory().get(reverse('reports:basic_europe'))
         req.user = mixer.blend(User, is_staff=True)
-        resp = ReportsView.as_view()(req)
+        resp = ReportsView.as_view()(req, report_type='basic')
         resp.render()
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_advanced(self):
         req = RequestFactory().get(reverse('reports:advanced_europe'))
         req.user = mixer.blend(User, is_staff=True)
-        resp = ReportsView.as_view()(req)
+        resp = ReportsView.as_view()(req, report_type='advanced')
         resp.render()
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_basic_country(self):
-        kwargs = {'country': self.c1.pk}
+        kwargs = {'country': self.c1.pk, 'report_type': 'basic'}
         req = RequestFactory().get(reverse('reports:basic_country', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
-        resp = ReportsView.as_view()(req, kwargs=kwargs)
+        resp = ReportsView.as_view()(req, **kwargs)
         resp.render()
         assert resp.status_code == 200, 'Allowed'
 
-    def test_staff_basic_country(self):
-        kwargs = {'country': self.c1.pk}
+    def test_staff_advanced_country(self):
+        kwargs = {'country': self.c1.pk, 'report_type': 'advanced'}
         req = RequestFactory().get(reverse('reports:advanced_country', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
-        resp = ReportsView.as_view()(req, kwargs=kwargs)
+        resp = ReportsView.as_view()(req, **kwargs)
         resp.render()
         assert resp.status_code == 200, 'Allowed'
 
+    def test_non_staff_recalculate(self):
+        req = RequestFactory().get(reverse('reports:recalculate'))
+        req.user = mixer.blend(User, is_staff=False)
+        resp = recalculate(req)
+        assert resp.status_code == 302, 'Not allowed'
+
+    def test_staff_recalculate(self):
+        req = RequestFactory().get(reverse('reports:recalculate'))
+        req.user = mixer.blend(User, is_staff=True)
+        resp = recalculate(req)
+        assert resp.status_code == 200, 'Allowed'
+
+    def test_non_staff_update_vars(self):
+        req = RequestFactory().get(reverse('reports:update_vars'))
+        req.user = mixer.blend(User, is_staff=False)
+        resp = update_vars(req)
+        assert resp.status_code == 302, 'Not allowed'
+
+    def test_staff_update_vars(self):
+        req = RequestFactory().get(reverse('reports:update_vars'))
+        req.user = mixer.blend(User, is_staff=True)
+        resp = update_vars(req)
+        assert resp.status_code == 200, 'Allowed'
 
 
