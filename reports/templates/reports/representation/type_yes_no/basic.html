@@ -1,0 +1,124 @@
+{% block representation %}
+  <div class="question-2 question-container">
+    <div class="question-title">
+      <div class="question-title-number">Question {{ i }}:</div>
+      <div>{{ stat.vars.question_text }}</div>
+    </div>
+    <div class="row equal-heights">
+      <div class="col-sm-12 col-md-6">
+        <div class="report-card chart-card pie-card report-card-red">
+          <div class="report-card-head">
+            <div class="title">{{ stat.vars.region_name | upper }} TOTAL</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body row">
+            <div class="col-md-6 pie-info">
+              <div class="report-card-text-lg pie-answers" id="q{{ i }}Percentage">
+                <div class="pie-answer">
+                  <div id="q{{ i }}PieNo" class="q{{ i }}-pie-no">
+                    1894
+                  </div>
+                  <span class="answer">No</span>
+                </div>
+                <div class="pie-answer">
+                  <div id="q{{ i }}PieYes" class="q{{ i }}-pie-yes">
+                    1894
+                  </div>
+                  <span class="answer">Yes</span>
+                </div>
+              </div>
+              <div class="pie-notice report-card-text">
+                {{ stat.vars.label1 }}
+              </div>
+            </div>
+            <div class="pie q1-pie col-md-6">
+              <canvas id="q{{ i }}Pie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
+              <div id="q{{ i }}PieLegend" class="chart-legend pie-legend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="report-card chart-card report-card-blue">
+          <div class="report-card-head">
+            <div class="title">{{ stat.vars.header_by_country | upper }}</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body horizontal-bar-chart-body">
+            <div class="horizontal-bar-chart" id="q{{ i }}HorizontalBarChart">
+              <div class="labeled-bars">
+                <div class="y-labels"></div>
+                <div class="horizontal-bars"></div>
+              </div>
+              <div class="x-labels">
+                <div class="h-chart-x-label"><span>0</span></div>
+                <div class="h-chart-x-label"><span>20%</span></div>
+                <div class="h-chart-x-label"><span>40%</span></div>
+                <div class="h-chart-x-label"><span>60%</span></div>
+                <div class="h-chart-x-label"><span>80%</span></div>
+                <div class="h-chart-x-label"><span>100%</span></div>
+              </div>
+              <div class="chart-legend h-bar-legend">
+                <ul>
+                  <li><span style="background-color:#b8103b"></span>No</li>
+                  <li><span style="background-color:#328ec9"></span>Yes</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function drawQ{{ i }}Pie() {
+      var qPieData = {
+        labels: {{ stat.vars.pie_labels | safe }},
+        datasets: [
+          {
+            data: {{ stat.vars.pie_data }},
+            backgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#328ec9"
+            ]
+          }]
+      };
+
+      var yesNum = qPieData.datasets[0].data[0];
+      var noNum = qPieData.datasets[0].data[1];
+
+      $('#q{{ i }}PieNo').css('color', qPieData.datasets[0].backgroundColor[0]).html(yesNum);
+      $('#q{{ i }}PieYes').css('color', qPieData.datasets[0].backgroundColor[1]).html(noNum);
+
+      ChartDrawer.drawPie(qPieData, '#q{{ i }}Pie', '#q{{ i }}PieLegend')
+    }
+
+    function drawQ{{ i }}Bars() {
+
+      var labels = {{ stat.vars.bar_labels | safe }};
+      var positiveNums = {{ stat.vars.bar_positive_nums | safe }};
+      var negativeNums = {{ stat.vars.bar_negative_nums | safe }};
+      var qBarsData = [];
+      for (var i=0; i < labels.length; i++) {
+          qBarsData.push({
+              label: labels[i],
+              positiveNum: positiveNums[i],
+              negativeNum: negativeNums[i]
+          });
+      }
+
+      ChartDrawer.drawHorizontalBarChart('#q{{ i }}HorizontalBarChart', qBarsData);
+    }
+    (function() {
+      $(document).ready(function() {
+        drawQ{{ i }}Pie();
+        drawQ{{ i }}Bars();
+      });
+    })();
+  </script>
+{% endblock %}

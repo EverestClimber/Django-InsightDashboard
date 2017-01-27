@@ -1,197 +1,231 @@
-from datetime import datetime
 from mixer.backend.django import mixer
 import pytest
-from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
-from django.utils import timezone
 
-from survey.models import Answer, Survey, Organization
+from survey.models import Option, Region, Organization, Question
 from insights.users.models import User, Country
-
-from ..models import TotalEvaluator, LastEvaluator, SurveyStat, OrganizationStat
+from ..models import OptionDict, QuestionStat, Representation
 
 pytestmark = pytest.mark.django_db
 
 
-class TestTotalEvaluator(TestCase):
-    evaluator = TotalEvaluator
-    # fixtures = ['survey.json']
+class TestOptionDict(TestCase):
 
     def setUp(self):
-        self.evaluator.survey_stat = {}
-        self.evaluator.organization_stat = {}
+        OptionDict.clear()
 
-    def test_get_answers(self):
-        mixer.blend(Answer, is_updated=True)
-        mixer.blend(Answer, is_updated=False)
-        answers = self.evaluator.get_answers()
-        assert len(answers) == 2, 'Should return all records'
+    def test_load(self):
+        mixer.blend(Option, value='Qq')
+        mixer.blend(Option, value='Ww')
+        mixer.blend(Option, value='Ee')
 
-    def test_clear(self):
-        mixer.blend(SurveyStat)
-        mixer.blend(SurveyStat)
-        mixer.blend(OrganizationStat)
-        mixer.blend(OrganizationStat)
+        od1 = mixer.blend(OptionDict, lower='qq', original='Qq')
+        od2 = mixer.blend(OptionDict, lower='ww', original='W')
 
-        self.evaluator.clear()
+        assert OptionDict.get('qq') == 'Qq'
+        assert OptionDict.get('mm') == 'mm'
 
-        assert SurveyStat.objects.all().count() == 0, 'Cleared'
-        assert OrganizationStat.objects.all().count() == 0, 'Cleared'
+        assert OptionDict.data['qq'] == od1
+        assert OptionDict.data['ww'] == od2
+        assert OptionDict.data['ww'].original == 'Ww'
+        assert OptionDict.data['ee'].original == 'Ee'
 
-    def test_load_stat(self):
-        s1 = mixer.blend(Survey)
-        s2 = mixer.blend(Survey)
-        c1 = mixer.blend(Country)
-        c2 = mixer.blend(Country)
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
-        mixer.blend(SurveyStat, survey=s1, country=None)
-        mixer.blend(SurveyStat, survey=s1, country=c1)
-        mixer.blend(SurveyStat, survey=s2, country=c1)
-        mixer.blend(OrganizationStat, survey=s1, country_id=None, organization=o1)
-        mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
-        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o1)
-        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o2)
-        self.evaluator.load_stat()
-        assert len(self.evaluator.survey_stat) == 3
-        assert len(self.evaluator.organization_stat) == 4
-
-    def test_fill_out(self):
-        s1 = mixer.blend(Survey, active=True)
-        c1 = mixer.blend(Country)
-        c2 = mixer.blend(Country)
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
-        mixer.blend(SurveyStat, survey=s1, country=None)
-        mixer.blend(SurveyStat, survey=s1, country=c1)
-        mixer.blend(OrganizationStat, survey=s1, country_id=None, organization=o1)
-        mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
-        self.evaluator.load_stat()
-        assert len(self.evaluator.survey_stat) == 2
-        assert len(self.evaluator.organization_stat) == 2
-        self.evaluator.fill_out()
-        assert len(self.evaluator.survey_stat) == 3
-        assert len(self.evaluator.organization_stat) == 6
+        OptionDict.register('mm', 'Mm')
+        assert OptionDict.get('mm') == 'Mm'
+        assert OptionDict.objects.get(lower='mm')
 
 
-    @patch('reports.models.AbstractEvaluator.process_answer')
-    @patch('reports.models.AbstractEvaluator.load_stat')
-    @patch('reports.models.AbstractEvaluator.fill_out')
-    @patch('reports.models.AbstractEvaluator.save')
-    def test_process_answers(self, save, fill_out, load_stat, process_answer):
-        s1 = mixer.blend(Survey)
-        s2 = mixer.blend(Survey)
-        c1 = mixer.blend(Country)
-        c2 = mixer.blend(Country)
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
-        mixer.blend(SurveyStat, survey=s1, country=None)
-        mixer.blend(SurveyStat, survey=s1, country=c1)
-        mixer.blend(SurveyStat, survey=s2, country=c1)
-        mixer.blend(OrganizationStat, survey=s1, country=None, organization=o1)
-        mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
-        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o1)
-        mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o2)
-        mixer.blend(Answer, is_updated=False)
-        mixer.blend(Answer, is_updated=False)
-        self.evaluator.process_answers()
-        assert process_answer.call_count == 2
-        fill_out.assert_called_once_with()
-        assert load_stat.call_count == 1
-        assert save.call_count == 1
+        assert OptionDict.get('xx') == 'xx'
 
-    @patch('reports.models.AbstractEvaluator.update_survey_stat')
-    @patch('reports.models.AbstractEvaluator.update_organization_stat')
-    def test_process_answer_with_empty_data(self, organization_stat, survey_stat):
-        user = mixer.blend(User, country_id=1)
 
-        answer = mixer.blend(Answer, user=user, body='')
-        self.evaluator.process_answer(answer)
-        assert organization_stat.call_count == 0
-        assert survey_stat.call_count == 0
+class TestQuestionStat(TestCase):
+    def test_updators(self):
+        q = QuestionStat()
+        for name, _ in QuestionStat.TYPE_CHOICES:
+            assert callable(getattr(q, 'update_%s' % name))
 
-        answer = mixer.blend(Answer, body='111')
-        self.evaluator.process_answer(answer)
-        assert organization_stat.call_count == 0
-        assert survey_stat.call_count == 0
+    def setUp(self):
+        self.c1 = mixer.blend(Country)
+        self.c2 = mixer.blend(Country)
+        self.c3 = mixer.blend(Country)
 
-        answer = mixer.blend(Answer, user=user, body='a=1')
-        self.evaluator.process_answer(answer)
-        survey_stat.assert_called_once_with((answer.survey_id, user.country_id), answer)
-        organization_stat.assert_called_once_with((answer.survey_id, user.country_id, answer.organization_id))
+        self.reg1 = mixer.blend(Region, country=self.c1)
+        self.reg2 = mixer.blend(Region, country=self.c1)
+        self.reg3 = mixer.blend(Region, country=self.c1)
 
-    def test_process_answer(self):
-        d1 = timezone.make_aware(datetime(2017, 1, 1))
-        d2 = timezone.make_aware(datetime(2017, 1, 2))
-        mixer.blend(SurveyStat, survey_id=1, country_id=None, total=2, last=d1)
-        mixer.blend(SurveyStat, survey_id=1, country_id=1, total=2, last=d1)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=None, organization_id=1, total=2)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=1, organization_id=1, total=2)
+        self.org1 = mixer.blend(Organization)
+        self.org2 = mixer.blend(Organization)
+        self.org3 = mixer.blend(Organization)
 
-        self.evaluator.load_stat()
+        self.q = mixer.blend(Question)
+        self.r = mixer.blend(Representation, question=[self.q])
 
-    def test_update_survey_stat(self):
-        d1 = timezone.make_aware(datetime(2017, 1, 1))
-        d2 = timezone.make_aware(datetime(2017, 1, 2))
-        a1 = mixer.blend(Answer)
-        a1.created_at = d1
-        a2 = mixer.blend(Answer)
-        a2.created_at = d2
-        self.evaluator.update_survey_stat((1, 2), a1)
-        self.evaluator.update_survey_stat((1, 2), a2)
-        assert self.evaluator.survey_stat[(1, 2)].total == 2
-        assert self.evaluator.survey_stat[(1, 2)].last == d2
-        assert self.evaluator.survey_stat[(1, None)].total == 2
-        assert self.evaluator.survey_stat[(1, None)].last == d2
+        QuestionStat.clear()
 
-    def test_update_organization_stat(self):
-        self.evaluator.update_organization_stat((1, 2, 3))
-        self.evaluator.update_organization_stat((1, 2, 3))
-        self.evaluator.update_organization_stat((1, 2, 4))
-        self.evaluator.update_organization_stat((1, 2, 4))
-        assert self.evaluator.organization_stat[(1, 2, 3)].total == 2
+    def test_update_type_average_percent(self):
+        data = {
+            'main_sum': 90.0,
+            'main_cnt': 3,
 
-    def test_save(self):
-        ss1 = MagicMock()
-        ss2 = MagicMock()
-        self.evaluator.survey_stat = {
-            (1, 1): ss1,
-            (1, 2): ss2,
+            'reg_sum': {'1': 60.0, '2': 30.0},
+            'reg_cnt': {'1': 2, '2': 1},
+
+            'org_sum': {'1': 90.0},
+            'org_cnt': {'1': 3},
+        }
+        qs0 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=None,
+                          type=QuestionStat.TYPE_AVERAGE_PERCENT)
+        qs0.update_vars()
+
+        qs1 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=self.c1,
+                          type=QuestionStat.TYPE_AVERAGE_PERCENT)
+        qs1.update_vars()
+
+    def test_update_type_yes_no(self):
+        data = {
+            'main_yes': 2,
+            'main_cnt': 3,
+
+            'reg_yes': {'1': 1, '2': 1},
+            'reg_cnt': {'1': 2, '2': 1},
+
+            'org_yes': {'1': 2},
+            'org_cnt': {'1': 3},
         }
 
-        os1 = MagicMock()
-        os2 = MagicMock()
-        self.evaluator.organization_stat = {
-            (1, 2, 3): os1,
-            (1, 3, 3): os2,
+        qs0 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=None,
+                          type=QuestionStat.TYPE_YES_NO)
+        qs0.update_vars()
+
+        qs1 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=self.c1,
+                          type=QuestionStat.TYPE_YES_NO)
+        qs1.update_vars()
+
+    def test_calculate_top(self):
+        top = {
+            'x1': 100,
+            'x2': 40,
+            'x3': 20,
+            'x4': 5,
+            'x5': 5,
+            'x6': 5,
+            'x7': 5,
+            'x8': 5,
+            'x9': 5,
+            'x10': 5,
+            'x11': 5
+        }
+        result = QuestionStat._calculate_top(top)
+
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', 'x3', 'Other'),
+            'data': (100, 40, 20, 40),
+            'hide_last_legend_item': 'true'
         }
 
-        self.evaluator.save()
+        assert result['table'] == [
+            (100, 'x1', 50.0),
+            (40, 'x2', 20.0),
+            (20, 'x3', 10.0),
+            (5, 'x10', 2.5),
+            (5, 'x11', 2.5),
+            (5, 'x4', 2.5),
+            (5, 'x5', 2.5),
+            (5, 'x6', 2.5),
+            (5, 'x7', 2.5),
+            (5, 'x8', 2.5),
 
-        os1.save.assert_called_once_with()
-        ss1.save.assert_called_once_with()
-        os2.save.assert_called_once_with()
-        ss2.save.assert_called_once_with()
+        ]
 
+        top = {
+            'x1': 40,
+            'x2': 30,
+            'x3': 20,
+            'x4': 10,
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', 'x3', 'Other'),
+            'data': (40, 30, 20, 10),
+            'hide_last_legend_item': 'true'
+        }
+        assert result['table'] == [
+            (40, 'x1', 40.0),
+            (30, 'x2', 30.0),
+            (20, 'x3', 20.0),
+            (10, 'x4', 10.0),
+        ]
 
-class TestLastEvaluator(object):
-    evaluator = LastEvaluator
+        top = {
+            'x1': 50,
+            'x2': 30,
+            'x3': 20
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', 'x3', ''),
+            'data': (50, 30, 20, 0),
+            'hide_last_legend_item': 'false'
+        }
 
-    def test_get_answers(self):
-        mixer.blend(Answer, is_updated=True)
-        mixer.blend(Answer, is_updated=False)
-        answers = self.evaluator.get_answers()
-        assert len(answers) == 1, 'Should return just one last record'
+        top = {
+            'x1': 50,
+            'x2': 30,
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', '', ''),
+            'data': (50, 30, 0, 0),
+            'hide_last_legend_item': 'false'
+        }
 
+        top = {
+            'x1': 50,
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', '', '', ''),
+            'data': (50, 0, 0, 0),
+            'hide_last_legend_item': 'false'
+        }
 
-    def test_clear(self):
-        mixer.blend(SurveyStat)
-        mixer.blend(SurveyStat)
-        mixer.blend(OrganizationStat)
-        mixer.blend(OrganizationStat)
+    def test_update_type_multiselect_top(self):
+        data = {
+            'top1': {'x2': 1, 'x1': 2},
+            'top3': {'x3': 2, 'x2': 3, 'x1': 2},
+            'cnt': 3,
+            'org': {
+                '1': {
+                    'top1': {'x2': 1, 'x1': 2},
+                    'top3': {'x3': 2, 'x2': 3, 'x1': 2},
+                    'cnt': 3
+                }
+            }
+        }
 
-        self.evaluator.clear()
+        qs0 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=None,
+                          type=QuestionStat.TYPE_MULTISELECT_TOP)
+        qs0.update_vars()
 
-        assert SurveyStat.objects.all().count() == 2, 'Cleared'
-        assert OrganizationStat.objects.all().count() == 2, 'Cleared'
+        qs1 = mixer.blend(QuestionStat,
+                          representation=self.r,
+                          data=data,
+                          country=self.c1,
+                          type=QuestionStat.TYPE_MULTISELECT_TOP)
+        qs1.update_vars()

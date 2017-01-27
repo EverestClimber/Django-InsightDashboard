@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Representation
+
+@admin.register(Representation)
+class RepresentationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'type', 'get_questions', 'ordering', 'label1', 'label2', 'label3')
+    search_fields = ('label1', 'label2', 'label3')
+
+
+    def get_questions(self, obj):
+        return "\n".join([str(q) for q in obj.question.all()])

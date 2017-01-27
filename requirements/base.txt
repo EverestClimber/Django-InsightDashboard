@@ -42,9 +42,8 @@ redis>=2.10.5
 
 
 
-
-
 # Your custom requirements go here
 csscompressor
 django_compressor
 querystring_parser
+django-jsonfield

@@ -1,0 +1,168 @@
+{% block representation %}
+  <div class="question-3 question-container">
+    <div class="question-title">
+      <div class="question-title-number">Question {{ i }}:</div>
+      <div>
+        {{ stat.vars.question_text }}
+      </div>
+    </div>
+    <div class="row equal-heights mb-30">
+      <div class="col-sm-12 col-md-6">
+        <div class="report-card chart-card q1-pie-card report-card-red">
+          <div class="report-card-head">
+            <div class="title">{{ stat.vars.region_name | upper }} TOTAL</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body">
+            <div class="row equal-heights">
+              <div class="pie q{{ i }}-pie col-md-6 col-sm-12">
+                <canvas id="q{{ i }}LeftPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
+              </div>
+              <div class="col-md-6 col-sm-12 right-side-pie-legend-container">
+                <div id="q{{ i }}LeftPieLegend" class="chart-legend right-side-pie-legend pie-legend"></div>
+              </div>
+            </div>
+            <div class="pie-info">
+              <div class="pie-notice report-card-text">
+                {{ stat.vars.label1 }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="report-card chart-card q1-pie-card report-card-red">
+          <div class="report-card-head">
+            <div class="title">{{ stat.vars.region_name | upper }} TOTAL</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body">
+            <div class="row equal-heights">
+              <div class="pie q{{ i }}-pie col-md-6 col-sm-12">
+                <canvas id="q{{ i }}RightPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
+              </div>
+              <div class="col-md-6 col-sm-12 right-side-pie-legend-container">
+                <div id="q{{ i }}RightPieLegend" class="chart-legend right-side-pie-legend pie-legend"></div>
+              </div>
+            </div>
+            <div class="pie-info">
+              <div class="pie-notice report-card-text">
+                {{ stat.vars.label2 }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row tables-row equal-heights">
+      <div class="col-sm-6">
+        <div class="report-card report-card-table">
+          <div class="report-card-head text-center">
+            <div class="title">{{ stat.vars.region_name | upper }} TOP #1</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body">
+            <table class="table report-table">
+              <tbody>
+                {% for x in stat.vars.top1.table %}
+                  <tr class="
+                    {% if forloop.counter == 1 %}report-table-first-red{% endif %}
+                    {% if forloop.counter == 2 %}report-table-second-red{% endif %}
+                    {% if forloop.counter == 3 %}report-table-third-red{% endif %}
+                   ">
+                    <td>{{ forloop.counter }}. {{ x.1 }}</td>
+                    <td class="text-right">{{ x.2|floatformat:"0" }}%</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="report-card report-card-table">
+          <div class="report-card-head text-center">
+            <div class="title">{{ stat.vars.region_name | upper }} TOP #3</div>
+            <div class="head-delim"></div>
+          </div>
+          <div class="report-card-body">
+            <table class="table report-table">
+              <tbody>
+
+                {% for x in stat.vars.top3.table %}
+                  <tr class="
+                    {% if forloop.counter == 1 %}report-table-first-red{% endif %}
+                    {% if forloop.counter == 2 %}report-table-second-blue{% endif %}
+                    {% if forloop.counter == 3 %}report-table-third-blue{% endif %}
+                   ">
+                    <td>{{ forloop.counter }}. {{ x.1 }}</td>
+                    <td class="text-right">{{ x.2|floatformat:"0" }}%</td>
+                  </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function drawQ{{ i }}LeftPie() {
+      var LeftPieData = {
+        labels: {{ stat.vars.top1.pie.labels | safe }},
+        datasets: [
+          {
+            data: {{ stat.vars.top1.pie.data }},
+            backgroundColor: [
+              "#b8103b",
+              "#f28d9e",
+              '#f9c6ce',
+              '#f9f9f9'
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#f28d9e",
+              '#f9c6ce',
+              '#f9f9f9'
+            ]
+          }],
+        hideLastLegendItem: {{ stat.vars.top1.pie.hide_last_legend_item }}
+      };
+
+      ChartDrawer.drawPie(LeftPieData, '#q{{ i }}LeftPie', '#q{{ i }}LeftPieLegend');
+    }
+
+    function drawQ{{ i }}RightPie() {
+      var RightPieData = {
+        labels: {{ stat.vars.top3.pie.labels | safe }},
+        datasets: [
+          {
+            data: {{ stat.vars.top3.pie.data }},
+            backgroundColor: [
+              "#b8103b",
+              "#328ec9",
+              '#84bbdf',
+              '#f9f9f9'
+            ],
+            hoverBackgroundColor: [
+              "#b8103b",
+              "#328ec9",
+              '#84bbdf',
+              '#f9f9f9'
+            ]
+          }],
+        hideLastLegendItem: {{ stat.vars.top3.pie.hide_last_legend_item }}
+      };
+
+      ChartDrawer.drawPie(RightPieData, '#q{{ i }}RightPie', '#q{{ i }}RightPieLegend');
+    }
+
+    $(document).ready(function() {
+      drawQ{{ i }}LeftPie();
+      drawQ{{ i }}RightPie();
+    });
+  </script>
+
+{% endblock %}

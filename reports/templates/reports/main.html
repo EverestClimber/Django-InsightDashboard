@@ -21,8 +21,11 @@
           </div>
           <div class="report-card-body">
             <div class="report-card-text-lg">
-              <div class="report-card-text-lesser left-1">{{ survey_stat.last|time:"H:i" }} CET</div>
-              {{ survey_stat.last|date:"d b o" | upper}}
+              {% if survey_stat.last %}
+                <div class="report-card-text-lesser left-1">{{ survey_stat.last|time:"H:i" }} CET</div>
+                {{ survey_stat.last|date:"d b o" | upper}}
+              {% endif %}
+
             </div>
             <div class="report-card-text">
               Number of surveys received
@@ -35,7 +38,7 @@
       <div class="col-md-3 col-sm-6">
         <div class="report-card report-card-gray">
           <div class="report-card-head">
-            <div class="title">{{ org_stat.organization.name | upper }}S</div>
+            <div class="title">{{ org_stat.organization.name_plural | upper }}</div>
             <div class="head-delim"></div>
           </div>
           <div class="report-card-body">
@@ -43,7 +46,7 @@
               {{ org_stat.total }}
             </div>
             <div class="report-card-text">
-              Text regarding the data
+              {{ org_stat.organization.label1 }}
             </div>
           </div>
         </div>
@@ -53,148 +56,8 @@
     </div>
   </div>
 
-  <div class="question-1">
-    <div class="row equal-heights">
-      <div class="col-md-6">
-        <div class="report-card chart-card report-card-red">
-          <div class="report-card-head">
-            <div class="title">EUROPE TOTAL</div>
-            <div class="head-delim"></div>
-          </div>
-          <div class="report-card-body">
-            <div class="col-md-6"></div>
-            <div class="pie q1-pie col-md-6">
-              <canvas id="q1Pie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
-              <div id="q1PieLegend" class="chart-legend pie-legend"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="report-card chart-card report-card-blue">
-          <div class="report-card-head">
-            <div class="title">BY COUNTRY</div>
-            <div class="head-delim"></div>
-          </div>
-          <div class="report-card-body">
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="question-3">
-    <div class="row tables-row equal-heights">
-      <div class="col-sm-6">
-        <div class="report-card report-card-table">
-          <div class="report-card-head text-center">
-            <div class="title">EUROPE TOP #1</div>
-            <div class="head-delim"></div>
-          </div>
-          <div class="report-card-body">
-            <table class="table report-table">
-              <tbody>
-                <tr class="report-table-first-red">
-                  <td>1. Mechanism of Action</td>
-                  <td class="text-right">88%</td>
-                </tr>
-                <tr class="report-table-second-red">
-                  <td>2. Age</td>
-                  <td>71%</td>
-                </tr>
-                <tr class="report-table-third-red">
-                  <td>3. Preference of Patients</td>
-                  <td>66%</td>
-                </tr>
-                <tr>
-                  <td>4. Efficacy profile</td>
-                  <td>51%</td>
-                </tr>
-                <tr>
-                  <td>5. Tolerability profile</td>
-                  <td>41%</td>
-                </tr>
-                <tr>
-                  <td>6. Health care system specific</td>
-                  <td>23%</td>
-                </tr>
-                <tr>
-                  <td>7. Age</td>
-                  <td>71%</td>
-                </tr>
-                <tr>
-                  <td>8. Preference of the Patients</td>
-                  <td>66%</td>
-                </tr>
-                <tr>
-                  <td>9. Efficacy profile</td>
-                  <td>51%</td>
-                </tr>
-                <tr>
-                  <td>10. Tolerability profile</td>
-                  <td>41%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="report-card report-card-table">
-          <div class="report-card-head text-center">
-            <div class="title">EUROPE TOP #3</div>
-            <div class="head-delim"></div>
-          </div>
-          <div class="report-card-body">
-            <table class="table report-table">
-              <tbody>
-              <tr class="report-table-first-red">
-                <td>1. Mechanism of Action</td>
-                <td>88%</td>
-              </tr>
-              <tr class="report-table-second-blue">
-                <td>2. Age</td>
-                <td>71%</td>
-              </tr>
-              <tr class="report-table-third-blue">
-                <td>3. Preference of Patients</td>
-                <td>66%</td>
-              </tr>
-              <tr>
-                <td>4. Efficacy profile</td>
-                <td>51%</td>
-              </tr>
-              <tr>
-                <td>5. Tolerability profile</td>
-                <td>41%</td>
-              </tr>
-              <tr>
-                <td>6. Health care system specific</td>
-                <td>23%</td>
-              </tr>
-              <tr>
-                <td>7. Age</td>
-                <td>71%</td>
-              </tr>
-              <tr>
-                <td>8. Preference of the Patients</td>
-                <td>66%</td>
-              </tr>
-              <tr>
-                <td>9. Efficacy profile</td>
-                <td>51%</td>
-              </tr>
-              <tr>
-                <td>10. Tolerability profile</td>
-                <td>41%</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% for qs in question_stat %}
+    {% include qs.get_template_name with stat=qs i=forloop.counter%}
+  {% endfor %}
 </div>
 {% endblock content %}

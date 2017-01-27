@@ -2,23 +2,34 @@ from django.db import models
 from insights.users.models import User, Country
 
 
-
 class Region(models.Model):
     name = models.CharField('Region name', max_length=100)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
+    ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
+
+    class Meta:
+        ordering = ['ordering', 'id']
 
     def __str__(self):
         return self.name
+
 
 
 class Organization(models.Model):
-    name = models.CharField('Organization name', max_length=100)
+    name = models.CharField('Organization name', max_length=100, default='')
+    name_plural = models.CharField('Organization name in plural form', max_length=100, default='')
+    name_plural_short = models.CharField('Short organization name in plural form', max_length=100, default='')
+    label1 =  models.CharField('Label1 for reports', max_length=200, default='')
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
-    report_order = models.PositiveIntegerField('Order in reports', default=1, blank=True)
+    ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
+
+    class Meta:
+        ordering = ['ordering', 'id']
 
     def __str__(self):
         return self.name
+
 
 
 # class HCPCategory(models.Model):
@@ -99,7 +110,6 @@ class Option(models.Model):
 
     class Meta:
         ordering = ['question_id', 'ordering', 'created_at']
-
 
     def __str__(self):
         return self.value

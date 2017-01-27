@@ -1,8 +1,11 @@
-from django.db import models
-from django.db.models import F
-from querystring_parser import parser as queryparser
+import jsonfield
 
-from survey.models import Country, Survey, Organization, Answer
+from django.db import models
+
+
+from insights.users.models import Country
+from survey.models import Survey, Organization, Answer, Question, Option, Region
+
 
 
 class Stat(models.Model):
@@ -23,157 +26,222 @@ class SurveyStat(Stat):
 
 class OrganizationStat(Stat):
     organization = models.ForeignKey(Organization, null=True)
-    report_order = models.PositiveIntegerField('Order in reports', default=1, blank=True)
+    ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
+
+    class Meta:
+        ordering = ['ordering', 'id']
 
 
-class AbstractEvaluator(object):
+class RepresentationTypeMixin(models.Model):
+    TYPE_AVERAGE_PERCENT = 'type_average_percent'
+    TYPE_YES_NO = 'type_yes_no'
+    TYPE_MULTISELECT_TOP = 'type_multiselect_top'
 
-    survey_stat = {}
-    organization_stat = {}
+    TYPE_CHOICES = (
+        (TYPE_AVERAGE_PERCENT, 'Average percent representation'),
+        (TYPE_YES_NO, 'Representation for "yes" or "no" answers'),
+        (TYPE_MULTISELECT_TOP, 'Top 1 and top 3 representation for ordered multiselect'),
+
+    )
+    type = models.CharField('Representation Type', choices=TYPE_CHOICES, max_length=50, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class Representation(RepresentationTypeMixin, models.Model):
+    survey = models.ForeignKey(Survey)
+    question = models.ManyToManyField(Question)
+    active = models.BooleanField(blank=True, default=True, db_index=True)
+    ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
+    label1 = models.CharField('Label 1', max_length=400, default='', blank=True)
+    label2 = models.CharField('Label 2', max_length=400, default='', blank=True)
+    label3 = models.CharField('Label 3', max_length=400, default='', blank=True)
+
+    def __str__(self):
+        return "%s, %s %s %s" % (self.id, self.label1, self.label2, self.label3)
+
+    class Meta:
+        ordering = ['ordering', 'id']
+
+
+class QuestionStat(RepresentationTypeMixin, models.Model):
+    survey = models.ForeignKey(Survey, null=True)
+    country = models.ForeignKey(Country, blank=True, null=True)
+    representation = models.ForeignKey(Representation)
+    data = jsonfield.JSONField()
+    vars = jsonfield.JSONField()
+    ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
+
+    report_type = 'basic'
+    regions_cache = {}
+
+    class Meta:
+        ordering = ['ordering', 'id']
+
+
+    @classmethod
+    def get_regions(cls, country_id):
+        if country_id in cls.regions_cache:
+            return cls.regions_cache[country_id]
+
+        if country_id:
+            regions = list(Region.objects.filter(country_id=country_id))
+        else:
+            regions = list(Country.objects.all())
+        cls.regions_cache[country_id] = regions
+        return regions
+
+    def update_type_average_percent(self):
+        regions = self.get_regions(self.country_id)
+        self.vars['bar_labels'] = []
+        self.vars['bar_series'] = []
+
+        data = self.data
+
+        for reg in regions:
+            reg_key = str(reg.pk)
+            if reg_key in data['reg_cnt']:
+                val = int(round(data['reg_sum'][reg_key] / data['reg_cnt'][reg_key]))
+            else:
+                val = -1
+            self.vars['bar_labels'].append(reg.name.upper())
+            self.vars['bar_series'].append(val)
+
+        self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
+        pers = int(round(self.data['main_sum'] / self.data['main_cnt']))
+        self.vars['pie_data'] = [pers, 100-pers]
+        self.vars['label1'] = self.representation.label1
+
+    def update_type_yes_no(self):
+        data = self.data
+        self.vars['bar_labels'] = []
+        self.vars['bar_positive_nums'] = []
+        self.vars['bar_negative_nums'] = []
+        regions = self.get_regions(self.country_id)
+        for reg in regions:
+            reg_key = str(reg.pk)
+            if reg_key in data['reg_cnt']:
+                positive_num = data['reg_yes'][reg_key]
+                negative_num = data['reg_cnt'][reg_key] - data['reg_yes'][reg_key]
+            else:
+                positive_num = -1
+                negative_num = -1
+            self.vars['bar_labels'].append(reg.name)
+            self.vars['bar_positive_nums'].append(positive_num)
+            self.vars['bar_negative_nums'].append(negative_num)
+
+        self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
+        self.vars['pie_data'] = [data['main_cnt'] - data['main_yes'], data['main_yes']]
+        self.vars['label1'] = self.representation.label1
 
     @staticmethod
-    def get_answers():
-        raise NotImplementedError
+    def _calculate_top(top):
+        pack = []
+        total = sum(top.values())
+        for prop, s in top.items():
+            pack.append((s, prop, 100.0 * s / total))
+        pack.sort(key=lambda x: (-x[0], x[1]))
+        pied = pack[:3]
+        other = pack[3:]
+        hide_last_legend_item = 'false'  # !! this is correct
+        if other:
+            other_s = sum([x[0] for x in other])
+            pied.append((other_s, 'Other', 100.0 * other_s / total))
+            hide_last_legend_item = 'true'  # !! this is correct
 
+        if len(pied) < 4:
+            pied += [(0, '', 0.0)] * (4-len(pied))
 
-    @staticmethod
-    def clear():
-        raise NotImplementedError
+        data, labels, _ = zip(*pied)
+        pack = pack[:10]
+        out = {
+            'pie': {
+                'labels': labels,
+                'data': data,
+                'hide_last_legend_item': hide_last_legend_item
+            },
+            'table': pack
+        }
+        return out
 
-    @classmethod
-    def load_stat(cls):
-        surveys = SurveyStat.objects.all()
-        for survey in surveys:
-            cls.survey_stat[(survey.survey_id, survey.country_id)] = survey
+    def update_type_multiselect_top(self):
+        self.vars['label1'] = self.representation.label1
+        self.vars['label2'] = self.representation.label2
+        data = self.data
+        self.vars['top1'] = self._calculate_top(data['top1'])
+        self.vars['top3'] = self._calculate_top(data['top3'])
 
-        orgs = OrganizationStat.objects.all()
-        for org in orgs:
-            cls.organization_stat[(org.survey_id, org.country_id, org.organization_id)] = org
-
-    @classmethod
-    def fill_out(cls):
-        countries = list(Country.objects.all())
-        countries.append(None)
-        organizations = list(Organization.objects.all())
-        for surv in Survey.objects.filter(active=True):
-            for country in countries:
-                if country is None:
-                    country_id = country
-                else:
-                    country_id = country.pk
-                surv_key = (surv.pk, country_id)
-
-                if surv_key not in cls.survey_stat:
-                    cls.survey_stat[surv_key] = SurveyStat(survey=surv, country=country)
-                for org in organizations:
-                    org_key = (surv.pk, country_id, org.pk)
-                    if org_key not in cls.organization_stat:
-                        cls.organization_stat[org_key] = OrganizationStat(
-                            survey=surv, country=country, organization=org, report_order=org.report_order)
-                    else:
-                        if cls.organization_stat[org_key].report_order != org.report_order:
-                            cls.organization_stat[org_key].report_order = org.report_order
-
-    @classmethod
-    def update_survey_stat(cls, surv_key, answer):
-        survey_id, country_id = surv_key
-        if surv_key not in cls.survey_stat:
-            cls.survey_stat[surv_key] = SurveyStat(survey_id=survey_id, country_id=country_id, last=answer.created_at)
-        cls.survey_stat[surv_key].total += 1
-        if cls.survey_stat[surv_key].last:
-            cls.survey_stat[surv_key].last = max(cls.survey_stat[surv_key].last, answer.created_at)
-        else:
-            cls.survey_stat[surv_key].last = answer.created_at
-
-        surv_key_all = (survey_id, None)
-        if surv_key_all not in cls.survey_stat:
-            cls.survey_stat[surv_key_all] = SurveyStat(survey_id=survey_id, country_id=None)
-        cls.survey_stat[surv_key_all].total += 1
-        if cls.survey_stat[surv_key_all].last:
-            cls.survey_stat[surv_key_all].last = max(cls.survey_stat[surv_key].last, answer.created_at)
-        else:
-            cls.survey_stat[surv_key_all].last = answer.created_at
-
-    @classmethod
-    def update_organization_stat(cls, org_key):
-        survey_id, country_id, organization_id = org_key
-        if org_key not in cls.organization_stat:
-            cls.organization_stat[org_key] = OrganizationStat(
-                survey_id=survey_id, country_id=country_id, organization_id=organization_id)
-        cls.organization_stat[org_key].total += 1
-
-        org_key_all = (survey_id, None, organization_id)
-        if org_key_all not in cls.organization_stat:
-            cls.organization_stat[org_key_all] = OrganizationStat(
-                survey_id=survey_id, country_id=None, organization_id=organization_id)
-        cls.organization_stat[org_key_all].total += 1
-
-    @classmethod
-    def process_answer(cls, answer):
-        if not answer.body:
+    def update_vars(self):
+        if not self.data:
             return
 
-        try:
-            data = queryparser.parse(answer.body)
-        except queryparser.MalformedQueryStringError:
-            return
+        self.vars['question_text'] = self.representation.question.first().text
+        if self.country_id:
+            self.vars['region_name'] = self.country.name
+            self.vars['header_by_country'] = 'BY REGION'
+        else:
+            self.vars['region_name'] = 'Europe'
+            self.vars['header_by_country'] = 'BY COUNTRY'
 
-        survey_id = answer.survey_id
-        country_id = answer.user.country_id
-        organization_id = answer.organization_id
+        if not self.type:
+            raise KeyError('Empty type')
 
-        surv_key = (survey_id, country_id)
-        cls.update_survey_stat(surv_key, answer)
+        getattr(self, 'update_%s' % self.type)()
 
-        org_key = (survey_id, country_id, organization_id)
-        cls.update_organization_stat(org_key)
+    def get_template_name(self):
+        return "reports/representation/%s/%s.html" % (self.type, self.__class__.report_type)
 
-        answer.is_updated = True
-        answer.save()
+    @classmethod
+    def clear(cls):
+        cls.report_type = 'basic'
+        cls.regions_cache = {}
+
+
+class OptionDict(models.Model):
+    lower = models.CharField(max_length=200, unique=True)
+    original = models.CharField(max_length=200)
+
+    data = {}
+    is_loaded = False
+
+    @classmethod
+    def clear(cls):
+        cls.data = {}
+        cls.is_loaded = False
+
+    @classmethod
+    def _load(cls):
+        for od in cls.objects.all():
+            cls.data[od.lower] = od
+        cls.is_loaded = True
+
+        for opt in Option.objects.all():
+            lower = opt.value.lower()
+            if lower not in cls.data:
+                new_dict = cls(lower=lower, original=opt.value)
+                new_dict.save()
+                cls.data[lower] = new_dict
+            elif opt.value != cls.data[lower].original:
+                cls.data[lower].original = opt.value
+                cls.data[lower].save()
 
 
     @classmethod
-    def save(cls):
-        for surv_stat in cls.survey_stat.values():
-            surv_stat.save()
-        for org_stat in cls.organization_stat.values():
-            org_stat.save()
-
-
-
-
+    def get(cls, name):
+        if not cls.is_loaded:
+            cls._load()
+        if name in cls.data:
+            return cls.data[name].original
+        else:
+            return name
 
     @classmethod
-    def process_answers(cls):
-        cls.clear()
-        cls.load_stat()
-        cls.fill_out()
-        answers = cls.get_answers()
-        for answer in answers:
-            cls.process_answer(answer)
-        cls.save()
+    def register(cls, lower, original):
+        if not cls.is_loaded:
+            cls._load()
 
-    def evaluate(self):
-        pass
-
-
-class TotalEvaluator(AbstractEvaluator):
-    @staticmethod
-    def get_answers():
-        return Answer.objects.all()
-
-    @staticmethod
-    def clear():
-        SurveyStat.objects.all().delete()
-        OrganizationStat.objects.all().delete()
-
-
-class LastEvaluator(AbstractEvaluator):
-    @staticmethod
-    def get_answers():
-        return Answer.objects.filter(is_updated=False)
-
-    @staticmethod
-    def clear():
-        pass
-
+        if lower not in cls.data:
+            new_dict = cls(lower=lower, original=original)
+            new_dict.save()
+            cls.data[lower] = new_dict

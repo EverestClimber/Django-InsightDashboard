@@ -9,7 +9,8 @@ from insights.users.models import User, Country
 
 from survey.models import Survey, Organization
 
-from ..models import SurveyStat, OrganizationStat, TotalEvaluator
+from ..models import SurveyStat, OrganizationStat
+from ..evaluators import TotalEvaluator
 from ..views import update_stat, ReportsView
 
 pytestmark = pytest.mark.django_db
