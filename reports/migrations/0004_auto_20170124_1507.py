@@ -24,8 +24,7 @@ class Migration(migrations.Migration):
                 ('data', jsonfield.fields.JSONField(default=dict)),
                 ('ordering', models.PositiveIntegerField(blank=True, db_index=True, default=1, verbose_name='Ordering in reports')),
                 ('country', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='users.Country')),
-            ],
-            bases=(models.Model),
+            ]
         ),
         migrations.CreateModel(
             name='Representation',
@@ -37,8 +36,7 @@ class Migration(migrations.Migration):
                 ('label3', models.CharField(blank=True, default='', max_length=400, verbose_name='Label 3')),
                 ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='survey.Question')),
                 ('survey', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='survey.Survey')),
-            ],
-            bases=(models.Model),
+            ]
         ),
         migrations.RemoveField(
             model_name='organizationstat',
