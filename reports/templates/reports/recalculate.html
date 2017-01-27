@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="alert alert-success">
-        Chart data was successfully recalculated
+  {% for message in evaluator_messages %}
+    <div class="alert alert-warning" role="alert">
+      {{ message }}
     </div>
+  {% empty %}
+    <div class="alert alert-success">
+      Chart data was successfully recalculated
+    </div>
+  {% endfor %}
+
 {% endblock %}

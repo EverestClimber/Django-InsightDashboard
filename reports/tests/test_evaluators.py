@@ -26,6 +26,7 @@ class TestTotalEvaluator(TestCase):
         self.evaluator.question_stat = {}
         self.evaluator.question_representation_link = {}
         self.evaluator.question_dict = {}
+        self.evaluator.messages = []
 
     def test_get_answers(self):
         mixer.blend(Answer, is_updated=True)
@@ -144,7 +145,7 @@ class TestTotalEvaluator(TestCase):
         user = mixer.blend(User, country_id=1)
 
         answer = mixer.blend(Answer, user=user, body='')
-        self.assertRaises(KeyError, self.evaluator.process_answer, answer)
+        self.evaluator.process_answer(answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 

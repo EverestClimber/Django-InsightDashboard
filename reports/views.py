@@ -52,7 +52,7 @@ def update_stat(request):
 @staff_member_required
 def recalculate(request):
     TotalEvaluator.process_answers()
-    return render(request, 'reports/recalculate.html')
+    return render(request, 'reports/recalculate.html', {'evaluator_messages': TotalEvaluator.messages})
 
 @staff_member_required
 def update_vars(request):

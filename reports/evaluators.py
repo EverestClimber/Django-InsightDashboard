@@ -17,13 +17,17 @@ class AbstractEvaluator(object):
     question_stat = {}
     question_representation_link = {}
     question_dict = {}
+    messages = []
 
 
     @classmethod
     def type_average_percent_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_TWO_DEPENDEND_FIELDS:
-            raise ValueError("type_average_percent_processor doesn't process %s", q.type)
+            raise ValueError("type_average_percent_processor doesn't process %s, Question: %s" % (q.type, q.pk))
+
+        if 'main' not in question_data:
+            return
 
         main_str = question_data['main'].strip()
         if not main_str:
@@ -78,7 +82,7 @@ class AbstractEvaluator(object):
     def type_yes_no_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_YES_NO and q.type != Question.TYPE_YES_NO_JUMPING:
-            raise ValueError("type_yes_no_processor doesn't process %s", q.type)
+            raise ValueError("type_yes_no_processor doesn't process %s. Question: %s" % (q.type, q.pk))
 
         result = question_data.strip()
 
@@ -135,7 +139,7 @@ class AbstractEvaluator(object):
     def type_multiselect_top_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
         if q.type != Question.TYPE_MULTISELECT_ORDERED:
-            raise ValueError("type_multiselect_top_processor doesn't process %s", q.type)
+            raise ValueError("type_multiselect_top_processor doesn't process %s. Question: %s" % (q.type, q.pk))
 
         if not question_data or '' not in question_data:
             return
@@ -200,7 +204,6 @@ class AbstractEvaluator(object):
             else:
                 data['org'][org_key]['top1'][top1] = 1
 
-
             for top_i in top3:
                 if top_i in data['top3']:
                     data['top3'][top_i] += 1
@@ -211,13 +214,6 @@ class AbstractEvaluator(object):
                     data['org'][org_key]['top3'][top_i] += 1
                 else:
                     data['org'][org_key]['top3'][top_i] = 1
-
-
-
-
-
-
-
 
     @staticmethod
     def get_answers():
@@ -332,15 +328,27 @@ class AbstractEvaluator(object):
     @classmethod
     def process_answer(cls, answer):
         if not answer.body:
-            raise KeyError("There is no answers data")
+            return
 
         results = cls.parse_query_string(answer.body)
         if 'data' not in results:
-            raise KeyError("There is data in post results")
+            raise KeyError("There is data in post results. Answer: %s" % answer.pk )
 
         data = results['data']
         if type(data) != dict:
-            raise KeyError("Answer data should be dict")
+            raise KeyError("Answer data should be dict. Answer: %s" % answer.pk )
+
+        survey_id = answer.survey_id
+        country_id = answer.user.country_id
+        organization_id = answer.organization_id
+
+        surv_key = (survey_id, country_id)
+        cls.update_survey_stat(surv_key, answer)
+
+        org_key = (survey_id, country_id, organization_id)
+        cls.update_organization_stat(org_key)
+
+
 
         for qid, question_data in data.items():
             if qid not in cls.question_dict:
@@ -353,16 +361,6 @@ class AbstractEvaluator(object):
             processor = "%s_processor" % repr.type
             getattr(cls, processor)(qid, question_data, answer)
 
-        survey_id = answer.survey_id
-        country_id = answer.user.country_id
-        organization_id = answer.organization_id
-
-        surv_key = (survey_id, country_id)
-        cls.update_survey_stat(surv_key, answer)
-
-        org_key = (survey_id, country_id, organization_id)
-        cls.update_organization_stat(org_key)
-
         answer.is_updated = True
         answer.save(update_fields=['is_updated'])
 
@@ -374,6 +372,7 @@ class AbstractEvaluator(object):
         for org_stat in cls.organization_stat.values():
             org_stat.save()
         for quest_stat in cls.question_stat.values():
+            quest_stat.update_vars()
             quest_stat.save()
 
 
@@ -391,8 +390,8 @@ class AbstractEvaluator(object):
             try:
                 cls.process_answer(answer)
             except Exception as e:
+                cls.messages.append(str(e))
                 logger.warning("Answer can't be processed. Exception: %s" % e)
-
 
         cls.save()
 
