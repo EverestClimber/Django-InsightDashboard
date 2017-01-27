@@ -46,20 +46,20 @@ class TestQuestionStat(TestCase):
             assert callable(getattr(q, 'update_%s' % name))
 
     def setUp(self):
-        self.c1 = mixer.blend(Country)
-        self.c2 = mixer.blend(Country)
-        self.c3 = mixer.blend(Country)
+        self.c1 = mixer.blend(Country, name='Spain', ordering=1)
+        self.c2 = mixer.blend(Country, name='France', ordering=2)
+        self.c3 = mixer.blend(Country, name='Italy', ordering=3)
 
-        self.reg1 = mixer.blend(Region, country=self.c1)
-        self.reg2 = mixer.blend(Region, country=self.c1)
-        self.reg3 = mixer.blend(Region, country=self.c1)
+        self.reg1 = mixer.blend(Region, country=self.c1, name='East', ordering=1)
+        self.reg2 = mixer.blend(Region, country=self.c1, name='West', ordering=2)
+        self.reg3 = mixer.blend(Region, country=self.c1, name='North', ordering=3)
 
-        self.org1 = mixer.blend(Organization)
-        self.org2 = mixer.blend(Organization)
-        self.org3 = mixer.blend(Organization)
+        self.org1 = mixer.blend(Organization, name='Org1', ordering=1)
+        self.org2 = mixer.blend(Organization, name='Org2', ordering=2)
+        self.org3 = mixer.blend(Organization, name='Org3', ordering=3)
 
-        self.q = mixer.blend(Question)
-        self.r = mixer.blend(Representation, question=[self.q])
+        self.q = mixer.blend(Question, text='Question text')
+        self.r = mixer.blend(Representation, question=[self.q], label1='label1', label2='label2', label3='label3')
 
         QuestionStat.clear()
 
@@ -80,6 +80,16 @@ class TestQuestionStat(TestCase):
                           country=None,
                           type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs0.update_vars()
+        assert qs0.vars == {
+            'region_name': 'Europe',
+            'header_by_country': 'BY COUNTRY',
+            'question_text': 'Question text',
+            'label1': 'label1',
+            'pie_labels': ['label2', 'label3'],
+            'pie_data': [30, 70],
+            'bar_labels': ['SPAIN', 'FRANCE', 'ITALY'],
+            'bar_series': [30, 30, -1]
+        }
 
         qs1 = mixer.blend(QuestionStat,
                           representation=self.r,
@@ -87,6 +97,16 @@ class TestQuestionStat(TestCase):
                           country=self.c1,
                           type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs1.update_vars()
+        assert qs1.vars == {
+            'region_name': 'Spain',
+            'question_text': 'Question text',
+            'header_by_country': 'BY REGION',
+            'label1': 'label1',
+            'pie_labels': ['label2', 'label3'],
+            'pie_data': [30, 70],
+            'bar_labels': ['EAST', 'WEST', 'NORTH'],
+            'bar_series': [30, 30, -1]
+        }
 
     def test_update_type_yes_no(self):
         data = {
@@ -106,6 +126,17 @@ class TestQuestionStat(TestCase):
                           country=None,
                           type=QuestionStat.TYPE_YES_NO)
         qs0.update_vars()
+        assert qs0.vars == {
+            'region_name': 'Europe',
+            'header_by_country': 'BY COUNTRY',
+            'question_text': 'Question text',
+            'label1': 'label1',
+            'pie_labels': ['label2', 'label3'],
+            'pie_data': [1, 2],
+            'bar_labels': ['Spain', 'France', 'Italy'],
+            'bar_negative_nums': [1, 0, -1],
+            'bar_positive_nums': [1, 1, -1],
+        }
 
         qs1 = mixer.blend(QuestionStat,
                           representation=self.r,
@@ -113,6 +144,17 @@ class TestQuestionStat(TestCase):
                           country=self.c1,
                           type=QuestionStat.TYPE_YES_NO)
         qs1.update_vars()
+        assert qs1.vars == {
+            'region_name': 'Spain',
+            'header_by_country': 'BY REGION',
+            'question_text': 'Question text',
+            'label1': 'label1',
+            'pie_labels': ['label2', 'label3'],
+            'pie_data': [1, 2],
+            'bar_labels': ['East', 'West', 'North'],
+            'bar_negative_nums': [1, 0, -1],
+            'bar_positive_nums': [1, 1, -1],
+        }
 
     def test_calculate_top(self):
         top = {
@@ -204,14 +246,14 @@ class TestQuestionStat(TestCase):
 
     def test_update_type_multiselect_top(self):
         data = {
-            'top1': {'x2': 1, 'x1': 2},
-            'top3': {'x3': 2, 'x2': 3, 'x1': 2},
-            'cnt': 3,
+            'top1': {'x2': 4, 'x1': 6},
+            'top3': {'x3': 4, 'x2': 6, 'x1': 10},
+            'cnt': 10,
             'org': {
                 '1': {
-                    'top1': {'x2': 1, 'x1': 2},
-                    'top3': {'x3': 2, 'x2': 3, 'x1': 2},
-                    'cnt': 3
+                    'top1': {'x2': 4, 'x1': 6},
+                    'top3': {'x3': 4, 'x2': 6, 'x1': 10},
+                    'cnt': 10
                 }
             }
         }
@@ -222,6 +264,29 @@ class TestQuestionStat(TestCase):
                           country=None,
                           type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs0.update_vars()
+        assert qs0.vars == {
+            'region_name': 'Europe',
+            'header_by_country': 'BY COUNTRY',
+            'question_text': 'Question text',
+            'label1': 'label1',
+            'label2': 'label2',
+            'top1': {
+                'table': [(6, 'x1', 60.0), (4, 'x2', 40.0)],
+                'pie': {
+                    'data': (6, 4, 0, 0),
+                    'labels': ('x1', 'x2', '', ''),
+                    'hide_last_legend_item': 'false'
+                }
+            },
+            'top3': {
+                'table': [(10, 'x1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
+                'pie': {
+                    'data': (10, 6, 4, 0),
+                    'labels': ('x1', 'x2', 'x3', ''),
+                    'hide_last_legend_item': 'false'
+                }
+            },
+        }
 
         qs1 = mixer.blend(QuestionStat,
                           representation=self.r,
@@ -229,3 +294,26 @@ class TestQuestionStat(TestCase):
                           country=self.c1,
                           type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs1.update_vars()
+        assert qs1.vars == {
+            'region_name': 'Spain',
+            'header_by_country': 'BY REGION',
+            'question_text': 'Question text',
+            'label1': 'label1',
+            'label2': 'label2',
+            'top1': {
+                'table': [(6, 'x1', 60.0), (4, 'x2', 40.0)],
+                'pie': {
+                    'data': (6, 4, 0, 0),
+                    'labels': ('x1', 'x2', '', ''),
+                    'hide_last_legend_item': 'false'
+                }
+            },
+            'top3': {
+                'table': [(10, 'x1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
+                'pie': {
+                    'data': (10, 6, 4, 0),
+                    'labels': ('x1', 'x2', 'x3', ''),
+                    'hide_last_legend_item': 'false'
+                }
+            },
+        }
