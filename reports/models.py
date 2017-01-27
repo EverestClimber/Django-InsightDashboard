@@ -79,7 +79,6 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     class Meta:
         ordering = ['ordering', 'id']
 
-
     @classmethod
     def get_regions(cls, country_id):
         if country_id in cls.regions_cache:

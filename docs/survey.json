@@ -950,15 +950,23 @@
   "pk": 1,
   "fields": {
     "name": "Drug Abuse Specialised Mental Health Centre",
-    "created_at": "2016-12-28T20:08:48.538Z"
+    "name_plural": "Drug Abuse Specialised Mental Health Centres",
+    "name_plural_short": "DASMHC",
+    "label1": "Text regarding the data",
+    "created_at": "2016-12-28T20:08:48.538Z",
+    "ordering": 1
   }
 },
 {
   "model": "survey.organization",
   "pk": 2,
   "fields": {
-    "name": "Mental Health Centres",
-    "created_at": "2016-12-28T20:08:55.070Z"
+    "name": "Mental Health Centre",
+    "name_plural": "Mental Health Centres",
+    "name_plural_short": "MHC",
+    "label1": "Text regarding the data",
+    "created_at": "2016-12-28T20:08:55.070Z",
+    "ordering": 1
   }
 },
 {
@@ -966,7 +974,11 @@
   "pk": 3,
   "fields": {
     "name": "Hospital",
-    "created_at": "2016-12-28T20:09:04.217Z"
+    "name_plural": "Hospitals",
+    "name_plural_short": "Hospitals",
+    "label1": "Text regarding the data",
+    "created_at": "2016-12-28T20:09:04.217Z",
+    "ordering": 1
   }
 },
 {
@@ -999,7 +1011,8 @@
   "fields": {
     "name": "East",
     "country": 3,
-    "created_at": "2016-12-28T20:10:55.914Z"
+    "created_at": "2016-12-28T20:10:55.914Z",
+    "ordering": 1
   }
 },
 {
@@ -1008,7 +1021,8 @@
   "fields": {
     "name": "North",
     "country": 3,
-    "created_at": "2016-12-28T20:11:01.434Z"
+    "created_at": "2016-12-28T20:11:01.434Z",
+    "ordering": 1
   }
 },
 {
@@ -1017,7 +1031,8 @@
   "fields": {
     "name": "South",
     "country": 3,
-    "created_at": "2017-01-05T13:31:23.717Z"
+    "created_at": "2017-01-05T13:31:23.717Z",
+    "ordering": 1
   }
 },
 {
@@ -1026,7 +1041,8 @@
   "fields": {
     "name": "North",
     "country": 4,
-    "created_at": "2017-01-05T13:32:21.206Z"
+    "created_at": "2017-01-05T13:32:21.206Z",
+    "ordering": 1
   }
 },
 {
@@ -1035,7 +1051,8 @@
   "fields": {
     "name": "South",
     "country": 4,
-    "created_at": "2017-01-05T13:32:26.215Z"
+    "created_at": "2017-01-05T13:32:26.215Z",
+    "ordering": 1
   }
 },
 {
@@ -1044,7 +1061,8 @@
   "fields": {
     "name": "Centre",
     "country": 4,
-    "created_at": "2017-01-05T13:33:10.140Z"
+    "created_at": "2017-01-05T13:33:10.140Z",
+    "ordering": 1
   }
 },
 {
@@ -1053,7 +1071,8 @@
   "fields": {
     "name": "North",
     "country": 5,
-    "created_at": "2017-01-05T13:37:41.840Z"
+    "created_at": "2017-01-05T13:37:41.840Z",
+    "ordering": 1
   }
 },
 {
@@ -1062,7 +1081,8 @@
   "fields": {
     "name": "South",
     "country": 5,
-    "created_at": "2017-01-05T13:37:48.612Z"
+    "created_at": "2017-01-05T13:37:48.612Z",
+    "ordering": 1
   }
 },
 {
@@ -1071,7 +1091,8 @@
   "fields": {
     "name": "East",
     "country": 5,
-    "created_at": "2017-01-05T13:37:54.973Z"
+    "created_at": "2017-01-05T13:37:54.973Z",
+    "ordering": 1
   }
 },
 {
@@ -1080,7 +1101,17 @@
   "fields": {
     "name": "West",
     "country": 5,
-    "created_at": "2017-01-11T12:06:01.710Z"
+    "created_at": "2017-01-11T12:06:01.710Z",
+    "ordering": 1
+  }
+},
+{
+  "model": "users.country",
+  "pk": 1,
+  "fields": {
+    "name": "Ukraine",
+    "created_at": "2016-12-28T19:38:34.933Z",
+    "ordering": 1
   }
 },
 {
@@ -1088,7 +1119,8 @@
   "pk": 3,
   "fields": {
     "name": "Spain",
-    "created_at": "2016-12-28T20:10:20.497Z"
+    "created_at": "2016-12-28T20:10:20.497Z",
+    "ordering": 1
   }
 },
 {
@@ -1096,7 +1128,8 @@
   "pk": 4,
   "fields": {
     "name": "Italy",
-    "created_at": "2016-12-28T20:10:26.283Z"
+    "created_at": "2016-12-28T20:10:26.283Z",
+    "ordering": 1
   }
 },
 {
@@ -1104,7 +1137,113 @@
   "pk": 5,
   "fields": {
     "name": "France",
-    "created_at": "2016-12-28T20:10:33.451Z"
+    "created_at": "2016-12-28T20:10:33.451Z",
+    "ordering": 1
+  }
+},
+{
+  "model": "users.country",
+  "pk": 6,
+  "fields": {
+    "name": "Other",
+    "created_at": "2017-01-18T15:26:06.074Z",
+    "ordering": 1
+  }
+},
+{
+  "model": "reports.representation",
+  "pk": 1,
+  "fields": {
+    "type": "type_average_percent",
+    "survey": 1,
+    "active": true,
+    "ordering": 1,
+    "label1": "Total percentage of patients with SCZ that have abused drugs",
+    "label2": "No abuse",
+    "label3": "Substance abuse",
+    "question": [
+      1
+    ]
+  }
+},
+{
+  "model": "reports.representation",
+  "pk": 2,
+  "fields": {
+    "type": "type_yes_no",
+    "survey": 1,
+    "active": true,
+    "ordering": 1,
+    "label1": "Number of answers for each option across the whole survey",
+    "label2": "No difference",
+    "label3": "Treats differently",
+    "question": [
+      2
+    ]
+  }
+},
+{
+  "model": "reports.representation",
+  "pk": 3,
+  "fields": {
+    "type": "type_multiselect_top",
+    "survey": 1,
+    "active": true,
+    "ordering": 1,
+    "label1": "Lorem ipsum",
+    "label2": "Lorem ipsum",
+    "label3": "",
+    "question": [
+      3
+    ]
+  }
+},
+{
+  "model": "reports.representation",
+  "pk": 4,
+  "fields": {
+    "type": "type_multiselect_top",
+    "survey": 1,
+    "active": true,
+    "ordering": 1,
+    "label1": "Lorem ipsum",
+    "label2": "Lorem ipsum",
+    "label3": "",
+    "question": [
+      4
+    ]
+  }
+},
+{
+  "model": "reports.representation",
+  "pk": 5,
+  "fields": {
+    "type": "type_yes_no",
+    "survey": 1,
+    "active": true,
+    "ordering": 1,
+    "label1": "Number of answers for each option across the whole survey",
+    "label2": "No difference",
+    "label3": "Treats differently",
+    "question": [
+      5
+    ]
+  }
+},
+{
+  "model": "reports.representation",
+  "pk": 6,
+  "fields": {
+    "type": "type_multiselect_top",
+    "survey": 1,
+    "active": true,
+    "ordering": 1,
+    "label1": "Why would you choose Aripiprazole over another antipsychotic",
+    "label2": "Lorem ipsum",
+    "label3": "Lorem ipsum",
+    "question": [
+      6
+    ]
   }
 }
 ]
