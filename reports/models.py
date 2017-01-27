@@ -135,9 +135,42 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['pie_data'] = [data['main_cnt'] - data['main_yes'], data['main_yes']]
         self.vars['label1'] = self.representation.label1
 
+    @staticmethod
+    def _calculate_top(top):
+        pack = []
+        total = sum(top.values())
+        for prop, s in top.items():
+            pack.append((s, prop, 100.0 * s / total))
+        pack.sort(key=lambda x: (-x[0], x[1]))
+        pied = pack[:3]
+        other = pack[3:]
+        hide_last_legend_item = 'false'  # !! this is correct
+        if other:
+            other_s = sum([x[0] for x in other])
+            pied.append((other_s, 'Other', 100.0 * other_s / total))
+            hide_last_legend_item = 'true'  # !! this is correct
+
+        if len(pied) < 4:
+            pied += [(0, '', 0.0)] * (4-len(pied))
+
+        data, labels, _ = zip(*pied)
+        pack = pack[:10]
+        out = {
+            'pie': {
+                'labels': labels,
+                'data': data,
+                'hide_last_legend_item': hide_last_legend_item
+            },
+            'table': pack
+        }
+        return out
 
     def update_type_multiselect_top(self):
-        pass
+        self.vars['label1'] = self.representation.label1
+        self.vars['label2'] = self.representation.label2
+        data = self.data
+        self.vars['top1'] = self._calculate_top(data['top1'])
+        self.vars['top3'] = self._calculate_top(data['top3'])
 
     def update_vars(self):
         if not self.data:
@@ -145,10 +178,10 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
 
         self.vars['question_text'] = self.representation.question.first().text
         if self.country_id:
-            self.vars['header_europe_total'] = '%s total' % self.country.name
+            self.vars['region_name'] = self.country.name
             self.vars['header_by_country'] = 'BY REGION'
         else:
-            self.vars['header_europe_total'] = 'Europe total'
+            self.vars['region_name'] = 'Europe'
             self.vars['header_by_country'] = 'BY COUNTRY'
 
         if not self.type:
@@ -163,7 +196,6 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     def clear(cls):
         cls.report_type = 'basic'
         cls.regions_cache = {}
-
 
 
 class OptionDict(models.Model):

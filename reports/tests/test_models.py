@@ -114,6 +114,94 @@ class TestQuestionStat(TestCase):
                           type=QuestionStat.TYPE_YES_NO)
         qs1.update_vars()
 
+    def test_calculate_top(self):
+        top = {
+            'x1': 100,
+            'x2': 40,
+            'x3': 20,
+            'x4': 5,
+            'x5': 5,
+            'x6': 5,
+            'x7': 5,
+            'x8': 5,
+            'x9': 5,
+            'x10': 5,
+            'x11': 5
+        }
+        result = QuestionStat._calculate_top(top)
+
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', 'x3', 'Other'),
+            'data': (100, 40, 20, 40),
+            'hide_last_legend_item': 'true'
+        }
+
+        assert result['table'] == [
+            (100, 'x1', 50.0),
+            (40, 'x2', 20.0),
+            (20, 'x3', 10.0),
+            (5, 'x10', 2.5),
+            (5, 'x11', 2.5),
+            (5, 'x4', 2.5),
+            (5, 'x5', 2.5),
+            (5, 'x6', 2.5),
+            (5, 'x7', 2.5),
+            (5, 'x8', 2.5),
+
+        ]
+
+        top = {
+            'x1': 40,
+            'x2': 30,
+            'x3': 20,
+            'x4': 10,
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', 'x3', 'Other'),
+            'data': (40, 30, 20, 10),
+            'hide_last_legend_item': 'true'
+        }
+        assert result['table'] == [
+            (40, 'x1', 40.0),
+            (30, 'x2', 30.0),
+            (20, 'x3', 20.0),
+            (10, 'x4', 10.0),
+        ]
+
+        top = {
+            'x1': 50,
+            'x2': 30,
+            'x3': 20
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', 'x3', ''),
+            'data': (50, 30, 20, 0),
+            'hide_last_legend_item': 'false'
+        }
+
+        top = {
+            'x1': 50,
+            'x2': 30,
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', 'x2', '', ''),
+            'data': (50, 30, 0, 0),
+            'hide_last_legend_item': 'false'
+        }
+
+        top = {
+            'x1': 50,
+        }
+        result = QuestionStat._calculate_top(top)
+        assert result['pie'] == {
+            'labels': ('x1', '', '', ''),
+            'data': (50, 0, 0, 0),
+            'hide_last_legend_item': 'false'
+        }
+
     def test_update_type_multiselect_top(self):
         data = {
             'top1': {'x2': 1, 'x1': 2},
