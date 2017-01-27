@@ -16,6 +16,36 @@
         </div>
       </div>
     </div>
+    <div class="col-sm-12 col-md-6">
+      <div class="report-card chart-card report-card-gray">
+        <div class="report-card-head">
+          <div class="title">BY ORGANIZATION</div>
+          <div class="head-delim"></div>
+        </div>
+        <div class="report-card-body horizontal-bar-chart-body">
+          <div class="horizontal-bar-chart" id="grayHorizontalBarChart">
+            <div class="labeled-bars">
+              <div class="y-labels"></div>
+              <div class="horizontal-bars"></div>
+            </div>
+            <div class="x-labels">
+              <div class="h-chart-x-label"><span>0</span></div>
+              <div class="h-chart-x-label"><span>20%</span></div>
+              <div class="h-chart-x-label"><span>40%</span></div>
+              <div class="h-chart-x-label"><span>60%</span></div>
+              <div class="h-chart-x-label"><span>80%</span></div>
+              <div class="h-chart-x-label"><span>100%</span></div>
+            </div>
+            <div class="chart-legend h-bar-legend">
+              <ul>
+                <li><span style="background-color:#464646"></span>Yes</li>
+                <li><span style="background-color:#cdcccc"></span>No</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -31,8 +61,30 @@
       ChartDrawer.drawVerticalBarChart('#grayBarChart', '#grayBarLabels', grayBarsData);
     }
 
+    function drawGrayHorizontalBars() {
+      var grayHBarsData = [
+        {
+          label: 'DASMHC',
+          positiveNum: 225,
+          negativeNum: 40
+        },
+        {
+          label: 'MHC',
+          positiveNum: 30,
+          negativeNum: 80
+        },
+        {
+          label: 'HOSPITALS',
+          positiveNum: 50,
+          negativeNum: 50
+        }
+      ];
+      ChartDrawer.drawHorizontalBarChart('#grayHorizontalBarChart', grayHBarsData);
+    }
+
     $(document).ready(function() {
       drawGrayBars();
+      drawGrayHorizontalBars();
     });
   })();
 </script>

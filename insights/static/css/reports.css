@@ -489,11 +489,11 @@
   cursor: default;
 }
 
-.horizontal-bars .bar .portion.red {
+.horizontal-bars .bar .portion.negative {
   background-color: #b8102c;
 }
 
-.horizontal-bars .bar .portion.blue {
+.horizontal-bars .bar .portion.positive {
   background-color: #328ec9;
 }
 
@@ -502,6 +502,14 @@
   width: 100%;
   font-size: 13px;
   color: #3d3d3d;
+}
+
+.report-card-gray .horizontal-bars .bar .portion.negative {
+  background-color: #cdcccc;
+}
+
+.report-card-gray .horizontal-bars .bar .portion.positive {
+  background-color: #464646;
 }
 
 .report-card-body.horizontal-bar-chart-body {

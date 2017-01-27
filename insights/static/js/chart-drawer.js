@@ -84,7 +84,7 @@
       var $negativePortionText = $('<span>' + item.negativeNum + '</span>');
 
       var $positivePortion = $(
-        '<div class="portion blue" ' +
+        '<div class="portion positive" ' +
         'data-toggle="tooltip" ' +
         'data-placement="top"' +
         ' title="' + item.positiveNum + '">' +
@@ -92,7 +92,7 @@
       ).html($positivePortionText);
 
       var $negativePortion = $(
-        '<div class="portion red" ' +
+        '<div class="portion negative" ' +
         'data-toggle="tooltip" ' +
         'data-placement="top"' +
         ' title="' + item.negativeNum + '">' +
