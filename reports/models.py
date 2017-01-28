@@ -172,7 +172,10 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['top3'] = self._calculate_top(data['top3'])
 
     def update_vars(self):
-        self.vars['question_text'] = self.representation.question.first().text
+        try:
+            self.vars['question_text'] = self.representation.question.first().text
+        except Exception:
+            return
 
         if self.data:
             self.vars['available'] = True

@@ -83,6 +83,7 @@ class TestQuestionStat(TestCase):
                           type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs0.update_vars()
         assert qs0.vars == {
+            'available': True,
             'region_name': 'Europe',
             'header_by_country': 'BY COUNTRY',
             'question_text': 'Question text',
@@ -100,6 +101,7 @@ class TestQuestionStat(TestCase):
                           type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs1.update_vars()
         assert qs1.vars == {
+            'available': True,
             'region_name': 'Spain',
             'question_text': 'Question text',
             'header_by_country': 'BY REGION',
@@ -129,6 +131,7 @@ class TestQuestionStat(TestCase):
                           type=QuestionStat.TYPE_YES_NO)
         qs0.update_vars()
         assert qs0.vars == {
+            'available': True,
             'region_name': 'Europe',
             'header_by_country': 'BY COUNTRY',
             'question_text': 'Question text',
@@ -147,6 +150,7 @@ class TestQuestionStat(TestCase):
                           type=QuestionStat.TYPE_YES_NO)
         qs1.update_vars()
         assert qs1.vars == {
+            'available': True,
             'region_name': 'Spain',
             'header_by_country': 'BY REGION',
             'question_text': 'Question text',
@@ -269,6 +273,7 @@ class TestQuestionStat(TestCase):
                           type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs0.update_vars()
         assert qs0.vars == {
+            'available': True,
             'region_name': 'Europe',
             'header_by_country': 'BY COUNTRY',
             'question_text': 'Question text',
@@ -299,6 +304,7 @@ class TestQuestionStat(TestCase):
                           type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs1.update_vars()
         assert qs1.vars == {
+            'available': True,
             'region_name': 'Spain',
             'header_by_country': 'BY REGION',
             'question_text': 'Question text',
