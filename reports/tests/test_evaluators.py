@@ -83,8 +83,8 @@ class TestTotalEvaluator(TestCase):
         q1 = mixer.blend(Question)
         q2 = mixer.blend(Question)
         mixer.blend(Question)
-        r1 = mixer.blend(Representation, active=True, question=[q1])
-        r2 = mixer.blend(Representation, active=True, question=[q2])
+        r1 = mixer.blend(Representation, active=True, question=[q1], ordering=1)
+        r2 = mixer.blend(Representation, active=True, question=[q2], ordering=2)
 
         mixer.blend(SurveyStat, survey=s1, country=None)
         mixer.blend(SurveyStat, survey=s1, country=c1)
@@ -100,6 +100,7 @@ class TestTotalEvaluator(TestCase):
         assert len(self.evaluator.survey_stat) == 3
         assert len(self.evaluator.organization_stat) == 6
         assert len(self.evaluator.question_stat) == 6
+        assert self.evaluator.question_stat[(s1.pk, None, r2.pk)].ordering == 2
         assert self.evaluator.question_representation_link == {
             q1.pk: r1,
             q2.pk: r2
