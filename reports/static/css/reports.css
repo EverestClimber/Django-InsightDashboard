@@ -570,9 +570,9 @@
 .horizontal-bars .bar .portion.empty {
   background-color: white;
   width: 100%;
-  font-size: 13px;
+  font-size: 10px;
+  line-height: 22px;
   color: #3d3d3d;
-  font-weight: normal;
 }
 
 .report-card-gray .horizontal-bars .bar .portion.negative {
