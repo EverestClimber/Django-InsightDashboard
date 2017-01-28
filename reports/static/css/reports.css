@@ -572,6 +572,7 @@
   width: 100%;
   font-size: 13px;
   color: #3d3d3d;
+  font-weight: normal;
 }
 
 .report-card-gray .horizontal-bars .bar .portion.negative {
