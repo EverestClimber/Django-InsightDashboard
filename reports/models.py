@@ -87,7 +87,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         if country_id:
             regions = list(Region.objects.filter(country_id=country_id))
         else:
-            regions = list(Country.objects.all())
+            regions = list(Country.objects.filter(use_in_reports=True))
         cls.regions_cache[country_id] = regions
         return regions
 

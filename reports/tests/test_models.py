@@ -46,9 +46,10 @@ class TestQuestionStat(TestCase):
             assert callable(getattr(q, 'update_%s' % name))
 
     def setUp(self):
-        self.c1 = mixer.blend(Country, name='Spain', ordering=1)
-        self.c2 = mixer.blend(Country, name='France', ordering=2)
-        self.c3 = mixer.blend(Country, name='Italy', ordering=3)
+        self.c1 = mixer.blend(Country, name='Spain', ordering=1, use_in_reports=True)
+        self.c2 = mixer.blend(Country, name='France', ordering=2, use_in_reports=True)
+        self.c3 = mixer.blend(Country, name='Italy', ordering=3, use_in_reports=True)
+        self.c3 = mixer.blend(Country, name='Other', ordering=3, use_in_reports=False)
 
         self.reg1 = mixer.blend(Region, country=self.c1, name='East', ordering=1)
         self.reg2 = mixer.blend(Region, country=self.c1, name='West', ordering=2)

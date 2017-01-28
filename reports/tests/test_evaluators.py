@@ -50,8 +50,8 @@ class TestTotalEvaluator(TestCase):
     def test_load_stat(self):
         s1 = mixer.blend(Survey)
         s2 = mixer.blend(Survey)
-        c1 = mixer.blend(Country)
-        c2 = mixer.blend(Country)
+        c1 = mixer.blend(Country, use_in_reports=True)
+        c2 = mixer.blend(Country, use_in_reports=True)
         o1 = mixer.blend(Organization)
         o2 = mixer.blend(Organization)
         mixer.blend(SurveyStat, survey=s1, country=None)
@@ -76,8 +76,8 @@ class TestTotalEvaluator(TestCase):
 
     def test_fill_out(self):
         s1 = mixer.blend(Survey, active=True)
-        c1 = mixer.blend(Country)
-        c2 = mixer.blend(Country)
+        c1 = mixer.blend(Country, use_in_reports=True)
+        c2 = mixer.blend(Country, use_in_reports=True)
         o1 = mixer.blend(Organization)
         o2 = mixer.blend(Organization)
         q1 = mixer.blend(Question)
@@ -119,8 +119,8 @@ class TestTotalEvaluator(TestCase):
     def test_process_answers(self, save, fill_out, load_stat, process_answer):
         s1 = mixer.blend(Survey)
         s2 = mixer.blend(Survey)
-        c1 = mixer.blend(Country)
-        c2 = mixer.blend(Country)
+        c1 = mixer.blend(Country, use_in_reports=True)
+        c2 = mixer.blend(Country, use_in_reports=True)
         o1 = mixer.blend(Organization)
         o2 = mixer.blend(Organization)
         mixer.blend(SurveyStat, survey=s1, country=None)
@@ -282,7 +282,7 @@ class TestTypeProcessor(TestCase):
             assert callable(getattr(self.evaluator, "%s_processor" % name))
 
         s1 = mixer.blend(Survey, active=True)
-        c1 = mixer.blend(Country)
+        c1 = mixer.blend(Country, use_in_reports=True)
 
         q1 = mixer.blend(Question, type=Question.TYPE_TWO_DEPENDEND_FIELDS)
         q2 = mixer.blend(Question, type=Question.TYPE_YES_NO)
@@ -327,9 +327,9 @@ class TestTypeProcessor(TestCase):
 
     def init_models(self, question_type, representation_type):
         self.surv = mixer.blend(Survey, active=True)
-        self.c1 = mixer.blend(Country)
-        self.c2 = mixer.blend(Country)
-        self.c3 = mixer.blend(Country)
+        self.c1 = mixer.blend(Country, use_in_reports=True)
+        self.c2 = mixer.blend(Country, use_in_reports=True)
+        self.c3 = mixer.blend(Country, use_in_reports=True)
         self.u1 = mixer.blend(User, country=self.c1)
         self.u11 = mixer.blend(User, country=self.c1)
         self.u2 = mixer.blend(User, country=self.c2)

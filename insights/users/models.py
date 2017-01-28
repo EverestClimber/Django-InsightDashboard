@@ -11,6 +11,7 @@ class Country(models.Model):
     name = models.CharField('Country name', max_length=100)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True, null=True)
     ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
+    use_in_reports = models.BooleanField('Use in reports', default=True, blank=True, db_index=True)
 
     class Meta:
         verbose_name_plural = 'countries'
