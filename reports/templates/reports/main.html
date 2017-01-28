@@ -57,7 +57,23 @@
   </div>
 
   {% for qs in question_stat %}
-    {% include qs.get_template_name with stat=qs i=forloop.counter%}
+    {% if qs.vars and qs.vars.available %}
+      {% include qs.get_template_name with stat=qs i=forloop.counter %}
+    {% else %}
+      <div class="question-container question-n-a">
+        <div class="question-title">
+          <div class="question-title-number">Question {{ forloop.counter }}:</div>
+          <div>{{ qs.vars.question_text }}</div>
+        </div>
+        <div class="row equal-heights">
+          <div class="col-sm-12 col-md-6">
+            <div class="report-card chart-card pie-card report-card-red">
+              No data available
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
   {% endfor %}
 </div>
 {% endblock content %}

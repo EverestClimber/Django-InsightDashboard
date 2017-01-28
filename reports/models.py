@@ -172,10 +172,14 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['top3'] = self._calculate_top(data['top3'])
 
     def update_vars(self):
-        if not self.data:
+        self.vars['question_text'] = self.representation.question.first().text
+
+        if self.data:
+            self.vars['available'] = True
+        else:
+            self.vars['available'] = False
             return
 
-        self.vars['question_text'] = self.representation.question.first().text
         if self.country_id:
             self.vars['region_name'] = self.country.name
             self.vars['header_by_country'] = 'BY REGION'

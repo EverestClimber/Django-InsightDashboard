@@ -597,3 +597,10 @@
     margin-top: 30px;
   }
 }
+
+.question-n-a .report-card{
+  height: 200px;
+  padding-top: 90px;
+  padding-left: 40px;
+  font-size: 20px;
+}

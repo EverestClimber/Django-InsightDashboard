@@ -33,8 +33,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
         kwargs['question_stat'] = []
         for qs in QuestionStat.objects.filter(survey=survey, country_id=country_id):
-            if (qs.vars):
-                kwargs['question_stat'].append(qs)
+            kwargs['question_stat'].append(qs)
 
         return super(self.__class__, self).get_context_data(**kwargs)
 
