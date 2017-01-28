@@ -77,7 +77,6 @@
     tooltipEl.style.opacity = 1;
     tooltipEl.style.left = position.left + tooltip.caretX + 'px';
     tooltipEl.style.top = position.top + tooltip.caretY + 'px';
-    tooltipEl.style.fontFamily = 'open-sans';
     tooltipEl.style.fontSize = tooltip.fontSize;
     tooltipEl.style.fontStyle = tooltip._fontStyle;
     tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';

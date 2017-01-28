@@ -384,6 +384,7 @@
   pointer-events: none;
   -webkit-transform: translate(-50%, 0);
   transform: translate(-50%, 0);
+  font-family: "open sans", Helvetica, sans-serif;
 }
 
 #chartjs-tooltip:before {
