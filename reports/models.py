@@ -139,7 +139,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         pack = []
         total = sum(top.values())
         for prop, s in top.items():
-            pack.append((s, prop, 100.0 * s / total))
+            pack.append((s, OptionDict.get(prop), 100.0 * s / total))
         pack.sort(key=lambda x: (-x[0], x[1]))
         pied = pack[:3]
         other = pack[3:]

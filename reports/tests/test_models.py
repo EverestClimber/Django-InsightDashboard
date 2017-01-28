@@ -62,6 +62,7 @@ class TestQuestionStat(TestCase):
         self.r = mixer.blend(Representation, question=[self.q], label1='label1', label2='label2', label3='label3')
 
         QuestionStat.clear()
+        OptionDict.clear()
 
     def test_update_type_average_percent(self):
         data = {
@@ -258,6 +259,8 @@ class TestQuestionStat(TestCase):
             }
         }
 
+        mixer.blend(OptionDict, lower='x1', original='X1')
+
         qs0 = mixer.blend(QuestionStat,
                           representation=self.r,
                           data=data,
@@ -271,18 +274,18 @@ class TestQuestionStat(TestCase):
             'label1': 'label1',
             'label2': 'label2',
             'top1': {
-                'table': [(6, 'x1', 60.0), (4, 'x2', 40.0)],
+                'table': [(6, 'X1', 60.0), (4, 'x2', 40.0)],
                 'pie': {
                     'data': (6, 4, 0, 0),
-                    'labels': ('x1', 'x2', '', ''),
+                    'labels': ('X1', 'x2', '', ''),
                     'hide_last_legend_item': 'false'
                 }
             },
             'top3': {
-                'table': [(10, 'x1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
+                'table': [(10, 'X1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
                 'pie': {
                     'data': (10, 6, 4, 0),
-                    'labels': ('x1', 'x2', 'x3', ''),
+                    'labels': ('X1', 'x2', 'x3', ''),
                     'hide_last_legend_item': 'false'
                 }
             },
@@ -301,18 +304,18 @@ class TestQuestionStat(TestCase):
             'label1': 'label1',
             'label2': 'label2',
             'top1': {
-                'table': [(6, 'x1', 60.0), (4, 'x2', 40.0)],
+                'table': [(6, 'X1', 60.0), (4, 'x2', 40.0)],
                 'pie': {
                     'data': (6, 4, 0, 0),
-                    'labels': ('x1', 'x2', '', ''),
+                    'labels': ('X1', 'x2', '', ''),
                     'hide_last_legend_item': 'false'
                 }
             },
             'top3': {
-                'table': [(10, 'x1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
+                'table': [(10, 'X1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
                 'pie': {
                     'data': (10, 6, 4, 0),
-                    'labels': ('x1', 'x2', 'x3', ''),
+                    'labels': ('X1', 'x2', 'x3', ''),
                     'hide_last_legend_item': 'false'
                 }
             },
