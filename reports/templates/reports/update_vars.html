@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
+    {% for message in evaluator_messages %}
+    <div class="alert alert-warning" role="alert">
+      {{ message }}
+    </div>
+  {% empty %}
     <div class="alert alert-success">
         Stat vars were successfully updated
     </div>
+  {% endfor %}
 {% endblock %}
