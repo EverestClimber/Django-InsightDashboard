@@ -220,9 +220,14 @@ class AbstractEvaluator(object):
         raise NotImplementedError
 
 
-    @staticmethod
-    def clear():
-        raise NotImplementedError
+    @classmethod
+    def clear(cls):
+        cls.survey_stat = {}
+        cls.organization_stat = {}
+        cls.question_stat = {}
+        cls.question_representation_link = {}
+        cls.question_dict = {}
+        cls.messages = []
 
     @classmethod
     def load_stat(cls):
@@ -404,8 +409,9 @@ class TotalEvaluator(AbstractEvaluator):
     def get_answers():
         return Answer.objects.all()
 
-    @staticmethod
-    def clear():
+    @classmethod
+    def clear(cls):
+        super(TotalEvaluator, cls).clear()
         SurveyStat.objects.all().delete()
         OrganizationStat.objects.all().delete()
         QuestionStat.objects.all().delete()
@@ -416,7 +422,4 @@ class LastEvaluator(AbstractEvaluator):
     def get_answers():
         return Answer.objects.filter(is_updated=False)
 
-    @staticmethod
-    def clear():
-        pass
 
