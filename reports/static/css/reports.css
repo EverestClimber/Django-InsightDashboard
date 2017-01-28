@@ -561,11 +561,11 @@
 }
 
 .horizontal-bars .bar .portion.negative {
-  background-color: #b8102c;
+  background-color: #328ec9;
 }
 
 .horizontal-bars .bar .portion.positive {
-  background-color: #328ec9;
+  background-color: #b8102c;
 }
 
 .horizontal-bars .bar .portion.empty {

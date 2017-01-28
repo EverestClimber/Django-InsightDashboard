@@ -15,16 +15,12 @@
             <div class="col-md-6 pie-info">
               <div class="report-card-text-lg pie-answers" id="q{{ i }}Percentage">
                 <div class="pie-answer">
-                  <div id="q{{ i }}PieNo" class="q{{ i }}-pie-no">
-                    1894
-                  </div>
-                  <span class="answer">No</span>
+                  <div id="q{{ i }}PieYes" class="q{{ i }}-pie-yes"></div>
+                  <span class="answer">Yes</span>
                 </div>
                 <div class="pie-answer">
-                  <div id="q{{ i }}PieYes" class="q{{ i }}-pie-yes">
-                    1894
-                  </div>
-                  <span class="answer">Yes</span>
+                  <div id="q{{ i }}PieNo" class="q{{ i }}-pie-no"></div>
+                  <span class="answer">No</span>
                 </div>
               </div>
               <div class="pie-notice report-card-text">
@@ -60,8 +56,8 @@
               </div>
               <div class="chart-legend h-bar-legend">
                 <ul>
-                  <li><span style="background-color:#b8103b"></span>No</li>
-                  <li><span style="background-color:#328ec9"></span>Yes</li>
+                  <li><span style="background-color:#b8103b"></span>Yes</li>
+                  <li><span style="background-color:#328ec9"></span>No</li>
                 </ul>
               </div>
             </div>
@@ -79,12 +75,13 @@
           {
             data: {{ stat.vars.pie_data }},
             backgroundColor: [
-              "#b8103b",
-              "#328ec9"
+              "#328ec9",
+              "#b8103b"
+
             ],
             hoverBackgroundColor: [
-              "#b8103b",
-              "#328ec9"
+              "#328ec9",
+              "#b8103b"
             ]
           }]
       };
