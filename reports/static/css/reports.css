@@ -355,18 +355,19 @@
 
 .chart-legend ul {
   list-style: none;
-}
-
-.chart-legend ul {
-  list-style: none;
   text-align: right;
 }
 
-.chart-legend ul li span {
-  display: inline-block;
-  float: right;
+.chart-legend ul li {
   position: relative;
-  top: 3px;
+  padding-right: 20px;
+}
+
+.chart-legend ul li span {
+  display: block;
+  position: absolute;
+  top: calc(50% - 6.5px);
+  right: 0;
   height: 13px;
   width: 13px;
   margin-left: 10px;
