@@ -1,36 +1,6 @@
 (function() {
   Chart.plugins.register({
-    afterDatasetsDraw: function(chartInstance, easing) {
-      // To only draw at the end of animation, check for easing === 1
-      var ctx = chartInstance.chart.ctx;
-      chartInstance.data.datasets.forEach(function (dataset, i) {
-        var meta = chartInstance.getDatasetMeta(i);
-        var total = dataset.data.reduce(function(a,b) {return a + b});
-        if (!meta.hidden) {
-          meta.data.forEach(function(element, index) {
-            //Check for almost white background TODO: change this comparison - too fragile
-            if (element._model.backgroundColor == '#f9f9f9') {
-              ctx.fillStyle = 'rgb(61, 61, 61)';
-            } else {
-              ctx.fillStyle = 'rgb(255, 255, 255)';
-            }
-            var fontSize = 14;
-            var fontStyle = 'bold';
-            var fontFamily = 'open sans';
-            var fontColor = 'white';
-            ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily, fontColor);
-            // Just naively convert to string for now
-            var percentage = Math.round(dataset.data[index]/total*100) + '%';
-            // Make sure alignment settings are correct
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            var padding = 5;
-            var position = element.tooltipPosition();
-            ctx.fillText(percentage, position.x, position.y - (fontSize / 2) - padding);
-          });
-        }
-      });
-    }
+    afterDatasetsDraw: drawPercentage
   });
 
   Chart.defaults.global.tooltips.custom = function(tooltip) {
@@ -81,4 +51,43 @@
     tooltipEl.style.fontStyle = tooltip._fontStyle;
     tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
   };
+
+  function drawPercentage(chartInstance, easing) {
+    // To only draw at the end of animation, check for easing === 1
+    var ctx = chartInstance.chart.ctx;
+    chartInstance.data.datasets.forEach(function (dataset, i) {
+      var meta = chartInstance.getDatasetMeta(i);
+      var total = dataset.data.reduce(function(a,b) {return a + b});
+      if (!meta.hidden) {
+        meta.data.forEach(function(element, index) {
+          var percentage = dataset.data[index]/total*100;
+          if (percentage != 0) {
+            _drawPercentageForSegment(percentage, element, ctx);
+          }
+        });
+      }
+    });
+  }
+
+  function _drawPercentageForSegment(percentage, element, ctx) {
+    //Check for almost white background TODO: change this comparison - too fragile
+    if (element._model.backgroundColor == '#f9f9f9') {
+      ctx.fillStyle = 'rgb(61, 61, 61)';
+    } else {
+      ctx.fillStyle = 'rgb(255, 255, 255)';
+    }
+    var fontSize = 14;
+    var fontStyle = 'bold';
+    var fontFamily = 'open sans';
+    var fontColor = 'white';
+    ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily, fontColor);
+    // Just naively convert to string for now
+    var percentageStr = Math.round(percentage) + '%';
+    // Make sure alignment settings are correct
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    var padding = 5;
+    var position = element.tooltipPosition();
+    ctx.fillText(percentageStr, position.x, position.y - (fontSize / 2) - padding);
+  }
 })();
