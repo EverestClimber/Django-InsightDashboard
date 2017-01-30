@@ -5,7 +5,7 @@
 /*Start of stupid safari grid override*/
 @media (min-width: 768px) {
   .report .col-sm-6 {
-    width: 49.9%;
+    width: 49.88%;
   }
 }
 
@@ -15,7 +15,7 @@
   }
 
   .report .col-md-6 {
-    width: 49.9%;
+    width: 49.88%;
   }
 }
 /*End of stupid safari grid override*/
