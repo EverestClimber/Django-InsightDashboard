@@ -54,7 +54,12 @@ class SurveyItemAdmin(admin.ModelAdmin):
 
 @admin.register(Answer)
 class ResponseAdmin(admin.ModelAdmin):
-    list_display = ('user', 'region', 'organization', 'survey', 'created_at')
+    list_display = ('user', 'region', 'organization', 'survey', 'created_at', 'has_data')
+
+    def has_data(self, item):
+        return bool(item.body)
+
+    has_data.boolean = True
 
 
 @admin.register(HCPCategory)
