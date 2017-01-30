@@ -56,7 +56,7 @@
     var percentage = Math.round(recordsNum/totalNum*100);
 
     return tooltipItems.yLabel = data.labels[tooltipItems.index] + '\n' +
-      'Records: ' + recordsNum + '\n' +
+      'Surveys: ' + recordsNum + '\n' +
       'Percent: ' + percentage + '%';
   }
 
