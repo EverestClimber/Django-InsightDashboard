@@ -379,6 +379,14 @@
   margin-left: 10px;
 }
 
+.chart-legend.reverse-legend ul {
+  transform: rotate(180deg);
+}
+
+.chart-legend.reverse-legend ul li {
+  transform: rotate(-180deg);
+}
+
 #chartjs-tooltip {
   opacity: 0;
   position: absolute;
