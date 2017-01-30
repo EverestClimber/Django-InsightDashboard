@@ -15,7 +15,18 @@
       options: {
         legend: false,
         tooltips: {
-          enabled: false
+          enabled: false,
+          callbacks: {
+            label: function(tooltipItems, data) {
+              var recordsNum = data.datasets[tooltipItems.datasetIndex].data[tooltipItems.index];
+              var totalNum = data.datasets[tooltipItems.datasetIndex].data.reduce(function(a,b) {return a + b});
+              var percentage = Math.round(recordsNum/totalNum*100);
+
+              return tooltipItems.yLabel = data.labels[tooltipItems.index] + '\n' +
+                'Records: ' + recordsNum + '\n' +
+                'Percent: ' + percentage + '%';
+            }
+          }
         }
       }
     });

@@ -18,25 +18,16 @@
     } else {
       tooltipEl.classList.add('no-transform');
     }
-    function getBody(bodyItem) {
-      return bodyItem.lines;
+    function getBodyLines(bodyItem) {
+      return bodyItem.lines[0].split('\n');
     }
     // Set Text
     if (tooltip.body) {
-      var titleLines = tooltip.title || [];
-      var bodyLines = tooltip.body.map(getBody);
+      var bodyLines = getBodyLines(tooltip.body[0]);
       var innerHtml = '<thead>';
-      titleLines.forEach(function(title) {
-        innerHtml += '<tr><th>' + title + '</th></tr>';
-      });
       innerHtml += '</thead><tbody>';
       bodyLines.forEach(function(body, i) {
-        var colors = tooltip.labelColors[i];
-        var style = 'background:' + colors.backgroundColor;
-        style += '; border-color:' + colors.borderColor;
-        style += '; border-width: 2px';
-        var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
-        innerHtml += '<tr><td>' + span + body + '</td></tr>';
+        innerHtml += '<tr><td>'  + body + '</td></tr>';
       });
       innerHtml += '</tbody>';
       var tableRoot = tooltipEl.querySelector('table');
