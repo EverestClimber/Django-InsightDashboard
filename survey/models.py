@@ -148,7 +148,7 @@ class HCPCategory(models.Model):
 
 
 class Answer(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     country = models.ForeignKey(Country)
     region = models.ForeignKey(Region, null=True, blank=True)
     organization = models.ForeignKey(Organization)

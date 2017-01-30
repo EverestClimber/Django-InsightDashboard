@@ -18,6 +18,27 @@ class AbstractEvaluator(object):
     question_representation_link = {}
     question_dict = {}
     messages = []
+    # https://app.asana.com/0/232511650961646/257462747620886
+    dependencies = [
+        {
+            'source': 3,
+            'target': 5,
+            'type': 'set_radio',
+            'additional': {
+                'options': ['Aripiprazole-oral', 'Aripiprazole-LAI'],
+                'anwser': 'Yes'
+            }
+        },
+        {
+            'source': 11,
+            'target': 13,
+            'type': 'set_radio',
+            'additional': {
+                'options': ['Aripiprazole-oral', 'Aripiprazole-LAI'],
+                'anwser': 'Yes'
+            }
+        }
+    ]
 
 
     @classmethod
@@ -336,6 +357,30 @@ class AbstractEvaluator(object):
 
 
     @classmethod
+    def process_dependencies(cls, data):
+        if not isinstance(cls.dependencies, list):
+            return
+
+        if not isinstance(data, dict):
+            return
+
+        def list_lower(data):
+            return [x.lower() for x in data]
+
+        for dependency in cls.dependencies:
+            if dependency['type'] == 'set_radio':
+                if not dependency['source'] in data:
+                    continue
+                if not '' in data[dependency['source']]:
+                    continue
+                options_set = set(list_lower(dependency['additional']['options']))
+                data_set = set(list_lower(data[dependency['source']]['']))
+                if options_set & data_set:
+                    data[dependency['target']] = dependency['additional']['anwser']
+
+
+
+    @classmethod
     def process_answer(cls, answer):
         if not answer.body:
             return
@@ -345,6 +390,9 @@ class AbstractEvaluator(object):
             raise KeyError("There is data in post results. Answer: %s" % answer.pk )
 
         data = results['data']
+
+        cls.process_dependencies(data)
+
         if type(data) != dict:
             raise KeyError("Answer data should be dict. Answer: %s" % answer.pk )
 

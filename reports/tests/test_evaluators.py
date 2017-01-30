@@ -176,6 +176,61 @@ class TestTotalEvaluator(TestCase):
 
         self.evaluator.load_stat()
 
+    def test_process_dependencies(self):
+        self.evaluator.dependencies = [
+            {
+                'source': 3,
+                'target': 5,
+                'type': 'set_radio',
+                'additional': {
+                    'options': ['Aripiprazole-oral', 'Aripiprazole-LAI'],
+                    'anwser': 'Yes'
+                }
+            },
+            {
+                'source': 11,
+                'target': 13,
+                'type': 'set_radio',
+                'additional': {
+                    'options': ['Aripiprazole-oral', 'Aripiprazole-LAI'],
+                    'anwser': 'Yes'
+                }
+            }
+        ]
+
+        d1 = {
+            1: {'main': '10', 'additional': ''},
+            2: 'Yes',
+            3: {'': ['Ari-oral', 'Resperidol-oral', 'Ari-LAI', ''], 'other': ''},
+            4: {'': ['Age', 'Preference of the patients', 'Efficacy profile', ''], 'other': ''},
+            6: {'': ['Age', 'Mechanism of Action', 'Preference of the patients', ''], 'other': ''},
+            7: 'No',
+            9: {'main': '', 'additional': ''},
+            11: {'': '', 'other': ''},
+            12: {'': '', 'other': ''},
+            14: {'': '', 'other': ''},
+            16: 'xxx'
+        }
+        self.evaluator.process_dependencies(d1)
+        assert 5 not in d1
+
+        d2 = {
+            1: {'main': '10', 'additional': ''},
+            2: 'Yes',
+            3: {'': ['Aripiprazole-oral', 'Resperidol-oral', 'Ari-LAI', ''], 'other': ''},
+            4: {'': ['Age', 'Preference of the patients', 'Efficacy profile', ''], 'other': ''},
+            6: {'': ['Age', 'Mechanism of Action', 'Preference of the patients', ''], 'other': ''},
+            7: 'No',
+            9: {'main': '', 'additional': ''},
+            11: {'': '', 'other': ''},
+            12: {'': '', 'other': ''},
+            14: {'': '', 'other': ''},
+            16: 'xxx'
+        }
+        self.evaluator.process_dependencies(d2)
+        assert d2[5] == 'Yes'
+
+
     def test_update_survey_stat(self):
         d1 = timezone.make_aware(datetime(2017, 1, 1))
         d2 = timezone.make_aware(datetime(2017, 1, 2))

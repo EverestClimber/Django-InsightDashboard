@@ -53,8 +53,8 @@ class SurveyItemAdmin(admin.ModelAdmin):
 
 
 @admin.register(Answer)
-class ResponseAdmin(admin.ModelAdmin):
-    list_display = ('user', 'region', 'organization', 'survey', 'created_at', 'has_data')
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'country', 'region', 'organization', 'survey', 'created_at', 'has_data')
 
     def has_data(self, item):
         return bool(item.body)
