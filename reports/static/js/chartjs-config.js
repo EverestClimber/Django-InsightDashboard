@@ -61,7 +61,7 @@
       if (!meta.hidden) {
         meta.data.forEach(function(element, index) {
           var percentage = dataset.data[index]/total*100;
-          if (percentage != 0) {
+          if (percentage >= 8) {
             _drawPercentageForSegment(percentage, element, ctx);
           }
         });
@@ -86,8 +86,7 @@
     // Make sure alignment settings are correct
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    var padding = 5;
     var position = element.tooltipPosition();
-    ctx.fillText(percentageStr, position.x, position.y - (fontSize / 2) - padding);
+    ctx.fillText(percentageStr, position.x, position.y);
   }
 })();
