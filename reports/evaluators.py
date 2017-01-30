@@ -30,10 +30,14 @@ class AbstractEvaluator(object):
             return
 
         main_str = question_data['main'].strip()
-        if not main_str:
+        additional_str = question_data['additional'].strip()
+        if not main_str and not additional_str:
             return
 
-        main_float = float(main_str)
+        if main_str:
+            main_float = float(main_str)
+        elif additional_str:
+            main_float = float(additional_str) * 10
         org_key = str(answer.organization_id)
         reg_id = answer.region_id
         country_id = answer.user.country_id
