@@ -20,6 +20,12 @@ CNS Insights Questions
 
 Open localhost:8000/admin/ , login and filout the questions if it needed
 
+### Additional installation commands for production server
+* `create empty config/settings/.env`
+* `create config/settings/production_local.py` (with sample contents)
+* `sudo chown :www static/CACHE`
+* `sudo chmod g+w static/CACHE`
+
 ## Testing
 
 * `pytest --cov`: Run pytest with coverage output
