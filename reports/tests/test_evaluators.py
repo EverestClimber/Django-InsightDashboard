@@ -375,7 +375,7 @@ class TestTypeProcessor(TestCase):
         a3 = self.create_answer(body='data[%s][main]=30' % qid, user=self.u2, region=self.reg21)
 
         self.evaluator.type_average_percent_processor(qid, {'main': '40', 'additional': ''}, a1)
-        self.evaluator.type_average_percent_processor(qid, {'main': '', 'additional': '2'}, a2)
+        self.evaluator.type_average_percent_processor(qid, {'additional': '2'}, a2)
         self.evaluator.type_average_percent_processor(qid, {'main': '30', 'additional': ''}, a3)
 
         k0 = (self.surv.pk, None, self.r.pk)
