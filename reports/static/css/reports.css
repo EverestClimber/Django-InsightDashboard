@@ -83,6 +83,11 @@
   border-left: none;
 }
 
+.report-card-table.report-card-blue {
+  border-top: 5px solid #328ec9;
+  border-left: none;
+}
+
 .report-card-head {
   margin-bottom: 40px;
 }
