@@ -91,7 +91,8 @@ class TestQuestionStat(TestCase):
             'pie_labels': ['label2', 'label3'],
             'pie_data': [30, 70],
             'bar_labels': ['SPAIN', 'FRANCE', 'ITALY'],
-            'bar_series': [30, 30, -1]
+            'bar_series': [30, 30, -1],
+            'main_cnt': 3
         }
 
         qs1 = mixer.blend(QuestionStat,
@@ -109,7 +110,8 @@ class TestQuestionStat(TestCase):
             'pie_labels': ['label2', 'label3'],
             'pie_data': [30, 70],
             'bar_labels': ['EAST', 'WEST', 'NORTH'],
-            'bar_series': [30, 30, -1]
+            'bar_series': [30, 30, -1],
+            'main_cnt': 3
         }
 
     def test_update_type_yes_no(self):
