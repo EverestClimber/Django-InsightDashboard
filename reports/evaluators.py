@@ -62,7 +62,7 @@ class AbstractEvaluator(object):
             main_float = float(additional_str) * 10
         org_key = str(answer.organization_id)
         reg_id = answer.region_id
-        country_id = answer.user.country_id
+        country_id = answer.country_id
         survey_id = answer.survey_id
 
         r = cls.question_representation_link[question_id]
@@ -121,7 +121,7 @@ class AbstractEvaluator(object):
 
         org_key = str(answer.organization_id)
         reg_id = answer.region_id
-        country_id = answer.user.country_id
+        country_id = answer.country_id
         survey_id = answer.survey_id
 
         r = cls.question_representation_link[question_id]
@@ -194,7 +194,7 @@ class AbstractEvaluator(object):
 
         r = cls.question_representation_link[question_id]
         org_key = str(answer.organization_id)
-        country_id = answer.user.country_id
+        country_id = answer.country_id
         survey_id = answer.survey_id
         k0 = (survey_id, None, r.pk)
         k1 = (survey_id, country_id, r.pk)
@@ -397,7 +397,7 @@ class AbstractEvaluator(object):
             raise KeyError("Answer data should be dict. Answer: %s" % answer.pk )
 
         survey_id = answer.survey_id
-        country_id = answer.user.country_id
+        country_id = answer.country_id
         organization_id = answer.organization_id
 
         surv_key = (survey_id, country_id)

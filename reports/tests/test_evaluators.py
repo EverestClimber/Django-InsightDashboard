@@ -142,9 +142,9 @@ class TestTotalEvaluator(TestCase):
     @patch('reports.evaluators.AbstractEvaluator.update_survey_stat')
     @patch('reports.evaluators.AbstractEvaluator.update_organization_stat')
     def test_process_answer_with_empty_data(self, organization_stat, survey_stat):
-        user = mixer.blend(User, country_id=1)
 
-        answer = mixer.blend(Answer, user=user, body='')
+        country = mixer.blend(Country, id=1)
+        answer = mixer.blend(Answer, body='')
         self.evaluator.process_answer(answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
@@ -154,17 +154,17 @@ class TestTotalEvaluator(TestCase):
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 
-        answer = mixer.blend(Answer, user=user, body='a=1')
+        answer = mixer.blend(Answer, body='a=1')
         self.assertRaises(KeyError, self.evaluator.process_answer, answer)
 
-        answer = mixer.blend(Answer, user=user, body='data=1')
+        answer = mixer.blend(Answer, body='data=1')
         self.assertRaises(KeyError, self.evaluator.process_answer, answer)
 
-        answer = mixer.blend(Answer, user=user, body='data[111]=Yes')
+        answer = mixer.blend(Answer, country=country, body='data[111]=Yes')
         self.evaluator.process_answer(answer)
 
-        survey_stat.assert_called_once_with((answer.survey_id, user.country_id), answer)
-        organization_stat.assert_called_once_with((answer.survey_id, user.country_id, answer.organization_id))
+        survey_stat.assert_called_once_with((answer.survey_id, country.pk), answer)
+        organization_stat.assert_called_once_with((answer.survey_id, country.pk, answer.organization_id))
 
     def test_process_answer(self):
         d1 = timezone.make_aware(datetime(2017, 1, 1))
@@ -414,7 +414,9 @@ class TestTypeProcessor(TestCase):
         if 'region' not in kwargs:
             kwargs['region'] = self.reg11
         if 'user' not in kwargs:
-            kwargs['user'] = self.u1
+            kwargs['user'] = self.u2
+        if 'country' not in kwargs:
+            kwargs['country'] = self.c1
         if 'org' not in kwargs:
             kwargs['organization'] = self.org
         if 'is_updated' not in kwargs:
@@ -425,9 +427,9 @@ class TestTypeProcessor(TestCase):
 
         self.init_models(Question.TYPE_TWO_DEPENDEND_FIELDS, Representation.TYPE_AVERAGE_PERCENT)
         qid = self.q.pk
-        a1 = self.create_answer(body='data[%s][main]=40' % qid, user=self.u1, region=self.reg11)
-        a2 = self.create_answer(body='data[%s][main]=20' % qid, user=self.u11, region=self.reg12)
-        a3 = self.create_answer(body='data[%s][main]=30' % qid, user=self.u2, region=self.reg21)
+        a1 = self.create_answer(body='data[%s][main]=40' % qid, country=self.c1, region=self.reg11)
+        a2 = self.create_answer(body='data[%s][main]=20' % qid, country=self.c1, region=self.reg12)
+        a3 = self.create_answer(body='data[%s][main]=30' % qid, country=self.c2, region=self.reg21)
 
         self.evaluator.type_average_percent_processor(qid, {'main': '40', 'additional': ''}, a1)
         self.evaluator.type_average_percent_processor(qid, {'additional': '2'}, a2)
@@ -465,9 +467,9 @@ class TestTypeProcessor(TestCase):
     def test_type_yes_no_processor(self):
         self.init_models(Question.TYPE_YES_NO, Representation.TYPE_YES_NO)
         qid = self.q.pk
-        a1 = self.create_answer(body='data[%s]=Yes' % qid, user=self.u1, region=self.reg11)
-        a2 = self.create_answer(body='data[%s]=No' % qid, user=self.u11, region=self.reg12)
-        a3 = self.create_answer(body='data[%s]=Yes' % qid, user=self.u2, region=self.reg21)
+        a1 = self.create_answer(body='data[%s]=Yes' % qid, region=self.reg11)
+        a2 = self.create_answer(body='data[%s]=No' % qid, region=self.reg12)
+        a3 = self.create_answer(body='data[%s]=Yes' % qid, country=self.c2, region=self.reg21)
 
         self.evaluator.type_yes_no_processor(qid, 'Yes', a1)
         self.evaluator.type_yes_no_processor(qid, 'No', a2)
@@ -506,9 +508,9 @@ class TestTypeProcessor(TestCase):
         self.init_models(Question.TYPE_MULTISELECT_ORDERED, Representation.TYPE_MULTISELECT_TOP)
         qid = self.q.pk
         a1 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2&data[{0}][]=x3&data[{0}][]=x4'.format(qid),
-                                user=self.u1, region=self.reg11)
-        a2 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2'.format(qid), user=self.u11, region=self.reg12)
-        a3 = self.create_answer(body='data[{0}][]=x2&data[{0}][]=x3'.format(qid), user=self.u2, region=self.reg21)
+                                country=self.c1, region=self.reg11)
+        a2 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2'.format(qid), region=self.reg12)
+        a3 = self.create_answer(body='data[{0}][]=x2&data[{0}][]=x3'.format(qid), country=self.c2, region=self.reg21)
 
         self.evaluator.type_multiselect_top_processor(qid, {'': ['x1', 'x2', 'x3', 'x4', ''], 'other': ''}, a1)
         self.evaluator.type_multiselect_top_processor(qid, {'': ['X1', 'x2', ''], 'other': ''}, a2)
