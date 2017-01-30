@@ -47,6 +47,7 @@
     function drawQ{{ i }}Pie() {
       var q{{ i }}PieData = {
         labels: {{ stat.vars.pie_labels | safe }},
+        surveys: [ {{ stat.vars.main_cnt }}, {{ stat.vars.main_cnt }} ],
         datasets: [
           {
             data: {{ stat.vars.pie_data }},
@@ -65,7 +66,7 @@
       var percentage = Math.round(q{{ i }}PieData.datasets[0].data[0]/total*100);
 
       $('#q{{ i }}Percentage').html(percentage + '%');
-      ChartDrawer.drawPie(q{{ i }}PieData, '#q{{ i }}Pie', '#q{{ i }}PieLegend')
+      ChartDrawer.drawSurveysAveragePie(q{{ i }}PieData, '#q{{ i }}Pie', '#q{{ i }}PieLegend')
     }
 
     function drawQ{{ i }}Bars() {

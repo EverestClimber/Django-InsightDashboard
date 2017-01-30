@@ -2,11 +2,21 @@
 
   window.ChartDrawer = {
     drawPie: drawPie,
+    drawSurveysAveragePie: drawSurveysAveragePie,
     drawHorizontalBarChart: drawHorizontalBarChart,
     drawVerticalBarChart: drawVerticalBarChart
   };
 
   function drawPie(pieData, pieId, legendId) {
+    _drawPie(pieData, pieId, legendId, _pieLabelCallback)
+  }
+
+  function drawSurveysAveragePie(pieData, pieId, legendId) {
+    var pieSurveysAverageCallback = _genPieSurveysAverageCallback(pieData.surveys);
+    _drawPie(pieData, pieId, legendId, pieSurveysAverageCallback)
+  }
+
+  function _drawPie(pieData, pieId, legendId, pieLabelCallback) {
     var $pieCtx = $(pieId).get(0).getContext("2d");
     var $pieLegend = $(legendId);
     var pie = new Chart($pieCtx,{
@@ -17,15 +27,7 @@
         tooltips: {
           enabled: false,
           callbacks: {
-            label: function(tooltipItems, data) {
-              var recordsNum = data.datasets[tooltipItems.datasetIndex].data[tooltipItems.index];
-              var totalNum = data.datasets[tooltipItems.datasetIndex].data.reduce(function(a,b) {return a + b});
-              var percentage = Math.round(recordsNum/totalNum*100);
-
-              return tooltipItems.yLabel = data.labels[tooltipItems.index] + '\n' +
-                'Records: ' + recordsNum + '\n' +
-                'Percent: ' + percentage + '%';
-            }
+            label: pieLabelCallback
           }
         }
       }
@@ -45,6 +47,27 @@
       if (pieData.hideLastLegendItem) {
         $lis.last().empty();
       }
+    }
+  }
+
+  function _pieLabelCallback(tooltipItems, data) {
+    var recordsNum = data.datasets[tooltipItems.datasetIndex].data[tooltipItems.index];
+    var totalNum = data.datasets[tooltipItems.datasetIndex].data.reduce(function(a,b) {return a + b});
+    var percentage = Math.round(recordsNum/totalNum*100);
+
+    return tooltipItems.yLabel = data.labels[tooltipItems.index] + '\n' +
+      'Records: ' + recordsNum + '\n' +
+      'Percent: ' + percentage + '%';
+  }
+
+  function _genPieSurveysAverageCallback(surveys) {
+    return function(tooltipItems, data) {
+      var surveysNum = surveys[tooltipItems.index];
+      var percentage = data.datasets[tooltipItems.datasetIndex].data[tooltipItems.index];
+
+      return tooltipItems.yLabel = data.labels[tooltipItems.index] + '\n' +
+        'Surveys: ' + surveysNum + '\n' +
+        'Percent: ' + percentage + '%';
     }
   }
 
