@@ -106,11 +106,15 @@
 
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a href="{% url 'reports:basic_europe' %}">Europe</a>
+                                                    <a href="{% url 'reports:basic' country='europe' %}">Europe</a>
                                                 </li>
                                                 {% for country in countries %}
                                                 <li>
-                                                    <a href="{% url 'reports:basic_country' country=country.pk %}">
+                                                    <a href="{% if country.slug %}
+                                                                {% url 'reports:basic' country=country.slug %}
+                                                              {% else %}
+                                                                {% url 'reports:basic' country=country.pk %}
+                                                              {% endif %}">
                                                         {{ country.name }}
                                                     </a>
                                                 </li>

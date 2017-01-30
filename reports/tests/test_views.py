@@ -47,9 +47,9 @@ class TestReports(TestCase):
     def setUpClass(cls):
         super(TestReports, cls).setUpClass()
         s1 = mixer.blend(Survey, active=True)
-        c1 = mixer.blend(Country)
+        c1 = mixer.blend(Country, slug='ukraine')
         cls.c1 = c1
-        c2 = mixer.blend(Country)
+        c2 = mixer.blend(Country, slug='germany')
         o1 = mixer.blend(Organization)
         o2 = mixer.blend(Organization)
         mixer.blend(SurveyStat, survey=s1, country=None)
@@ -59,56 +59,62 @@ class TestReports(TestCase):
         TotalEvaluator.process_answers()
 
     def test_anonimous(self):
-        req = RequestFactory().get(reverse('reports:basic_europe'))
+        kwargs = {'country': 'europe', 'report_type': 'basic'}
+        req = RequestFactory().get(reverse('reports:basic', kwargs=kwargs))
         req.user = AnonymousUser()
-        resp = ReportsView.as_view()(req)
+        resp = ReportsView.as_view()(req, **kwargs)
         assert resp.status_code == 302, 'Should redirect to auth'
 
     def test_non_staff(self):
-        req = RequestFactory().get(reverse('reports:basic_europe'))
+        kwargs = {'country': 'europe', 'report_type': 'basic'}
+        req = RequestFactory().get(reverse('reports:basic', kwargs=kwargs))
         req.user = mixer.blend(User)
-        resp = ReportsView.as_view()(req, report_type='basic')
+        resp = ReportsView.as_view()(req, **kwargs)
         # assert resp.status_code == 302, 'Should redirect to auth'
         assert resp.status_code == 200, 'Allowed'
 
     def test_anonimous_advanced(self):
-        req = RequestFactory().get(reverse('reports:advanced_europe'))
+        kwargs = {'country': 'europe', 'report_type': 'advanced'}
+        req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = AnonymousUser()
-        resp = ReportsView.as_view()(req, report_type='advanced')
+        resp = ReportsView.as_view()(req, **kwargs)
         assert resp.status_code == 302, 'Should redirect to auth'
 
     def test_non_staff_advanced(self):
-        req = RequestFactory().get(reverse('reports:advanced_europe'))
+        kwargs = {'country': 'europe', 'report_type': 'advanced'}
+        req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = mixer.blend(User)
-        resp = ReportsView.as_view()(req, report_type='advanced')
+        resp = ReportsView.as_view()(req, **kwargs)
         # assert resp.status_code == 302, 'Should redirect to auth'
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_basic(self):
-        req = RequestFactory().get(reverse('reports:basic_europe'))
+        kwargs = {'country': 'europe', 'report_type': 'basic'}
+        req = RequestFactory().get(reverse('reports:basic', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
-        resp = ReportsView.as_view()(req, report_type='basic')
+        resp = ReportsView.as_view()(req, **kwargs)
         resp.render()
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_advanced(self):
-        req = RequestFactory().get(reverse('reports:advanced_europe'))
+        kwargs = {'country': 'europe', 'report_type': 'advanced'}
+        req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
-        resp = ReportsView.as_view()(req, report_type='advanced')
+        resp = ReportsView.as_view()(req, **kwargs)
         resp.render()
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_basic_country(self):
-        kwargs = {'country': self.c1.pk, 'report_type': 'basic'}
-        req = RequestFactory().get(reverse('reports:basic_country', kwargs=kwargs))
+        kwargs = {'country': self.c1.slug, 'report_type': 'basic'}
+        req = RequestFactory().get(reverse('reports:basic', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
         resp = ReportsView.as_view()(req, **kwargs)
         resp.render()
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_advanced_country(self):
-        kwargs = {'country': self.c1.pk, 'report_type': 'advanced'}
-        req = RequestFactory().get(reverse('reports:advanced_country', kwargs=kwargs))
+        kwargs = {'country': self.c1.slug, 'report_type': 'advanced'}
+        req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
         resp = ReportsView.as_view()(req, **kwargs)
         resp.render()

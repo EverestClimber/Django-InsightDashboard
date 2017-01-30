@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from insights.users.models import Country
 from survey.models import Survey
 
 from .models import SurveyStat, OrganizationStat, QuestionStat
@@ -13,6 +14,7 @@ from .evaluators import LastEvaluator, TotalEvaluator
 
 class ReportsView(LoginRequiredMixin, TemplateView):
     template_name = 'reports/main.html'
+    country_dict = {}
 
     def get_context_data(self, **kwargs):
 
@@ -21,10 +23,22 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         if not survey:
             raise ValueError('There is no active surveys')
 
-        if 'country' in kwargs:
-            country_id = int(kwargs['country'])
-        else:
+        if kwargs['country'] == 'europe':
             country_id = None
+        else:
+            try:
+                country_id = int(kwargs['country'])
+            except ValueError:
+                if kwargs['country'] in ReportsView.country_dict:
+                    country_id = ReportsView.country_dict[kwargs['country']]
+                else:
+                    country = Country.objects.get(slug=kwargs['country'])
+                    if country:
+                        country_id = country.pk
+                        ReportsView.country_dict[kwargs['country']] = country_id
+                    else:
+                        raise Http404("There is no country %s" % kwargs['country'])
+
 
         kwargs['survey_stat'] = SurveyStat.objects.filter(survey=survey, country_id=country_id).last()
         kwargs['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=country_id)

@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Country(models.Model):
     name = models.CharField('Country name', max_length=100)
+    slug = models.SlugField('Country slug', null=True, blank=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True, null=True)
     ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
     use_in_reports = models.BooleanField('Use in reports', default=True, blank=True, db_index=True)

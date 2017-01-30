@@ -48,3 +48,4 @@ class MyUserAdmin(AuthUserAdmin):
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'use_in_reports', 'ordering', 'created_at')
+    prepopulated_fields = {'slug': ('name',), }
