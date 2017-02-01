@@ -269,7 +269,7 @@ div.bootstrap-tagsinput input{
     margin-left: 0;
   }
   .navbar-collapse.collapse {
-    display: none;
+    /*display: none;*/
   }
   .reports-dropdown {
     position: static;
@@ -300,17 +300,17 @@ div.bootstrap-tagsinput input{
   transition: none;
 }
 
-.navbar-collapse.collapse.in{
+.navbar-collapse.collapse.in, .navbar-collapse.collapsing{
   position: absolute;
-  top: 43px;
-  right: 15px;
+  top: 50px;
   height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  width: 200px;
-  transition: none;
+  left: -15px;
+  right: -15px;
   background-color: white;
-  box-shadow: 3px 3px 20px -4px rgba(110,110,110,1);
+  border-top: 0.5px solid #ccc;
+  box-shadow: 0px 10px 10px -4px rgb(167, 164, 164)
+}
+
+.navbar-collapse.collapse.in ul li, .navbar-collapse.collapsing ul li {
+  display: block;
 }

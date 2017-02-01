@@ -332,16 +332,6 @@ $(document).ready(function () {
             // this is also open (or was)
             $( this ).toggleClass('open');
         });
-
-        // Open/close collapsed navbar smoothly
-
-        $('#navbar').on('show.bs.collapse hide.bs.collapse', function(e) {
-            e.preventDefault();
-        });
-        $('#navbarToggle').on('click', function(e) {
-            e.preventDefault();
-            $($(this).data('target')).toggleClass('in');
-        });
     });
 
 
