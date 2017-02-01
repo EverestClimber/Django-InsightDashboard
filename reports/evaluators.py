@@ -333,7 +333,7 @@ class AbstractEvaluator(object):
             cls.survey_stat[surv_key_all] = SurveyStat(survey_id=survey_id, country_id=None)
         cls.survey_stat[surv_key_all].total += 1
         if cls.survey_stat[surv_key_all].last:
-            cls.survey_stat[surv_key_all].last = max(cls.survey_stat[surv_key].last, answer.created_at)
+            cls.survey_stat[surv_key_all].last = max(cls.survey_stat[surv_key_all].last, answer.created_at)
         else:
             cls.survey_stat[surv_key_all].last = answer.created_at
 
