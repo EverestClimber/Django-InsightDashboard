@@ -9,4 +9,4 @@ class RepresentationAdmin(admin.ModelAdmin):
 
 
     def get_questions(self, obj):
-        return "\n".join([str(q) for q in obj.question.all()])
+        return "\n".join(["%s %s" % (q.pk, q) for q in obj.question.all()])
