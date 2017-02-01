@@ -1,5 +1,9 @@
+from querystring_parser import parser as queryparser
+
 from django.contrib import admin
 from django import forms
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe, mark_for_escaping
 from .models import Region, Organization, Question, Option, Survey, SurveyItem, Answer, HCPCategory
 
 
@@ -54,10 +58,22 @@ class SurveyItemAdmin(admin.ModelAdmin):
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'country', 'region', 'organization', 'survey', 'created_at', 'has_data')
+    list_display = ('user', 'country', 'region', 'organization', 'survey', 'created_at', 'has_data', 'get_data')
 
     def has_data(self, item):
         return bool(item.body)
+
+    def get_data(self, item):
+        data = queryparser.parse(item.body)
+        if 'data' not in data:
+            return None
+
+        items = list(data['data'].items())
+        items.sort()
+        out = ''
+        for i, dt in items:
+            out += "%s %s<br>" % (i, mark_for_escaping(dt))
+        return mark_safe(out)
 
     has_data.boolean = True
 
