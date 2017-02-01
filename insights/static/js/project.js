@@ -322,10 +322,15 @@ $(document).ready(function () {
         $( ".dropdown-submenu" ).click(function(event) {
             // stop bootstrap.js to hide the parents
             event.stopPropagation();
+
+            var $target = $(event.target);
+            if ($target.is('a') && $target.attr('href') && $target.attr('href') == '#') {
+                event.preventDefault();
+            }
+
             //  close all 'dropdown-submenu' elements
             if (!$(this).hasClass('open')) {
                 $(".dropdown-submenu.open").removeClass('open');
-
             }
             // add 'open' class to all parents with class 'dropdown-submenu'
             $( this ).parents(".dropdown-submenu").addClass('open');
