@@ -38,7 +38,7 @@
     function _filterLegend() {
       var $lis = $pieLegend.find('ul > li');
 
-      $lis.each(function(index, li) {
+      !pieData.showZerosInLegend && $lis.each(function(index, li) {
         if (pieData.datasets[0].data[index] == 0) {
           $(li).empty();
         }

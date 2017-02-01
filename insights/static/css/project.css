@@ -264,20 +264,6 @@ div.bootstrap-tagsinput input{
   }
 }
 
-@media (max-width: 480px) {
-  .top-navigation .navbar-collapse > .nav > li:first-child > a {
-    margin-left: 0;
-  }
-  .navbar-collapse.collapse {
-    display: none;
-  }
-  .reports-dropdown {
-    position: static;
-    box-shadow: none;
-    margin-bottom: 10px;
-  }
-}
-
 @media (max-width: 350px) {
   .nav.navbar-top-links li.dropdown {
     display: block;
@@ -300,17 +286,34 @@ div.bootstrap-tagsinput input{
   transition: none;
 }
 
-.navbar-collapse.collapse.in{
+.navbar-collapse.collapse.in, .navbar-collapse.collapsing{
   position: absolute;
-  top: 43px;
-  right: 15px;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  width: 200px;
-  transition: none;
+  top: 50px;
+  height: 201px;
+  left: -15px;
+  right: -15px;
   background-color: white;
-  box-shadow: 3px 3px 20px -4px rgba(110,110,110,1);
+  border-top: 0.5px solid #ccc;
+  box-shadow: 0px 10px 10px -4px rgb(167, 164, 164)
+}
+
+.navbar-collapse.collapse.in ul li, .navbar-collapse.collapsing ul li {
+  display: block;
+}
+
+.dropdown-submenu {
+  z-index: 1000000; /* Safari hack */
+  position: relative;
+}
+
+.top-navigation .navbar-collapse.collapse.in > .nav > li:first-child > a,
+.top-navigation .navbar-collapse.collapsing > .nav > li:first-child > a {
+  margin-left: 0;
+}
+
+.navbar-collapse.collapse.in .reports-dropdown,
+.navbar-collapse.collapsing .reports-dropdown {
+  position: static;
+  box-shadow: none;
+  margin-bottom: 10px;
 }
