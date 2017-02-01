@@ -7,7 +7,9 @@
   <div id="chartjs-tooltip">
     <table></table>
   </div>
-  <h1 class="survey-overview-title">SURVEY OVERVIEW</h1>
+  <h1 class="survey-overview-title">
+    SURVEY OVERVIEW - {% if country %}{{ country.name | upper }}{% else %}EUROPE{% endif %}
+  </h1>
   <div class="survey-cards">
     <div class="row equal-heights">
       <div class="col-md-3 col-sm-6">

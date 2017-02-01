@@ -25,21 +25,23 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
         if kwargs['country'] == 'europe':
             country_id = None
+            country = None
         else:
             try:
                 country_id = int(kwargs['country'])
+                country = Country.objects.get(pk=country_id)
             except ValueError:
                 if kwargs['country'] in ReportsView.country_dict:
-                    country_id = ReportsView.country_dict[kwargs['country']]
+                    country = ReportsView.country_dict[kwargs['country']]
                 else:
                     country = Country.objects.get(slug=kwargs['country'])
-                    if country:
-                        country_id = country.pk
-                        ReportsView.country_dict[kwargs['country']] = country_id
-                    else:
-                        raise Http404("There is no country %s" % kwargs['country'])
+            if country:
+                country_id = country.pk
+                ReportsView.country_dict[country.slug] = country
+            else:
+                raise Http404("There is no country %s" % kwargs['country'])
 
-
+        kwargs['country'] = country
         kwargs['survey_stat'] = SurveyStat.objects.filter(survey=survey, country_id=country_id).last()
         kwargs['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=country_id)
 
