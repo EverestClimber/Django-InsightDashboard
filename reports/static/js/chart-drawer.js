@@ -384,7 +384,7 @@
         $yLabels.css('transition', 'none')
       }
 
-      $yLabels.css('opacity', 1);
+      $yLabels.css('color', '#3d3d3d');
     }
   }
 
