@@ -513,7 +513,7 @@
   top: 4px;
 }
 
-.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-barlabel, .ct-bar-labels .ct-bar-label {
+.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-bar-percentage, .ct-bar-labels .ct-bar-label {
   font-family: "open sans";
   font-size: 10px;
   color: #3d3d3d;
@@ -533,6 +533,12 @@
   flex-direction: row;
   align-items: center;
   transform-origin: center center;
+}
+
+.ct-chart .ct-bar-percentage {
+  fill-opacity: 0;
+  -webkit-transition: fill-opacity 1.5s;
+  transition: fill-opacity 1.5s;
 }
 
 .ct-chart-bar .ct-label.ct-horizontal.ct-end {

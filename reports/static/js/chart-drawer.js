@@ -269,12 +269,16 @@
             return text + '%';
           },
           anchorToPoint: true
+        }),
+        Chartist.plugins.barAnimation({
+          duration: 2000
         })
       ]
     })
       .on('draw',setBarPercentage)
       .on('draw', setBarWidth)
-      .on('created', drawBarLabels);
+      .on('created', drawBarLabels)
+      .on('created', animatePercentages);
 
     $(document).on('resize', drawBarLabels);
 
@@ -298,7 +302,7 @@
         } else {
           label.text(value + '%');
         }
-        label.addClass("ct-barlabel");
+        label.addClass("ct-bar-percentage");
         label.attr({
           x: barHorizontalCenter,
           y: barVerticalCenter,
@@ -333,6 +337,13 @@
         $label.css('left', labelLeft);
         $label.css('height', $label.width());
       });
+    }
+
+    function animatePercentages() {
+      var $barChartContainer = $(chartId);
+      var $percentages = $barChartContainer.find('.ct-bar-percentage');
+
+      $percentages.css('fill-opacity', 1);
     }
   }
 
