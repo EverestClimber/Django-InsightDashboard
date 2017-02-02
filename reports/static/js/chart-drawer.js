@@ -1,8 +1,14 @@
 (function() {
 
   window.ChartDrawer = {
-    drawPie: drawPie,
-    drawSurveysAveragePie: drawSurveysAveragePie,
+    drawPie: function(pieData, pieId, legendId) {
+      var drawFn = drawPie.bind(this, pieData, pieId, legendId);
+      drawPieOnScroll(pieId, drawFn);
+    },
+    drawSurveysAveragePie: function(pieData, pieId, legendId) {
+      var drawFn = drawSurveysAveragePie.bind(this, pieData, pieId, legendId);
+      drawPieOnScroll(pieId, drawFn);
+    },
     drawHorizontalBarChart: drawHorizontalBarChart,
     drawVerticalBarChart: drawVerticalBarChart
   };
@@ -69,6 +75,36 @@
         'Surveys: ' + surveysNum + '\n' +
         'Percent: ' + percentage + '%';
     }
+  }
+
+  function drawPieOnScroll(elemId, drawFn) {
+    var inView = false;
+    var wasShown = false;
+
+    function isScrolledIntoView(elemId)
+    {
+      var docViewTop = $(window).scrollTop();
+      var docViewBottom = docViewTop + $(window).height();
+
+      var elemTop = $(elemId).offset().top;
+      var elemBottom = elemTop + $(elemId).height();
+
+      return ((elemTop <= docViewBottom) && (elemBottom >= docViewTop));
+    }
+
+    function show() {
+      if (isScrolledIntoView(elemId)) {
+        if (inView || wasShown) {
+          return;
+        }
+        inView = true;
+        wasShown = true;
+        drawFn();
+      }
+    }
+
+    $(document).ready(show);
+    $(window).scroll(show);
   }
 
   function drawHorizontalBarChart(chartId, chartData) {
