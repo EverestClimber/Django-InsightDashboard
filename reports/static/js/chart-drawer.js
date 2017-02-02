@@ -3,15 +3,15 @@
   window.ChartDrawer = {
     drawPie: function(pieData, pieId, legendId) {
       var drawFn = drawPie.bind(this, pieData, pieId, legendId);
-      drawPieOnScroll(pieId, drawFn);
+      drawOnScroll(pieId, drawFn);
     },
     drawSurveysAveragePie: function(pieData, pieId, legendId) {
       var drawFn = drawSurveysAveragePie.bind(this, pieData, pieId, legendId);
-      drawPieOnScroll(pieId, drawFn);
+      drawOnScroll(pieId, drawFn);
     },
     drawVerticalBarChart: function(chartId, labelsId, data) {
       var drawFn = drawVerticalBarChart.bind(this, chartId, labelsId, data);
-      drawPieOnScroll(chartId, drawFn);
+      drawOnScroll(chartId, drawFn);
     },
     drawHorizontalBarChart: drawHorizontalBarChart
   };
@@ -80,7 +80,7 @@
     }
   }
 
-  function drawPieOnScroll(elemId, drawFn) {
+  function drawOnScroll(elemId, drawFn) {
     var inView = false;
     var wasShown = false;
 
@@ -347,6 +347,8 @@
     function animateAdditionalElements() {
       animatePercentages();
       animateGrid();
+      animateLabels(chartId, '.ct-label');
+      animateLabels(labelsId, '.ct-bar-label');
       wasDrawn = true;
     }
 
@@ -372,6 +374,17 @@
       }
 
       $percentages.css('fill-opacity', 1);
+    }
+
+    function animateLabels(containerId, labelsSelector) {
+      var $container = $(containerId);
+      var $yLabels = $container.find(labelsSelector);
+
+      if (wasDrawn) {
+        $yLabels.css('transition', 'none')
+      }
+
+      $yLabels.css('opacity', 1);
     }
   }
 

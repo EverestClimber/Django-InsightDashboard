@@ -524,6 +524,11 @@
   letter-spacing: 1px;
 }
 
+.ct-chart .ct-label, .ct-bar-label {
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
 .ct-bar-labels .ct-bar-label {
   text-align: right;
   position: absolute;
