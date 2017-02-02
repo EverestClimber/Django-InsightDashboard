@@ -606,6 +606,10 @@
   cursor: default;
 }
 
+.horizontal-bars .bar .portion.negative, .horizontal-bars .bar .portion.positive {
+  padding-top: 1px;
+}
+
 .horizontal-bars .bar .portion.negative {
   background-color: #328ec9;
 }
