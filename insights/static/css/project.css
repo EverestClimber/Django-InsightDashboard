@@ -289,7 +289,7 @@ div.bootstrap-tagsinput input{
 .navbar-collapse.collapse.in, .navbar-collapse.collapsing{
   position: absolute;
   top: 50px;
-  height: 201px;
+  height: auto;
   left: -15px;
   right: -15px;
   background-color: white;
