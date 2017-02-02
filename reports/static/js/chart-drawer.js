@@ -153,11 +153,13 @@
       var $positivePortionText = $('<span>' + item.positiveNum + '</span>');
       var $negativePortionText = $('<span>' + item.negativeNum + '</span>');
 
+      var percentages = _getPercentages(item);
+
       var $positivePortion = $(
         '<div class="portion positive" ' +
         'data-toggle="tooltip" ' +
         'data-placement="top"' +
-        ' title="' + item.positiveNum + '">' +
+        ' title="' + percentages.positive + '">' +
         '</div>'
       ).html($positivePortionText);
 
@@ -165,12 +167,11 @@
         '<div class="portion negative" ' +
         'data-toggle="tooltip" ' +
         'data-placement="top"' +
-        ' title="' + item.negativeNum + '">' +
+        ' title="' + percentages.negative + '">' +
         '</div>'
       ).html($negativePortionText);
 
       var positiveWidth = _calcPositiveWidth(item);
-
       var negativeWidth = 100 - positiveWidth;
 
       $negativePortion.css('width', negativeWidth + '%');
@@ -221,6 +222,28 @@
       }
 
       return positiveWidth;
+    }
+
+    function _getPercentages(item) {
+      var positivePercentage = item.positiveNum / (item.positiveNum + item.negativeNum) * 100;
+      var negativePercentage = 100 - positivePercentage;
+
+      return {
+        positive: _getPercentageString(positivePercentage),
+        negative: _getPercentageString(negativePercentage)
+      }
+    }
+
+    function _getPercentageString(percentage) {
+      var percentageStr = Math.round(percentage) + '%';
+
+      if (percentage > 0 && percentage < 1) {
+        percentageStr = '< 1%';
+      } else if (percentage > 99 && percentage < 100) {
+        percentageStr = '> 99%';
+      }
+
+      return percentageStr;
     }
   }
 
