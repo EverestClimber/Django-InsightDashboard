@@ -262,7 +262,15 @@
       },
       axisX: {
         showGrid: false
-      }
+      },
+      plugins: [
+        Chartist.plugins.tooltip({
+          transformTooltipTextFnc: function (text) {
+            return text + '%';
+          },
+          anchorToPoint: true
+        })
+      ]
     })
       .on('draw',setBarPercentage)
       .on('draw', setBarWidth)
