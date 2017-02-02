@@ -10,7 +10,7 @@
           <div class="title">BY ORGANIZATION</div>
           <div class="head-delim"></div>
         </div>
-        <div class="report-card-body bars-body">
+        <div class="report-card-body bars-body" id="grayBarChartContainer">
           <div id="grayBarChart" class="ct-chart"></div>
           <div id="grayBarLabels" class="ct-bar-labels"></div>
         </div>
@@ -220,7 +220,7 @@
         series: [67, 78, 55]
       };
 
-      ChartDrawer.drawVerticalBarChart('#grayBarChart', '#grayBarLabels', grayBarsData);
+      ChartDrawer.drawVerticalBarChart('#grayBarChartContainer', '#grayBarChart', '#grayBarLabels', grayBarsData);
     }
 
     function drawGrayHorizontalBars() {

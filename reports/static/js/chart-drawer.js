@@ -9,9 +9,9 @@
       var drawFn = drawSurveysAveragePie.bind(this, pieData, pieId, legendId);
       drawOnScroll(pieId, drawFn);
     },
-    drawVerticalBarChart: function(chartId, labelsId, data) {
+    drawVerticalBarChart: function(chartContainerId, chartId, labelsId, data) {
       var drawFn = drawVerticalBarChart.bind(this, chartId, labelsId, data);
-      drawOnScroll(chartId, drawFn);
+      drawOnScroll(chartContainerId, drawFn);
     },
     drawHorizontalBarChart: drawHorizontalBarChart
   };
@@ -90,7 +90,7 @@
       var docViewBottom = docViewTop + $(window).height();
 
       var elemTop = $(elemId).offset().top;
-      var elemBottom = elemTop + $(elemId).height();
+      var elemBottom = elemTop + $(elemId).outerHeight();
 
       return ((elemTop <= docViewBottom) && (elemBottom >= docViewTop));
     }
