@@ -248,6 +248,8 @@
   }
 
   function drawVerticalBarChart(chartId, labelsId, data) {
+    var wasDrawn = false;
+
     var barChart = new Chartist.Bar(chartId, {
       labels: data.labels,
       series: [data.series]
@@ -343,7 +345,13 @@
       var $barChartContainer = $(chartId);
       var $percentages = $barChartContainer.find('.ct-bar-percentage');
 
+      if (wasDrawn) {
+        $percentages.css('transition', 'none')
+      }
+
       $percentages.css('fill-opacity', 1);
+
+      wasDrawn = true;
     }
   }
 
