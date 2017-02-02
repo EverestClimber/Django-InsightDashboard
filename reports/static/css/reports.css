@@ -506,6 +506,8 @@
   stroke: #cacaca;
   stroke-width: 0.5px;
   stroke-dasharray: 5px;
+  stroke-opacity: 0;
+  transition: stroke-opacity 1.5s ease;
 }
 
 .ct-chart .ct-label.ct-vertical.ct-start {

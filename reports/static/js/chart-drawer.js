@@ -9,8 +9,11 @@
       var drawFn = drawSurveysAveragePie.bind(this, pieData, pieId, legendId);
       drawPieOnScroll(pieId, drawFn);
     },
-    drawHorizontalBarChart: drawHorizontalBarChart,
-    drawVerticalBarChart: drawVerticalBarChart
+    drawVerticalBarChart: function(chartId, labelsId, data) {
+      var drawFn = drawVerticalBarChart.bind(this, chartId, labelsId, data);
+      drawPieOnScroll(chartId, drawFn);
+    },
+    drawHorizontalBarChart: drawHorizontalBarChart
   };
 
   function drawPie(pieData, pieId, legendId) {
@@ -280,7 +283,7 @@
       .on('draw',setBarPercentage)
       .on('draw', setBarWidth)
       .on('created', drawBarLabels)
-      .on('created', animatePercentages);
+      .on('created', animateAdditionalElements);
 
     $(document).on('resize', drawBarLabels);
 
@@ -341,6 +344,25 @@
       });
     }
 
+    function animateAdditionalElements() {
+      animatePercentages();
+      animateGrid();
+      wasDrawn = true;
+    }
+
+    function animateGrid() {
+      var $barChartContainer = $(chartId);
+      var $grid = $barChartContainer.find('.ct-grid');
+
+      if (wasDrawn) {
+        $grid.css('transition', 'none');
+      }
+
+      $grid.each(function (index, elt) {  //Jquery cannot set stroke-opacity via css() method
+        elt.style.strokeOpacity = 1;
+      });
+    }
+
     function animatePercentages() {
       var $barChartContainer = $(chartId);
       var $percentages = $barChartContainer.find('.ct-bar-percentage');
@@ -350,8 +372,6 @@
       }
 
       $percentages.css('fill-opacity', 1);
-
-      wasDrawn = true;
     }
   }
 
