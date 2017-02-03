@@ -128,8 +128,10 @@
 
           if(tooltipText) {
             $toolTip.innerHTML = tooltipText;
-            setPosition(event);
-            show($toolTip);
+            setTimeout(function () {
+              setPosition(event);
+              show($toolTip);
+            });
 
             // Remember height and width to avoid wrong position in IE
             height = $toolTip.offsetHeight;
@@ -159,8 +161,8 @@
             var top = event.pageY - box.top - window.pageYOffset ;
 
             if (true === options.anchorToPoint && event.target.x2 && event.target.y2) {
-              anchorX = parseInt(event.target.x2.baseVal.value);
-              anchorY = parseInt(event.target.y2.baseVal.value);
+              anchorX = parseInt($(event.target).attr('x2'));
+              anchorY = parseInt($(event.target).attr('y2'));
             }
 
             $toolTip.style.top = (anchorY || top) + offsetY + 'px';

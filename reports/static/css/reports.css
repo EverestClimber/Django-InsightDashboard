@@ -454,7 +454,7 @@
 }
 
 .chartist-tooltip {
-  height: 31px;    /* Little hack to properly display tooltip on first show */
+  white-space: nowrap;
 }
 
 .chartist-tooltip:before {
