@@ -121,6 +121,7 @@
     adjustXLabels($horizontalBarChart, chartData);
     initTooltips($horizontalBarChart);
     animateBars($horizontalBarChart);
+    animateLabels($horizontalBarChart);
 
     function drawBars($chart, data) {
       var $bars = $chart.find('.horizontal-bars');
@@ -260,7 +261,12 @@
       setTimeout(function() {
         $barItems.css('transition', 'width 1s ease');
         $barItems.css('width', '100%')
-      }, 100);
+      });
+    }
+
+    function animateLabels($chart) {
+      var $labels = $chart.find('.h-chart-x-label, .h-chart-y-label');
+      $labels.css('opacity', 1);
     }
   }
 
