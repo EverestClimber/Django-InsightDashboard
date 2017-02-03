@@ -13,7 +13,10 @@
       var drawFn = drawVerticalBarChart.bind(this, chartId, labelsId, data);
       drawOnScroll(chartContainerId, drawFn);
     },
-    drawHorizontalBarChart: drawHorizontalBarChart
+    drawHorizontalBarChart: function (chartId, chartData) {
+      var drawFn = drawHorizontalBarChart.bind(this, chartId, chartData);
+      drawOnScroll(chartId, drawFn);
+    }
   };
 
   function drawPie(pieData, pieId, legendId) {
@@ -117,6 +120,7 @@
     drawBars($horizontalBarChart, chartData);
     adjustXLabels($horizontalBarChart, chartData);
     initTooltips($horizontalBarChart);
+    animateBars($horizontalBarChart);
 
     function drawBars($chart, data) {
       var $bars = $chart.find('.horizontal-bars');
@@ -247,6 +251,16 @@
       }
 
       return percentageStr;
+    }
+
+    function animateBars($chart) {
+      var $barItems = $chart.find('.horizontal-bars .bar');
+      $barItems.css('width', '0');
+
+      setTimeout(function() {
+        $barItems.css('transition', 'width 1s ease');
+        $barItems.css('width', '100%')
+      }, 100);
     }
   }
 
