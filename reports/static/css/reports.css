@@ -423,6 +423,8 @@
   color: white;
   font-family: "open sans", Helvetica, sans-serif;
   margin-top: 12px;
+  font-size: 13px;
+  font-weight: normal;
 }
 
 #chartjs-tooltip:before, .chartist-tooltip:before {

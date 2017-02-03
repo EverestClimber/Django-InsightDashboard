@@ -72,7 +72,14 @@
     function drawQ1Bars() {
       var q1BarsData = {
         labels: ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'],
-        series: [50, 20, -1, 84, 0, 63]
+        series: [
+          {meta: 5000, value: 50},
+          {meta: 2000, value: 20},
+          {meta: 0, value: -1},
+          {meta: 8400, value: 84},
+          {meta: 0, value: 0},
+          {meta: 63000, value: 63}
+        ]
       };
 
       ChartDrawer.drawVerticalBarChart('#q1BarChartContainer', '#q1BarChart', '#q1BarLabels', q1BarsData);
