@@ -266,7 +266,7 @@
 
     function animateLabels($chart) {
       var $labels = $chart.find('.h-chart-x-label, .h-chart-y-label');
-      $labels.css('opacity', 1);
+      $labels.addClass('animated');
     }
   }
 
@@ -398,13 +398,13 @@
 
     function animateLabels(containerId, labelsSelector) {
       var $container = $(containerId);
-      var $yLabels = $container.find(labelsSelector);
+      var $labels = $container.find(labelsSelector);
 
       if (wasDrawn) {
-        $yLabels.css('transition', 'none')
+        $labels.css('transition', 'none')
       }
 
-      $yLabels.css('color', '#3d3d3d');
+      $labels.addClass('animated');
     }
   }
 
