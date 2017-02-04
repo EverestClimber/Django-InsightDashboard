@@ -55,9 +55,9 @@ class TestQuestionStat(TestCase):
         self.reg2 = mixer.blend(Region, country=self.c1, name='West', ordering=2)
         self.reg3 = mixer.blend(Region, country=self.c1, name='North', ordering=3)
 
-        self.org1 = mixer.blend(Organization, name='Org1', ordering=1)
-        self.org2 = mixer.blend(Organization, name='Org2', ordering=2)
-        self.org3 = mixer.blend(Organization, name='Org3', ordering=3)
+        self.org1 = mixer.blend(Organization, name='Org1', name_plural_short='org1', ordering=1)
+        self.org2 = mixer.blend(Organization, name='Org2', name_plural_short='org2', ordering=2)
+        self.org3 = mixer.blend(Organization, name='Org3', name_plural_short='org3', ordering=3)
 
         self.q = mixer.blend(Question, text='Question text')
         self.r = mixer.blend(Representation, question=[self.q], label1='label1', label2='label2', label3='label3')
@@ -93,6 +93,8 @@ class TestQuestionStat(TestCase):
             'bar_labels': ['SPAIN', 'FRANCE', 'ITALY'],
             'bar_series': [30, 30, -1],
             'bar_series_meta': [{'meta': 2, 'value': 30}, {'meta': 1, 'value': 30}, {'meta': 0, 'value': -1}],
+            'org_labels': ['ORG1', 'ORG2', 'ORG3'],
+            'org_series_meta': [{'meta': 3, 'value': 30}, {'meta': 0, 'value': -1}, {'meta': 0, 'value': -1}],
             'main_cnt': 3
         }
 
@@ -113,6 +115,8 @@ class TestQuestionStat(TestCase):
             'bar_labels': ['EAST', 'WEST', 'NORTH'],
             'bar_series': [30, 30, -1],
             'bar_series_meta': [{'meta': 2, 'value': 30}, {'meta': 1, 'value': 30}, {'meta': 0, 'value': -1}],
+            'org_labels': ['ORG1', 'ORG2', 'ORG3'],
+            'org_series_meta': [{'meta': 3, 'value': 30}, {'meta': 0, 'value': -1}, {'meta': 0, 'value': -1}],
             'main_cnt': 3
         }
 

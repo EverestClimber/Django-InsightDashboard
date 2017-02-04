@@ -75,6 +75,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
 
     report_type = 'basic'
     regions_cache = {}
+    organizations_cache = []
 
     class Meta:
         ordering = ['ordering', 'id']
@@ -90,6 +91,12 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             regions = list(Country.objects.filter(use_in_reports=True))
         cls.regions_cache[country_id] = regions
         return regions
+
+    @classmethod
+    def get_organizations(cls):
+        if not cls.organizations_cache:
+            cls.organizations_cache = list(Organization.objects.all())
+        return cls.organizations_cache
 
     def update_type_average_percent(self):
         regions = self.get_regions(self.country_id)
@@ -110,6 +117,21 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             self.vars['bar_labels'].append(reg.name.upper())
             self.vars['bar_series'].append(val)
             self.vars['bar_series_meta'].append({'meta': reg_cnt, 'value': val})
+
+        orgs = self.get_organizations()
+        self.vars['org_labels'] = []
+        self.vars['org_series_meta'] = []
+        for org in orgs:
+            org_key = str(org.pk)
+            if org_key in data['org_cnt']:
+                org_cnt = data['org_cnt'][org_key]
+                val = int(round(data['org_sum'][org_key] / org_cnt))
+            else:
+                org_cnt = 0
+                val = -1
+
+            self.vars['org_labels'].append(org.name_plural_short.upper())
+            self.vars['org_series_meta'].append({'meta': org_cnt, 'value': val})
 
         self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
         pers = int(round(self.data['main_sum'] / self.data['main_cnt']))
