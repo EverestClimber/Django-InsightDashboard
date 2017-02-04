@@ -1,3 +1,4 @@
+{% load utils %}
 {% block representation %}
   <div class="question-{{ i }} question-container">
     <div class="question-title">
@@ -75,7 +76,7 @@
 {#        series: [50, 20, -1, 84, 0, 63]#}
 
         labels: {{ stat.vars.bar_labels|safe }},
-        series: {{ stat.vars.bar_series }}
+        series: {{ stat.vars.bar_series_meta|safe }}
       };
 
       ChartDrawer.drawVerticalBarChart('#q{{ i }}BarChartContainer', '#q{{ i }}BarChart', '#q{{ i }}BarLabels', q{{ i }}BarsData);

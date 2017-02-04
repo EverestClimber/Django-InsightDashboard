@@ -92,6 +92,7 @@ class TestQuestionStat(TestCase):
             'pie_data': [30, 70],
             'bar_labels': ['SPAIN', 'FRANCE', 'ITALY'],
             'bar_series': [30, 30, -1],
+            'bar_series_meta': [{'meta': 2, 'value': 30}, {'meta': 1, 'value': 30}, {'meta': 0, 'value': -1}],
             'main_cnt': 3
         }
 
@@ -111,6 +112,7 @@ class TestQuestionStat(TestCase):
             'pie_data': [30, 70],
             'bar_labels': ['EAST', 'WEST', 'NORTH'],
             'bar_series': [30, 30, -1],
+            'bar_series_meta': [{'meta': 2, 'value': 30}, {'meta': 1, 'value': 30}, {'meta': 0, 'value': -1}],
             'main_cnt': 3
         }
 

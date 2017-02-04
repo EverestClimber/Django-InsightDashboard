@@ -95,6 +95,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         regions = self.get_regions(self.country_id)
         self.vars['bar_labels'] = []
         self.vars['bar_series'] = []
+        self.vars['bar_series_meta'] = []
 
         data = self.data
 
@@ -102,10 +103,13 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             reg_key = str(reg.pk)
             if reg_key in data['reg_cnt']:
                 val = int(round(data['reg_sum'][reg_key] / data['reg_cnt'][reg_key]))
+                reg_cnt = data['reg_cnt'][reg_key]
             else:
                 val = -1
+                reg_cnt = 0
             self.vars['bar_labels'].append(reg.name.upper())
             self.vars['bar_series'].append(val)
+            self.vars['bar_series_meta'].append({'meta': reg_cnt, 'value': val})
 
         self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
         pers = int(round(self.data['main_sum'] / self.data['main_cnt']))
