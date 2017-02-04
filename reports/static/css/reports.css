@@ -529,6 +529,10 @@
   transition: color 1.5s ease;
 }
 
+.ct-chart .ct-label.animated, .ct-bar-labels .ct-bar-label.animated {
+  color: #3d3d3d;
+}
+
 .ct-bar-labels .ct-bar-label {
   text-align: right;
   position: absolute;
@@ -560,7 +564,7 @@
 }
 
 .horizontal-bar-chart {
-
+  height: 100%;
 }
 
 .labeled-bars {
@@ -568,13 +572,17 @@
   flex-direction: row;
 }
 
-.x-labels, .y-labels{
+.x-labels .h-chart-x-label, .y-labels .h-chart-y-label {
   font-family: "open sans";
   font-size: 10px;
-  color: #3d3d3d;
-  fill: #3d3d3d;
+  color: transparent;
   font-weight: bolder;
   letter-spacing: 1px;
+  transition: color 1.5s ease;
+}
+
+.x-labels .h-chart-x-label.animated, .y-labels .h-chart-y-label.animated {
+  color: #3d3d3d;
 }
 
 .y-labels {
@@ -668,6 +676,7 @@
 }
 
 .report-card-body.horizontal-bar-chart-body {
+  height: 100%;
   margin-top: 0;
 }
 
