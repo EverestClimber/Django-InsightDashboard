@@ -149,6 +149,11 @@ class TestQuestionStat(TestCase):
             'bar_labels': ['Spain', 'France', 'Italy'],
             'bar_negative_nums': [1, 0, -1],
             'bar_positive_nums': [1, 1, -1],
+            'org_data': [
+                {'label': 'ORG1', 'positiveNum': 2, 'negativeNum': 1},
+                {'label': 'ORG2', 'positiveNum': -1, 'negativeNum': -1},
+                {'label': 'ORG3', 'positiveNum': -1, 'negativeNum': -1},
+            ]
         }
 
         qs1 = mixer.blend(QuestionStat,
@@ -168,6 +173,11 @@ class TestQuestionStat(TestCase):
             'bar_labels': ['East', 'West', 'North'],
             'bar_negative_nums': [1, 0, -1],
             'bar_positive_nums': [1, 1, -1],
+            'org_data': [
+                {'label': 'ORG1', 'positiveNum': 2, 'negativeNum': 1},
+                {'label': 'ORG2', 'positiveNum': -1, 'negativeNum': -1},
+                {'label': 'ORG3', 'positiveNum': -1, 'negativeNum': -1},
+            ]
         }
 
     def test_calculate_top(self):
