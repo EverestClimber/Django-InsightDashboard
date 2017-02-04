@@ -20,7 +20,12 @@
     <!--[if lt IE 9]>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
-    {% compress css inline %}
+    <style type="text/css">
+      {# Moved from Inspinia style.css because it is not importing #}
+      @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
+      @import url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
+    </style>
+    {% compress css %}
         {% block css %}
 
             <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
