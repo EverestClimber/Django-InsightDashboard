@@ -1,1 +1,72 @@
-type_multiselect_top/advanced.html
+{% extends './basic.html' %}
+{% block representation %}
+  {{ block.super }}
+  <div class="row tables-row equal-heights">
+    <div class="col-sm-12 col-md-6">
+      <div class="report-card report-card-table report-card-gray">
+        <div class="report-card-head text-center">
+          <div class="title">BY ORGANIZATION TOP #1</div>
+          <div class="head-delim"></div>
+        </div>
+        <div class="report-card-body">
+          <table class="table report-table multi-percent-table">
+            <thead>
+            <th></th>
+            {% for name in stat.vars.org_names %}
+              <th>{{ name }}</th>
+            {% endfor %}
+            </thead>
+            <tbody>
+              {% for x in stat.vars.top1.org_table %}
+                <tr class="
+                  {% if forloop.counter == 1 %}report-table-first-gray{% endif %}
+                  {% if forloop.counter == 2 %}report-table-second-gray{% endif %}
+                  {% if forloop.counter == 3 %}report-table-third-gray{% endif %}
+                 ">
+                  <td>{{ forloop.counter }}. {{ x.1 }}</td>
+                  {% for p in x.2 %}
+                    <td class="{% if forloop.last %}text-right{% else %}text-center{% endif %}">{{ p|floatformat:"0" }}%</td>
+                  {% endfor %}
+
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <div class="report-card report-card-table report-card-gray">
+        <div class="report-card-head text-center">
+          <div class="title">BY ORGANIZATION TOP #3</div>
+          <div class="head-delim"></div>
+        </div>
+        <div class="report-card-body">
+          <table class="table report-table multi-percent-table">
+            <thead>
+            <th></th>
+            {% for name in stat.vars.org_names %}
+              <th>{{ name }}</th>
+            {% endfor %}
+            </thead>
+            <tbody>
+              {% for x in stat.vars.top3.org_table %}
+                <tr class="
+                  {% if forloop.counter == 1 %}report-table-first-gray{% endif %}
+                  {% if forloop.counter == 2 %}report-table-second-gray{% endif %}
+                  {% if forloop.counter == 3 %}report-table-third-gray{% endif %}
+                 ">
+                  <td>{{ forloop.counter }}. {{ x.1 }}</td>
+                  {% for p in x.2 %}
+                    <td class="{% if forloop.last %}text-right{% else %}text-center{% endif %}">{{ p|floatformat:"0" }}%</td>
+                  {% endfor %}
+
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

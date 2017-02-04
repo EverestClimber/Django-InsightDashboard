@@ -125,22 +125,26 @@
                                                 {% endfor %}
                                             </ul>
                                         </li>
-{#                                        <li class="dropdown-submenu" data-submenu>#}
-{#                                            <a href="#">Advanced</a>#}
-{##}
-{#                                            <ul class="dropdown-menu">#}
-{#                                                <li>#}
-{#                                                    <a href="{% url 'reports:advanced_europe' %}">Europe</a>#}
-{#                                                </li>#}
-{#                                                {% for country in countries %}#}
-{#                                                <li>#}
-{#                                                    <a href="{% url 'reports:advanced_country' country=country.pk %}">#}
-{#                                                        {{ country.name }}#}
-{#                                                    </a>#}
-{#                                                </li>#}
-{#                                                {% endfor %}#}
-{#                                            </ul>#}
-{#                                        </li>#}
+                                        <li class="dropdown-submenu" data-submenu>
+                                            <a href="#">Advanced</a>
+
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="{% url 'reports:advanced' country='europe' %}">Europe</a>
+                                                </li>
+                                                {% for country in countries %}
+                                                <li>
+                                                    <a href="{% if country.slug %}
+                                                                {% url 'reports:advanced' country=country.slug %}
+                                                              {% else %}
+                                                                {% url 'reports:advanced' country=country.pk %}
+                                                              {% endif %}">
+                                                        {{ country.name }}
+                                                    </a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>

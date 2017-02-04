@@ -275,9 +275,14 @@ class TestQuestionStat(TestCase):
             'cnt': 10,
             'org': {
                 '1': {
-                    'top1': {'x2': 4, 'x1': 6},
-                    'top3': {'x3': 4, 'x2': 6, 'x1': 10},
-                    'cnt': 10
+                    'top1': {'x2': 2, 'x1': 4},
+                    'top3': {'x3': 2, 'x2': 4, 'x1': 8},
+                    'cnt': 8
+                },
+                '2': {
+                    'top1': {'x2': 2, 'x1': 2},
+                    'top3': {'x3': 2, 'x2': 2, 'x1': 2},
+                    'cnt': 2
                 }
             }
         }
@@ -290,6 +295,38 @@ class TestQuestionStat(TestCase):
                           country=None,
                           type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs0.update_vars()
+        org_table_1 = [
+            (6, 'X1', (40.0, 20.0, 0)),
+            (4, 'x2', (20.0, 20.0, 0))
+        ]
+        org_table_3 = [
+            (10, 'X1', (40.0, 10.0, 0)),
+            (6, 'x2', (20.0, 10.0, 0)),
+            (4, 'x3', (10.0, 10.0, 0))
+        ]
+
+        top1 = {
+            'table': [(6, 'X1', 60.0), (4, 'x2', 40.0)],
+            'pie': {
+                'data': (6, 4, 0, 0),
+                'labels': ('X1', 'x2', '', ''),
+                'hide_last_legend_item': 'false'
+            },
+            'org_table': org_table_1,
+        }
+        top3 = {
+            'table': [(10, 'X1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
+            'pie': {
+                'data': (10, 6, 4, 0),
+                'labels': ('X1', 'x2', 'x3', ''),
+                'hide_last_legend_item': 'false'
+            },
+            'org_table': org_table_3,
+        }
+
+        assert qs0.vars['top1']['org_table'] == org_table_1
+        assert qs0.vars['top3']['org_table'] == org_table_3
+
         assert qs0.vars == {
             'available': True,
             'region_name': 'Europe',
@@ -297,22 +334,9 @@ class TestQuestionStat(TestCase):
             'question_text': 'Question text',
             'label1': 'label1',
             'label2': 'label2',
-            'top1': {
-                'table': [(6, 'X1', 60.0), (4, 'x2', 40.0)],
-                'pie': {
-                    'data': (6, 4, 0, 0),
-                    'labels': ('X1', 'x2', '', ''),
-                    'hide_last_legend_item': 'false'
-                }
-            },
-            'top3': {
-                'table': [(10, 'X1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
-                'pie': {
-                    'data': (10, 6, 4, 0),
-                    'labels': ('X1', 'x2', 'x3', ''),
-                    'hide_last_legend_item': 'false'
-                }
-            },
+            'top1': top1,
+            'top3': top3,
+            'org_names': ['ORG1', 'ORG2', 'ORG3']
         }
 
         qs1 = mixer.blend(QuestionStat,
@@ -321,6 +345,8 @@ class TestQuestionStat(TestCase):
                           country=self.c1,
                           type=QuestionStat.TYPE_MULTISELECT_TOP)
         qs1.update_vars()
+        assert qs1.vars['top1']['org_table'] == org_table_1
+        assert qs1.vars['top3']['org_table'] == org_table_3
         assert qs1.vars == {
             'available': True,
             'region_name': 'Spain',
@@ -328,20 +354,7 @@ class TestQuestionStat(TestCase):
             'question_text': 'Question text',
             'label1': 'label1',
             'label2': 'label2',
-            'top1': {
-                'table': [(6, 'X1', 60.0), (4, 'x2', 40.0)],
-                'pie': {
-                    'data': (6, 4, 0, 0),
-                    'labels': ('X1', 'x2', '', ''),
-                    'hide_last_legend_item': 'false'
-                }
-            },
-            'top3': {
-                'table': [(10, 'X1', 50.0), (6, 'x2', 30.0), (4, 'x3', 20.0)],
-                'pie': {
-                    'data': (10, 6, 4, 0),
-                    'labels': ('X1', 'x2', 'x3', ''),
-                    'hide_last_legend_item': 'false'
-                }
-            },
+            'top1': top1,
+            'top3': top3,
+            'org_names': ['ORG1', 'ORG2', 'ORG3']
         }

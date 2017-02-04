@@ -2,10 +2,8 @@ import jsonfield
 
 from django.db import models
 
-
 from insights.users.models import Country
 from survey.models import Survey, Organization, Answer, Question, Option, Region
-
 
 
 class Stat(models.Model):
@@ -135,7 +133,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
 
         self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
         pers = int(round(self.data['main_sum'] / self.data['main_cnt']))
-        self.vars['pie_data'] = [pers, 100-pers]
+        self.vars['pie_data'] = [pers, 100 - pers]
         self.vars['label1'] = self.representation.label1
         self.vars['main_cnt'] = self.data['main_cnt']
 
@@ -179,13 +177,39 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['pie_data'] = [data['main_cnt'] - data['main_yes'], data['main_yes']]
         self.vars['label1'] = self.representation.label1
 
-    @staticmethod
-    def _calculate_top(top):
+    @classmethod
+    def _calculate_top(cls, top, name_top=None, org_tops=None):
+        # Initial data for Main Top table
         pack = []
         total = sum(top.values())
+
+        # Initial data for Organization table
+        org_pack = []
+        if org_tops is None:
+            org_tops = {}
+
+        orgs = cls.get_organizations()
+
         for prop, s in top.items():
-            pack.append((s, OptionDict.get(prop), 100.0 * s / total))
+            prop_name = OptionDict.get(prop)
+            pack.append((s, prop_name, 100.0 * s / total))
+
+            org_values = []
+            for org in orgs:
+                org_key = str(org.pk)
+
+                s_org = 0
+                if org_key in org_tops and name_top in org_tops[org_key] and prop in org_tops[org_key][name_top]:
+                    s_org = org_tops[org_key][name_top][prop]
+                p_org = 100.0 * s_org / total
+
+                org_values.append(p_org)
+            org_pack.append((s, prop_name, tuple(org_values)))
+
         pack.sort(key=lambda x: (-x[0], x[1]))
+        org_pack.sort(key=lambda x: (-x[0], x[1]))
+
+        # Pies:
         pied = pack[:3]
         other = pack[3:]
         hide_last_legend_item = 'false'  # !! this is correct
@@ -195,17 +219,20 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             hide_last_legend_item = 'true'  # !! this is correct
 
         if len(pied) < 4:
-            pied += [(0, '', 0.0)] * (4-len(pied))
+            pied += [(0, '', 0.0)] * (4 - len(pied))
 
         data, labels, _ = zip(*pied)
+
         pack = pack[:10]
+
         out = {
             'pie': {
                 'labels': labels,
                 'data': data,
                 'hide_last_legend_item': hide_last_legend_item
             },
-            'table': pack
+            'table': pack,
+            'org_table': org_pack[:10]
         }
         return out
 
@@ -213,8 +240,12 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['label1'] = self.representation.label1
         self.vars['label2'] = self.representation.label2
         data = self.data
-        self.vars['top1'] = self._calculate_top(data['top1'])
-        self.vars['top3'] = self._calculate_top(data['top3'])
+        self.vars['top1'] = self._calculate_top(data['top1'], 'top1', data['org'])
+        self.vars['top3'] = self._calculate_top(data['top3'], 'top3', data['org'])
+        org_names = []
+        for org in self.get_organizations():
+            org_names.append(org.name_plural_short.upper())
+        self.vars['org_names'] = org_names
 
     def update_vars(self):
         try:
@@ -276,7 +307,6 @@ class OptionDict(models.Model):
             elif opt.value != cls.data[lower].original:
                 cls.data[lower].original = opt.value
                 cls.data[lower].save()
-
 
     @classmethod
     def get(cls, name):
