@@ -8,9 +8,9 @@
           <div class="title">BY ORGANIZATION</div>
           <div class="head-delim"></div>
         </div>
-        <div class="report-card-body bars-body" id="grayBarChartContainer">
-          <div id="grayBarChart" class="ct-chart"></div>
-          <div id="grayBarLabels" class="ct-bar-labels"></div>
+        <div class="report-card-body bars-body" id="grayBarChartContainer{{ i }}">
+          <div id="grayBarChart{{ i }}" class="ct-chart"></div>
+          <div id="grayBarLabels{{ i }}" class="ct-bar-labels"></div>
         </div>
       </div>
     </div>
@@ -25,28 +25,7 @@
         series: {{ stat.vars.org_series_meta|safe }}
       };
 
-      ChartDrawer.drawVerticalBarChart('#grayBarChartContainer', '#grayBarChart', '#grayBarLabels', grayBarsData);
-    }
-
-    function drawGrayHorizontalBars() {
-      var grayHBarsData = [
-        {
-          label: 'DASMHC',
-          positiveNum: 225,
-          negativeNum: 40
-        },
-        {
-          label: 'MHC',
-          positiveNum: 30,
-          negativeNum: 80
-        },
-        {
-          label: 'HOSPITALS',
-          positiveNum: 50,
-          negativeNum: 50
-        }
-      ];
-      ChartDrawer.drawHorizontalBarChart('#grayHorizontalBarChart', grayHBarsData);
+      ChartDrawer.drawVerticalBarChart('#grayBarChartContainer{{ i }}', '#grayBarChart{{ i }}', '#grayBarLabels{{ i }}', grayBarsData);
     }
 
     $(document).ready(function() {
