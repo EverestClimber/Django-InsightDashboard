@@ -16,6 +16,10 @@
     drawHorizontalBarChart: function (chartId, chartData) {
       var drawFn = drawHorizontalBarChart.bind(this, chartId, chartData);
       drawOnScroll(chartId, drawFn);
+    },
+    drawSurveysAverageBarChart: function(chartContainerId, chartId, labelsId, data) {
+      var drawFn = drawSurveysAverageBarChart.bind(this, chartId, labelsId, data);
+      drawOnScroll(chartContainerId, drawFn);
     }
   };
 
@@ -273,6 +277,144 @@
   }
 
   function drawVerticalBarChart(chartId, labelsId, data) {
+    var wasDrawn = false;
+
+    var barChart = new Chartist.Bar(chartId, {
+      labels: data.labels,
+      series: [data.series]
+    }, {
+      stackBars: false,
+      high: 100,
+      low: 0,
+      axisY: {
+        type: Chartist.FixedScaleAxis,
+        ticks: [0, 25, 50, 75, 100],
+        labelInterpolationFnc: setYAxisLabels
+      },
+      axisX: {
+        showGrid: false
+      },
+      plugins: [
+        Chartist.plugins.tooltip({
+          tooltipFnc: function (surveysNum, percentage) {
+            return 'Surveys: ' + surveysNum;
+          },
+          anchorToPoint: true
+        }),
+        Chartist.plugins.barAnimation({
+          duration: 2000
+        })
+      ]
+    })
+      .on('draw',setBarPercentage)
+      .on('draw', setBarWidth)
+      .on('created', drawBarLabels)
+      .on('created', animateAdditionalElements);
+
+    $(document).on('resize', drawBarLabels);
+
+    function setBarWidth(data) {
+      if (data.type === "bar") {
+        data.element.attr({
+          style: 'stroke-width: 22px'
+        });
+      }
+    }
+
+    function setBarPercentage(data) {
+      if (data.type === "bar") {
+        var barHorizontalCenter, barVerticalCenter, label, value;
+        barHorizontalCenter = data.x1 + (data.element.width() * .5);
+        barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
+        value = data.element.attr('ct:value');
+        label = new Chartist.Svg('text');
+        if (value == '-1') {
+          label.text('n/a');
+        } else {
+          label.text(value + '%');
+        }
+        label.addClass("ct-bar-percentage");
+        label.attr({
+          x: barHorizontalCenter,
+          y: barVerticalCenter,
+          'text-anchor': 'middle'
+        });
+        return data.group.append(label);
+      }
+    }
+
+    function setYAxisLabels(value) {
+      return value % 50 == 0 ? value + '%' : '';
+    }
+
+    function drawBarLabels() {
+      var $barChartContainer = $(chartId);
+      var barChartContainerPosition = $barChartContainer.offset();
+      var $labels = $(labelsId);
+      var $bars = $barChartContainer.find('.ct-bar');
+
+      $labels.empty();
+
+      $bars.each(function(i, bar) {
+        var $bar = $(bar);
+        var barPosition = $bar.offset();
+        var $label = $('<div class="ct-bar-label">' + barChart.data.labels[i] + '</div>');
+        $labels.append($label);
+        var barHeight = bar.getBBox().height;
+        var barWidth = bar.getBBox().width;
+        var labelTop = barPosition.top - barChartContainerPosition.top + barHeight + 10;
+        var labelLeft = barPosition.left - barChartContainerPosition.left + barWidth/2 - $label.width()/2;
+        $label.css('top', labelTop);
+        $label.css('left', labelLeft);
+        $label.css('height', $label.width());
+      });
+    }
+
+    function animateAdditionalElements() {
+      animatePercentages();
+      animateGrid();
+      animateLabels(chartId, '.ct-label');
+      animateLabels(labelsId, '.ct-bar-label');
+      wasDrawn = true;
+    }
+
+    function animateGrid() {
+      var $barChartContainer = $(chartId);
+      var $grid = $barChartContainer.find('.ct-grid');
+
+      if (wasDrawn) {
+        $grid.css('transition', 'none');
+      }
+
+      $grid.each(function (index, elt) {  //Jquery cannot set stroke-opacity via css() method
+        elt.style.strokeOpacity = 1;
+      });
+    }
+
+    function animatePercentages() {
+      var $barChartContainer = $(chartId);
+      var $percentages = $barChartContainer.find('.ct-bar-percentage');
+
+      if (wasDrawn) {
+        $percentages.css('transition', 'none')
+      }
+
+      $percentages.css('fill-opacity', 1);
+    }
+
+    function animateLabels(containerId, labelsSelector) {
+      var $container = $(containerId);
+      var $labels = $container.find(labelsSelector);
+
+      if (wasDrawn) {
+        $labels.css('transition', 'none')
+      }
+
+      $labels.addClass('animated');
+    }
+  }
+
+  function drawSurveysAverageBarChart(chartId, labelsId, data) {
     var wasDrawn = false;
 
     var barChart = new Chartist.Bar(chartId, {

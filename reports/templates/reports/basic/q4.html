@@ -1,0 +1,44 @@
+<div class="question-1 question-container">
+  <div class="question-title">
+    <div class="question-title-number">Question 1:</div>
+    <div>How many of your patients under 35 years old with SCZ have Substance Abuse?</div>
+  </div>
+  <div class="row equal-heights">
+    <div class="col-sm-12 col-md-6">
+      <div class="report-card chart-card report-card-red">
+        <div class="report-card-head">
+          <div class="title">BY COUNTRY</div>
+          <div class="head-delim"></div>
+        </div>
+        <div class="report-card-body bars-body" id="q4BarChartContainer">
+          <div id="q4BarChart" class="ct-chart"></div>
+          <div id="q4BarLabels" class="ct-bar-labels"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function drawQ4Bars() {
+      var q4BarsData = {
+        labels: ['GERMANY', 'ITALY', 'FRANCE', 'SPAIN', 'NETHERLANDS', 'LUXEMBURG'],
+        series: [
+          {meta: 5000, value: 50},
+          {meta: 2000, value: 20},
+          {meta: 0, value: -1},
+          {meta: 8400, value: 84},
+          {meta: 0, value: 0},
+          {meta: 63000, value: 63}
+        ]
+      };
+
+      ChartDrawer.drawSurveysAverageBarChart('#q4BarChartContainer', '#q4BarChart', '#q4BarLabels', q4BarsData);
+    }
+
+    $(document).ready(function() {
+      drawQ4Bars();
+    });
+  })();
+</script>
