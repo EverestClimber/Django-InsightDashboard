@@ -306,7 +306,7 @@
         })
       ]
     })
-      .on('draw',setBarPercentage)
+      .on('draw',setBarTitle)
       .on('draw', setBarWidth)
       .on('created', drawBarLabels)
       .on('created', animateAdditionalElements);
@@ -321,7 +321,7 @@
       }
     }
 
-    function setBarPercentage(data) {
+    function setBarTitle(data) {
       if (data.type === "bar") {
         var barHorizontalCenter, barVerticalCenter, label, value;
         barHorizontalCenter = data.x1 + (data.element.width() * .5);
@@ -333,7 +333,7 @@
         } else {
           label.text(value + '%');
         }
-        label.addClass("ct-bar-percentage");
+        label.addClass("ct-bar-title");
         label.attr({
           x: barHorizontalCenter,
           y: barVerticalCenter,
@@ -371,7 +371,7 @@
     }
 
     function animateAdditionalElements() {
-      animatePercentages();
+      animateTitles();
       animateGrid();
       animateLabels(chartId, '.ct-label');
       animateLabels(labelsId, '.ct-bar-label');
@@ -391,9 +391,9 @@
       });
     }
 
-    function animatePercentages() {
+    function animateTitles() {
       var $barChartContainer = $(chartId);
-      var $percentages = $barChartContainer.find('.ct-bar-percentage');
+      var $percentages = $barChartContainer.find('.ct-bar-title');
 
       if (wasDrawn) {
         $percentages.css('transition', 'none')
@@ -444,7 +444,7 @@
         })
       ]
     })
-      .on('draw',setBarPercentage)
+      .on('draw',setBarTitle)
       .on('draw', setBarWidth)
       .on('created', drawBarLabels)
       .on('created', animateAdditionalElements);
@@ -459,19 +459,19 @@
       }
     }
 
-    function setBarPercentage(data) {
+    function setBarTitle(data) {
       if (data.type === "bar") {
         var barHorizontalCenter, barVerticalCenter, label, value;
         barHorizontalCenter = data.x1 + (data.element.width() * .5);
         barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
         value = data.element.attr('ct:value');
         label = new Chartist.Svg('text');
-        if (value == '-1') {
+        if (value == '-1' || value == '0') {
           label.text('n/a');
         } else {
-          label.text(value + '%');
+          label.text(value);
         }
-        label.addClass("ct-bar-percentage");
+        label.addClass("ct-bar-title");
         label.attr({
           x: barHorizontalCenter,
           y: barVerticalCenter,
@@ -509,7 +509,7 @@
     }
 
     function animateAdditionalElements() {
-      animatePercentages();
+      animateTitles();
       animateGrid();
       animateLabels(chartId, '.ct-label');
       animateLabels(labelsId, '.ct-bar-label');
@@ -529,9 +529,9 @@
       });
     }
 
-    function animatePercentages() {
+    function animateTitles() {
       var $barChartContainer = $(chartId);
-      var $percentages = $barChartContainer.find('.ct-bar-percentage');
+      var $percentages = $barChartContainer.find('.ct-bar-title');
 
       if (wasDrawn) {
         $percentages.css('transition', 'none')

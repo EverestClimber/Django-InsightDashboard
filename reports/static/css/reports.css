@@ -517,7 +517,7 @@
   top: 4px;
 }
 
-.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-bar-percentage, .ct-bar-labels .ct-bar-label {
+.ct-chart .ct-label.ct-vertical.ct-start, .ct-chart .ct-bar-title, .ct-bar-labels .ct-bar-label {
   font-family: "open sans";
   font-size: 10px;
   font-weight: bolder;
@@ -546,7 +546,7 @@
   transform-origin: center center;
 }
 
-.ct-chart .ct-bar-percentage {
+.ct-chart .ct-bar-title {
   fill: #3d3d3d;
   fill-opacity: 0;
   -webkit-transition: fill-opacity 1.5s;
