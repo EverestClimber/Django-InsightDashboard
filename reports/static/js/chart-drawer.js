@@ -92,8 +92,10 @@
       var docViewTop = $(window).scrollTop();
       var docViewBottom = docViewTop + $(window).height();
 
-      var elemTop = $(elemId).offset().top;
-      var elemBottom = elemTop + $(elemId).outerHeight();
+      var heightModificator = $(elemId).outerHeight() * 0.25;
+
+      var elemTop = $(elemId).offset().top + heightModificator;
+      var elemBottom = elemTop + $(elemId).outerHeight() - heightModificator;
 
       return ((elemTop <= docViewBottom) && (elemBottom >= docViewTop));
     }

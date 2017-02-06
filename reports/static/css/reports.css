@@ -682,7 +682,7 @@
 
 @media (min-width: 992px) {
   .report-card-body.horizontal-bar-chart-body {
-    margin-top: 10px;
+    padding-top: 10px;
   }
 
   .report-card-gray .report-card-body.horizontal-bar-chart-body {
