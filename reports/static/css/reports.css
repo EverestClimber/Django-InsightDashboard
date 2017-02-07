@@ -468,11 +468,11 @@
 
 /* Chartist */
 
-.ct-chart .ct-bar:nth-of-type(6n+1) {
+.ct-chart .ct-bar:nth-of-type(6n+1), .ct-chart .ct-bar.highest {
   stroke: #c50032;
 }
 
-.ct-chart .ct-bar:nth-of-type(6n+2) {
+.ct-chart .ct-bar:nth-of-type(6n+2), .ct-chart .ct-bar.medium {
   stroke: #e04578;
 }
 
@@ -480,7 +480,7 @@
   stroke: #e597ae;
 }
 
-.ct-chart .ct-bar:nth-of-type(6n+4) {
+.ct-chart .ct-bar:nth-of-type(6n+4), .ct-chart .ct-bar.lower {
   stroke: #e7b2c2;
 }
 
@@ -510,6 +510,18 @@
   stroke-dasharray: 5px;
   stroke-opacity: 0;
   transition: stroke-opacity 1.5s ease;
+}
+
+.distribution-chart-body .ct-chart .ct-bar.highest {
+  stroke: #c50032;
+}
+
+.distribution-chart-body .ct-chart .ct-bar.medium {
+  stroke: #e04578;
+}
+
+.distribution-chart-body .ct-chart .ct-bar.lower {
+  stroke: #e7b2c2;
 }
 
 .ct-chart .ct-label.ct-vertical.ct-start {
@@ -548,10 +560,6 @@
 
 .distribution-chart-body .ct-bar-labels .ct-bar-label {
   transform: rotate(-45deg);
-}
-
-.distribution-chart-body .ct-chart .ct-bar {
-  stroke: #c50032;
 }
 
 .ct-chart .ct-bar-title {

@@ -448,41 +448,53 @@
       ]
     })
       .on('draw',setBarTitle)
-      .on('draw', setBarStyle)
+      .on('draw', setBarWidth)
+      .on('draw', setBarColor)
       .on('created', drawBarLabels)
       .on('created', animateAdditionalElements);
 
     $(document).on('resize', drawBarLabels);
 
-    function setBarStyle(data) {
+    function setBarWidth(data) {
       if (data.type === "bar") {
-        var opacity = data.series[data.index].value/maxVal;
-
         data.element.attr({
-          style: 'stroke-width: 22px;' + 'stroke-opacity: ' + opacity
+          style: 'stroke-width: 22px;'
         });
+      }
+    }
+
+    function setBarColor(data) {
+      if (data.type === "bar") {
+        var maxBarRelation = data.series[data.index].value/maxVal;
+        var colorClass = 'highest';
+
+        if (maxBarRelation >= 0.5 && maxBarRelation < 1) {
+          colorClass = 'medium'
+        } else if (maxBarRelation < 0.5) {
+          colorClass = 'lower'
+        }
+        data.element._node.className.baseVal += ' ' + colorClass;
+        data.element._node.className.animVal += ' ' + colorClass;
       }
     }
 
     function setBarTitle(data) {
       if (data.type === "bar") {
-        var barHorizontalCenter, barVerticalCenter, label, value;
-        barHorizontalCenter = data.x1 + (data.element.width() * .5);
-        barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
         value = data.element.attr('ct:value');
-        label = new Chartist.Svg('text');
         if (value == '-1' || value == '0') {
+          var barHorizontalCenter, barVerticalCenter, label, value;
+          barHorizontalCenter = data.x1 + (data.element.width() * .5);
+          barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
+          label = new Chartist.Svg('text');
           label.text('n/a');
-        } else {
-          label.text(value);
+          label.addClass("ct-bar-title");
+          label.attr({
+            x: barHorizontalCenter,
+            y: barVerticalCenter,
+            'text-anchor': 'middle'
+          });
+          return data.group.append(label);
         }
-        label.addClass("ct-bar-title");
-        label.attr({
-          x: barHorizontalCenter,
-          y: barVerticalCenter,
-          'text-anchor': 'middle'
-        });
-        return data.group.append(label);
       }
     }
 
