@@ -97,7 +97,7 @@
       var docViewTop = $(window).scrollTop();
       var docViewBottom = docViewTop + $(window).height();
 
-      var heightModificator = $elemContainer.outerHeight() * 0.3;
+      var heightModificator = $elemContainer.outerHeight() * 0.4;
 
       var elemTop = $elemContainer.offset().top + heightModificator;
       var elemBottom = elemTop + $elemContainer.outerHeight() - heightModificator;
@@ -112,7 +112,7 @@
         }
         inView = true;
         wasShown = true;
-        drawFn();
+        setTimeout(drawFn, 0);
       }
     }
 
