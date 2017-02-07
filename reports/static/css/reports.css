@@ -546,6 +546,10 @@
   transform-origin: center center;
 }
 
+.distribution-chart-body .ct-bar-labels .ct-bar-label {
+  transform: rotate(-45deg);
+}
+
 .ct-chart .ct-bar-title {
   fill: #3d3d3d;
   fill-opacity: 0;
