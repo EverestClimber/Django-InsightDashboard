@@ -417,8 +417,8 @@
   function drawDistributionChart(chartId, labelsId, data) {
     var wasDrawn = false;
 
-    var tick = 20;
     var maxVal = findMaxValue();
+    var tick = calcTick();
     var maxY = findMaxY();
 
     var barChart = new Chartist.Bar(chartId, {
@@ -481,20 +481,22 @@
     function setBarTitle(data) {
       if (data.type === "bar") {
         value = data.element.attr('ct:value');
+        var barHorizontalCenter, barVerticalCenter, label, value;
+        barHorizontalCenter = data.x1 + (data.element.width() * .5);
+        barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
+        label = new Chartist.Svg('text');
         if (value == '-1' || value == '0') {
-          var barHorizontalCenter, barVerticalCenter, label, value;
-          barHorizontalCenter = data.x1 + (data.element.width() * .5);
-          barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
-          label = new Chartist.Svg('text');
           label.text('n/a');
-          label.addClass("ct-bar-title");
-          label.attr({
-            x: barHorizontalCenter,
-            y: barVerticalCenter,
-            'text-anchor': 'middle'
-          });
-          return data.group.append(label);
+        } else {
+          label.text(value);
         }
+        label.addClass("ct-bar-title");
+        label.attr({
+          x: barHorizontalCenter,
+          y: barVerticalCenter,
+          'text-anchor': 'middle'
+        });
+        return data.group.append(label);
       }
     }
 
@@ -580,6 +582,16 @@
       }
 
       return ticks;
+    }
+
+    function calcTick() {
+      tick = 20;
+      if (maxVal > 120) {
+        tick = 40;
+      } else if (maxVal < 40) {
+        tick = 10;
+      }
+      return tick;
     }
   }
 
