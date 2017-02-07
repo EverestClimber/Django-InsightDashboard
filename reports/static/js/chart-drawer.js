@@ -93,13 +93,14 @@
 
     function isScrolledIntoView(elemId)
     {
+      var $elemContainer = $(elemId).closest('.report-card');
       var docViewTop = $(window).scrollTop();
       var docViewBottom = docViewTop + $(window).height();
 
-      var heightModificator = $(elemId).outerHeight() * 0.25;
+      var heightModificator = $elemContainer.outerHeight() * 0.3;
 
-      var elemTop = $(elemId).offset().top + heightModificator;
-      var elemBottom = elemTop + $(elemId).outerHeight() - heightModificator;
+      var elemTop = $elemContainer.offset().top + heightModificator;
+      var elemBottom = elemTop + $elemContainer.outerHeight() - heightModificator;
 
       return ((elemTop <= docViewBottom) && (elemBottom >= docViewTop));
     }
