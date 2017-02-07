@@ -417,8 +417,8 @@
   function drawDistributionChart(chartId, labelsId, data) {
     var wasDrawn = false;
 
+    var tick = 20;
     var maxVal = findMaxValue();
-    console.log(maxVal);
 
     var barChart = new Chartist.Bar(chartId, {
       labels: data.labels,
@@ -429,8 +429,7 @@
       low: 0,
       axisY: {
         type: Chartist.FixedScaleAxis,
-        ticks: [0, maxVal/4, maxVal/2, maxVal*3/4, maxVal],
-        labelInterpolationFnc: setYAxisLabels
+        ticks: genTicks()
       },
       axisX: {
         showGrid: false
@@ -556,7 +555,19 @@
 
     function findMaxValue() {
       var max = Math.max.apply( Math, data.series.map(function(item) {return item.value}) );
-      return Math.round(max * 1.5);
+      max = (Math.floor(max/tick) + 1)*tick;
+
+      return max;
+    }
+
+    function genTicks() {
+      var ticksNum = Math.round(maxVal/tick);
+      var ticks = [];
+      for (var i = 0; i <=ticksNum; i+=1) {
+        ticks.push(i*tick);
+      }
+
+      return ticks;
     }
   }
 
