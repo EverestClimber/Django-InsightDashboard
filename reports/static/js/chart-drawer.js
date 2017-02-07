@@ -585,11 +585,9 @@
     }
 
     function calcTick() {
-      tick = 20;
-      if (maxVal > 120) {
-        tick = 40;
-      } else if (maxVal < 40) {
-        tick = 10;
+      tick = Math.round(maxVal/3/10)*10;
+      if (!tick) {
+        tick = 5;
       }
       return tick;
     }
