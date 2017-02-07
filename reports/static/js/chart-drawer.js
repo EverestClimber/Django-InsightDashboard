@@ -438,8 +438,7 @@
       plugins: [
         Chartist.plugins.tooltip({
           tooltipFnc: function (percentage, surveysNum) {
-            return 'Percentage: ' + percentage + '</br>' +
-                   'Surveys: ' + surveysNum;
+            return 'Surveys: ' + surveysNum;
           },
           anchorToPoint: true
         }),
