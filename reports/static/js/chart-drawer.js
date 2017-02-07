@@ -17,8 +17,8 @@
       var drawFn = drawHorizontalBarChart.bind(this, chartId, chartData);
       drawOnScroll(chartId, drawFn);
     },
-    drawSurveysAverageBarChart: function(chartContainerId, chartId, labelsId, data) {
-      var drawFn = drawSurveysAverageBarChart.bind(this, chartId, labelsId, data);
+    drawDistributionChart: function(chartContainerId, chartId, labelsId, data) {
+      var drawFn = drawDistributionChart.bind(this, chartId, labelsId, data);
       drawOnScroll(chartContainerId, drawFn);
     }
   };
@@ -414,19 +414,22 @@
     }
   }
 
-  function drawSurveysAverageBarChart(chartId, labelsId, data) {
+  function drawDistributionChart(chartId, labelsId, data) {
     var wasDrawn = false;
+
+    var maxVal = findMaxValue();
+    console.log(maxVal);
 
     var barChart = new Chartist.Bar(chartId, {
       labels: data.labels,
       series: [data.series]
     }, {
       stackBars: false,
-      high: 100,
+      high: maxVal,
       low: 0,
       axisY: {
         type: Chartist.FixedScaleAxis,
-        ticks: [0, 25, 50, 75, 100],
+        ticks: [0, maxVal/4, maxVal/2, maxVal*3/4, maxVal],
         labelInterpolationFnc: setYAxisLabels
       },
       axisX: {
@@ -482,7 +485,7 @@
     }
 
     function setYAxisLabels(value) {
-      return value % 50 == 0 ? value + '%' : '';
+      return Math.round(value);
     }
 
     function drawBarLabels() {
@@ -549,6 +552,11 @@
       }
 
       $labels.addClass('animated');
+    }
+
+    function findMaxValue() {
+      var max = Math.max.apply( Math, data.series.map(function(item) {return item.value}) );
+      return Math.round(max * 1.5);
     }
   }
 
