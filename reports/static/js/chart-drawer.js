@@ -419,13 +419,14 @@
 
     var tick = 20;
     var maxVal = findMaxValue();
+    var maxY = findMaxY();
 
     var barChart = new Chartist.Bar(chartId, {
       labels: data.labels,
       series: [data.series]
     }, {
       stackBars: false,
-      high: maxVal,
+      high: maxY,
       low: 0,
       axisY: {
         type: Chartist.FixedScaleAxis,
@@ -447,16 +448,18 @@
       ]
     })
       .on('draw',setBarTitle)
-      .on('draw', setBarWidth)
+      .on('draw', setBarStyle)
       .on('created', drawBarLabels)
       .on('created', animateAdditionalElements);
 
     $(document).on('resize', drawBarLabels);
 
-    function setBarWidth(data) {
+    function setBarStyle(data) {
       if (data.type === "bar") {
+        var opacity = data.series[data.index].value/maxVal;
+
         data.element.attr({
-          style: 'stroke-width: 22px'
+          style: 'stroke-width: 22px;' + 'stroke-opacity: ' + opacity
         });
       }
     }
@@ -481,10 +484,6 @@
         });
         return data.group.append(label);
       }
-    }
-
-    function setYAxisLabels(value) {
-      return Math.round(value);
     }
 
     function drawBarLabels() {
@@ -554,14 +553,15 @@
     }
 
     function findMaxValue() {
-      var max = Math.max.apply( Math, data.series.map(function(item) {return item.value}) );
-      max = (Math.floor(max/tick) + 1)*tick;
+      return Math.max.apply( Math, data.series.map(function(item) {return item.value}) );
+    }
 
-      return max;
+    function findMaxY() {
+      return (Math.floor(maxVal/tick) + 1)*tick;
     }
 
     function genTicks() {
-      var ticksNum = Math.round(maxVal/tick);
+      var ticksNum = Math.round(maxY/tick);
       var ticks = [];
       for (var i = 0; i <=ticksNum; i+=1) {
         ticks.push(i*tick);
