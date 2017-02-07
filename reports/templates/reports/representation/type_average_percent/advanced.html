@@ -2,6 +2,7 @@
 {% block representation %}
   {{ block.super }}
   <div class="row equal-heights">
+
     <div class="col-sm-12 col-md-6">
       <div class="report-card chart-card report-card-gray">
         <div class="report-card-head">
@@ -14,6 +15,20 @@
         </div>
       </div>
     </div>
+
+      <div class="col-sm-12 col-md-6">
+      <div class="report-card chart-card report-card-red">
+        <div class="report-card-head">
+          <div class="title">FREQUENCY DISTRIBUTION</div>
+          <div class="head-delim"></div>
+        </div>
+        <div class="report-card-body bars-body distribution-chart-body" id="distBarChartContainer{{ i }}">
+          <div id="distBarChart{{ i }}" class="ct-chart"></div>
+          <div id="distBarLabels{{ i }}" class="ct-bar-labels"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -28,8 +43,18 @@
       ChartDrawer.drawVerticalBarChart('#grayBarChartContainer{{ i }}', '#grayBarChart{{ i }}', '#grayBarLabels{{ i }}', grayBarsData);
     }
 
+    function drawDistBars() {
+      var q4BarsData = {
+        labels: {{ stat.vars.dist_labels|safe }},
+        series: {{ stat.vars.dist_series_meta|safe }}
+      };
+
+      ChartDrawer.drawDistributionChart('#distBarChartContainer{{ i }}', '#distBarChart{{ i }}', '#distBarLabels{{ i }}', q4BarsData);
+    }
+
     $(document).ready(function() {
       drawGrayBars();
+      drawDistBars();
     });
   })();
 </script>

@@ -58,8 +58,10 @@ class AbstractEvaluator(object):
 
         if main_str:
             main_float = float(main_str)
+            val_str = main_str
         elif additional_str:
             main_float = float(additional_str) * 10
+            val_str = str(int(additional_str) * 10)
         org_key = str(answer.organization_id)
         reg_id = answer.region_id
         country_id = answer.country_id
@@ -78,6 +80,7 @@ class AbstractEvaluator(object):
                 data.update({
                     'main_sum': 0.0,
                     'main_cnt': 0,
+                    'dist': {},
                     'reg_sum': {},
                     'reg_cnt': {},
                     'org_sum': {},
@@ -87,6 +90,12 @@ class AbstractEvaluator(object):
             data = cls.question_stat[k].data
             data['main_sum'] += main_float
             data['main_cnt'] += 1
+
+            if val_str in data['dist']:
+                data['dist'][val_str] += 1
+            else:
+                data['dist'][val_str] = 1
+
             if reg_key in data['reg_sum']:
                 data['reg_sum'][reg_key] += main_float
                 data['reg_cnt'][reg_key] += 1

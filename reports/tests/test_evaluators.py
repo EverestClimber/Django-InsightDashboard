@@ -441,12 +441,19 @@ class TestTypeProcessor(TestCase):
         data = self.evaluator.question_stat[k0].data
         assert data['main_cnt'] == 3
         self.assertAlmostEqual(data['main_sum'],  90.0)
+        assert data['dist'] == {
+            '20': 1,
+            '30': 1,
+            '40': 1
+        }
 
-        assert data['reg_cnt'][str(self.c1.pk)] == 2
-        self.assertAlmostEqual(data['reg_sum'][str(self.c1.pk)],  60.0)
+        reg_key = str(self.c1.pk)
+        assert data['reg_cnt'][reg_key] == 2
+        self.assertAlmostEqual(data['reg_sum'][reg_key],  60.0)
 
-        assert data['reg_cnt'][str(self.c2.pk)] == 1
-        self.assertAlmostEqual(data['reg_sum'][str(self.c2.pk)],  30.0)
+        reg_key = str(self.c2.pk)
+        assert data['reg_cnt'][reg_key] == 1
+        self.assertAlmostEqual(data['reg_sum'][reg_key],  30.0)
 
         assert data['org_cnt'][str(self.org.pk)] == 3
         self.assertAlmostEqual(data['org_sum'][str(self.org.pk)],  90.0)
@@ -454,6 +461,10 @@ class TestTypeProcessor(TestCase):
         data = self.evaluator.question_stat[k1].data
         assert data['main_cnt'] == 2
         self.assertAlmostEqual(data['main_sum'],  60.0)
+        assert data['dist'] == {
+            '20': 1,
+            '40': 1
+        }
 
         assert data['reg_cnt'][str(self.reg11.pk)] == 1
         self.assertAlmostEqual(data['reg_sum'][str(self.reg11.pk)],  40.0)

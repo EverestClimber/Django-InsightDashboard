@@ -96,6 +96,34 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             cls.organizations_cache = list(Organization.objects.all())
         return cls.organizations_cache
 
+    @staticmethod
+    def extract_dist_data(dist):
+        num = 10
+        piece = 100.0 / 10
+        dist_labels = []
+        dist_values = [0] * num
+
+        for i in range(num):
+            if i:
+                i_min = int(i * piece + 1)
+            else:
+                i_min = 0
+            i_max = int((i + 1) * piece)
+            dist_labels.append('{}-{}%'.format(i_min, i_max))
+
+        total = sum(dist.values())
+        for val_str, n in dist.items():
+            val = int(float(val_str))
+            position = int(val/piece)
+            if val and position * int(piece) == val:
+                position -= 1
+            if position > num - 1:
+                position = num - 1
+            dist_values[position] += n
+
+        dist_series_meta = [{'value': x, 'meta': int(round(100.0 * x / total))} for x in dist_values]
+        return dist_labels, dist_series_meta
+
     def update_type_average_percent(self):
         regions = self.get_regions(self.country_id)
         self.vars['bar_labels'] = []
@@ -131,11 +159,15 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             self.vars['org_labels'].append(org.name_plural_short.upper())
             self.vars['org_series_meta'].append({'meta': org_cnt, 'value': val})
 
+        dist_labels, dist_series_meta = self.extract_dist_data(data['dist'])
+
         self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
         pers = int(round(self.data['main_sum'] / self.data['main_cnt']))
         self.vars['pie_data'] = [pers, 100 - pers]
         self.vars['label1'] = self.representation.label1
         self.vars['main_cnt'] = self.data['main_cnt']
+        self.vars['dist_labels'] = dist_labels
+        self.vars['dist_series_meta'] = dist_series_meta
 
     def update_type_yes_no(self):
         data = self.data

@@ -65,6 +65,128 @@ class TestQuestionStat(TestCase):
         QuestionStat.clear()
         OptionDict.clear()
 
+    def test_extract_data(self):
+        dist = {'20': 1, '30': 1, '40': 1}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 33},
+            {'value': 1, 'meta': 33},
+            {'value': 1, 'meta': 33},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+        ]
+
+        dist = {'20': 1, '30': 1, '40': 2}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 25},
+            {'value': 1, 'meta': 25},
+            {'value': 2, 'meta': 50},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+        ]
+
+        dist = {'20': 1, '25': 1, '30': 1, '35': 1, '40': 1}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+            {'value': 2, 'meta': 40},
+            {'value': 2, 'meta': 40},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+        ]
+
+        dist = {'20': 1, '25': 1, '30': 1, '35': 1, '100': 1}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+            {'value': 2, 'meta': 40},
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+        ]
+
+        dist = {'20': 1, '25': 1, '30': 1, '35': 1, '95': 1}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+            {'value': 2, 'meta': 40},
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+        ]
+
+        dist = {'5': 1, '25': 1, '30': 1, '35': 1, '95': 1}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 2, 'meta': 40},
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+        ]
+
+        dist = {'0': 1, '25': 1, '30': 1, '35': 1, '95': 1}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 2, 'meta': 40},
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+        ]
+
+        dist = {'5.5': 1, '25': 1, '30': 1, '35': 1, '95': 1}
+        _, series_meta = QuestionStat.extract_dist_data(dist)
+        assert series_meta == [
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 2, 'meta': 40},
+            {'value': 1, 'meta': 20},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 20},
+        ]
+
+
     def test_update_type_average_percent(self):
         data = {
             'main_sum': 90.0,
@@ -75,6 +197,8 @@ class TestQuestionStat(TestCase):
 
             'org_sum': {'1': 90.0},
             'org_cnt': {'1': 3},
+
+            'dist': {'20': 1, '30': 1, '40': 1}
         }
         qs0 = mixer.blend(QuestionStat,
                           representation=self.r,
@@ -82,6 +206,23 @@ class TestQuestionStat(TestCase):
                           country=None,
                           type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs0.update_vars()
+        dist_labels = ['0-10%', '11-20%', '21-30%', '31-40%', '41-50%', '51-60%', '61-70%', '71-80%', '81-90%', '91-100%']
+        dist_series_meta = [
+            {'value': 0, 'meta': 0},
+            {'value': 1, 'meta': 33},
+            {'value': 1, 'meta': 33},
+            {'value': 1, 'meta': 33},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+            {'value': 0, 'meta': 0},
+        ]
+
+        assert qs0.vars['dist_labels'] == dist_labels
+        assert qs0.vars['dist_series_meta'] == dist_series_meta
+
         assert qs0.vars == {
             'available': True,
             'region_name': 'Europe',
@@ -95,6 +236,8 @@ class TestQuestionStat(TestCase):
             'bar_series_meta': [{'meta': 2, 'value': 30}, {'meta': 1, 'value': 30}, {'meta': 0, 'value': -1}],
             'org_labels': ['ORG1', 'ORG2', 'ORG3'],
             'org_series_meta': [{'meta': 3, 'value': 30}, {'meta': 0, 'value': -1}, {'meta': 0, 'value': -1}],
+            'dist_labels': dist_labels,
+            'dist_series_meta': dist_series_meta,
             'main_cnt': 3
         }
 
@@ -117,6 +260,8 @@ class TestQuestionStat(TestCase):
             'bar_series_meta': [{'meta': 2, 'value': 30}, {'meta': 1, 'value': 30}, {'meta': 0, 'value': -1}],
             'org_labels': ['ORG1', 'ORG2', 'ORG3'],
             'org_series_meta': [{'meta': 3, 'value': 30}, {'meta': 0, 'value': -1}, {'meta': 0, 'value': -1}],
+            'dist_labels': dist_labels,
+            'dist_series_meta': dist_series_meta,
             'main_cnt': 3
         }
 
