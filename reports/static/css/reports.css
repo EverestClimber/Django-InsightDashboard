@@ -56,8 +56,11 @@
 
 
 @media (max-width: 992px) {
-  .survey-cards > .row > *, .question-container > .row > *  {
-    margin-bottom: 20px;
+  .survey-cards > .row > *, .question-container > .row > *, .advanced-addon > .row > *  {
+    margin-bottom: 30px;
+  }
+  .question-container > .row > *:last-child, .advanced-addon > .row > *:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -153,6 +156,10 @@
 }
 
 .question-container {
+  margin-top: 90px;
+}
+
+.question-container.question-1 {
   margin-top: 70px;
 }
 
