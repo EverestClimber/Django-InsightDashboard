@@ -576,7 +576,7 @@
   .distribution-chart-body .ct-bar-title {
     font-size: 8px;
   }
-  .distribution-chart-body .ct-bar-title:not(.not-enough-data) {
+  .distribution-chart-body .ct-bar-title {
     display: none;
   }
 }

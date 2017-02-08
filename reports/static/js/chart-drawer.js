@@ -501,9 +501,6 @@
         } else {
           label.text(meta + '%');
         }
-        if (value == '-1' || value == '0') {
-          label.addClass("not-enough-data");
-        }
         label.addClass("ct-bar-title");
         label.attr({
           x: barHorizontalCenter,
