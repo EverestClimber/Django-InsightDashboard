@@ -459,8 +459,17 @@
 
     function setBarWidth(data) {
       if (data.type === "bar") {
+        var windowWidth = $(window).width();
+        var strokeWidth = 22;
+
+        if (windowWidth < 450 && windowWidth >= 375) {
+          strokeWidth = 15;
+        } else if (windowWidth < 375) {
+          strokeWidth = 10
+        }
+
         data.element.attr({
-          style: 'stroke-width: 22px;'
+          style: 'stroke-width: ' + strokeWidth + 'px;'
         });
       }
     }
@@ -492,6 +501,9 @@
           label.text('n/a');
         } else {
           label.text(meta + '%');
+        }
+        if (value == '-1' || value == '0') {
+          label.addClass("not-enough-data");
         }
         label.addClass("ct-bar-title");
         label.attr({

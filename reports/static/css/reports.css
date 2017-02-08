@@ -562,6 +562,18 @@
   transform: rotate(-45deg);
 }
 
+@media (max-width: 450px) {
+  .distribution-chart-body .ct-bar-labels .ct-bar-label {
+    transform: rotate(-90deg);
+  }
+  .distribution-chart-body .ct-bar-title {
+    font-size: 8px;
+  }
+  .distribution-chart-body .ct-bar-title:not(.not-enough-data) {
+    display: none;
+  }
+}
+
 .distribution-chart-body {
   min-height: 219px;
 }
