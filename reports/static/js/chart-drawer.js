@@ -496,9 +496,7 @@
         barHorizontalCenter = data.x1 + (data.element.width() * .5);
         barVerticalCenter = data.y1 + (data.element.height() * -1) - 10;
         label = new Chartist.Svg('text');
-        if (value == '-1') {
-          label.text('n/a');
-        } else {
+        if (value != '-1' && value != '0') {
           label.text(meta + '%');
         }
         label.addClass("ct-bar-title");
