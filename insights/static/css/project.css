@@ -264,6 +264,12 @@ div.bootstrap-tagsinput input{
   }
 }
 
+@media (max-width: 767px) {
+  .dropdown-submenu {
+    overflow: hidden;
+  }
+}
+
 @media (max-width: 350px) {
   .nav.navbar-top-links li.dropdown {
     display: block;
