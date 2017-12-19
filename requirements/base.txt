@@ -47,3 +47,4 @@ csscompressor
 django_compressor
 querystring_parser
 django-jsonfield
+django-flat-responsive

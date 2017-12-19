@@ -33,6 +33,7 @@ DJANGO_APPS = (
     # 'django.contrib.humanize',
 
     # Admin
+    'flat_responsive',
     'django.contrib.admin',
 )
 THIRD_PARTY_APPS = (
