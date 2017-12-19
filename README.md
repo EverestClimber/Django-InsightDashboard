@@ -14,7 +14,7 @@ CNS Insights Questions
 * `pip install -r requirements/development.txt`
 * `./manage.py migrate`
 * `./manage.py collectstatic`
-* `./manage.py loaddata {path_to_the_dump_file}` - if you hae it
+* `./manage.py loaddata {path_to_the_dump_file}` - if you have it
 * `./manage.py createsuperuser` - if you need to create new superuser
 * `./manage.py runserver`
 
