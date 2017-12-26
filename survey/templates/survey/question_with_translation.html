@@ -1,0 +1,8 @@
+{% load get_translation from survey_tags %}
+
+<div class="question">{{ question.text }}</div>
+<!-- !!!!!!!!!!!!!!!!!!!!! -->
+{% get_translation question lang as t %}
+{% if t %}
+  <div class="question">{{ t }}</div>
+{% endif %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
@@ -29,6 +29,7 @@ class InstructionsView(LoginRequiredMixin, TemplateView):
 
 
 @login_required
+@permission_required('survey.can_add_answer', raise_exception=True)
 def start_view(request):
     if request.user.country is None:
         raise ValueError('User country is not set')
@@ -59,6 +60,7 @@ def start_view(request):
 
 
 @login_required
+@permission_required('survey.can_add_answer', raise_exception=True)
 def pass_view(request, id):
     answer = Answer.objects.select_related('survey').get(pk=id)
     if answer.body:

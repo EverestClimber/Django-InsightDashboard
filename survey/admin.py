@@ -1,10 +1,12 @@
 from querystring_parser import parser as queryparser
 
 from django.contrib import admin
+from django.utils.translation import gettext as _
 from django import forms
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe, mark_for_escaping
-from .models import Region, Organization, Question, Option, Survey, SurveyItem, Answer, HCPCategory
+from .models import (Region, Organization, Question, QuestionTranslation,
+                     Option, Survey, SurveyItem, Answer, HCPCategory)
 
 
 @admin.register(Region)
@@ -29,13 +31,34 @@ class QuestionModelForm(forms.ModelForm):
         }
 
 
+class QuestionTranslationInlineFormset(forms.models.BaseInlineFormSet):
+    def clean(self):
+        print('clean')
+        has_lang = {}
+        for form in self.forms:
+            try:
+                if form.cleaned_data and not form.cleaned_data['DELETE']:
+                    print(form.cleaned_data)
+                    lang = form.cleaned_data['lang'].pk
+                    if lang in has_lang:
+                        raise forms.ValidationError(_('Only one translation per language is allowed'))
+                    has_lang[lang] = True
+            except AttributeError:
+                pass
+
+
+class QuestionTranslationInline(admin.StackedInline):
+    formset = QuestionTranslationInlineFormset
+    model = QuestionTranslation
+    extra = 0
+
+
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
+    inlines = [QuestionTranslationInline]
     list_display = ('id', 'type', 'field', 'text', 'created_at', 'depends_of', 'dependency_type')
     search_fields = ['text']
     form = QuestionModelForm
-
-
 
 
 @admin.register(Option)

@@ -22,12 +22,29 @@ class Country(models.Model):
         return self.name
 
 
+class Language(models.Model):
+    name = models.CharField(_('Name'), max_length=100)
+    code = models.CharField(_('Code'), max_length=2)
+
+    def __str__(self):
+        return self.name
+
+
+class TherapeuticArea(models.Model):
+    name = models.CharField(_('Name'), max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class User(AbstractUser):
 
     # First Name and Last Name do not cover name patterns
     # around the globe.
     name = models.CharField(_('Name of User'), blank=True, max_length=255)
     country = models.ForeignKey(Country, null=True)
+    secondary_language = models.ForeignKey(Language, null=True, blank=True)
+    therapeutic_areas = models.ManyToManyField(TherapeuticArea, related_name="users", blank=True)
 
     def __str__(self):
         return self.username

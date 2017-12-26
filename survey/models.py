@@ -1,5 +1,5 @@
 from django.db import models
-from insights.users.models import User, Country
+from insights.users.models import User, Country, Language, TherapeuticArea
 
 
 class Region(models.Model):
@@ -102,6 +102,15 @@ class Question(models.Model):
         return dependend.first()
 
 
+class QuestionTranslation(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="translations")
+    lang = models.ForeignKey(Language, on_delete=models.CASCADE)
+    text = models.CharField('Question text', max_length=1000)
+
+    def __str__(self):
+        return "[{0.lang.name}] {0.text}".format(self)
+
+
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     value = models.CharField('Option value', max_length=200)
@@ -117,6 +126,7 @@ class Option(models.Model):
 
 class Survey(models.Model):
     name = models.CharField('Name of survey', max_length=100)
+    therapeutic_area = models.ForeignKey(TherapeuticArea, on_delete=models.CASCADE, null=True)
     active = models.BooleanField('Is survey active or not', default=False, db_index=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
 

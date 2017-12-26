@@ -5,7 +5,8 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm, ReadOnlyPasswordHashField
-from .models import User, Country
+from django.utils.translation import gettext as _
+from .models import User, Country, Language, TherapeuticArea
 
 
 class MyUserChangeForm(UserChangeForm):
@@ -38,14 +39,35 @@ class MyUserCreationForm(UserCreationForm):
 class MyUserAdmin(AuthUserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
+    # fieldsets = (
+    #         ('User Profile', {'fields': ('name', 'country')}),
+    # ) + AuthUserAdmin.fieldsets
     fieldsets = (
-            ('User Profile', {'fields': ('name', 'country')}),
-    ) + AuthUserAdmin.fieldsets
-    list_display = ('username', 'name', 'email', 'country', 'is_staff', 'is_superuser')
+        ('User Profile', {'fields': ('name', 'country', 'secondary_language', 'therapeutic_areas')}),
+        (None, {'fields': ('username', 'password')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groups')}),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+    list_display = ('username', 'name', 'email', 'country',
+                    'get_groups', 'is_staff', 'is_superuser')
     search_fields = ['name', 'email']
+
+    def get_groups(self, user):
+        return ", ".join(g.name for g in user.groups.all())
+    get_groups.short_description = _('Groups')
 
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'use_in_reports', 'ordering', 'created_at')
     prepopulated_fields = {'slug': ('name',), }
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code')
+
+@admin.register(TherapeuticArea)
+class TherapeuticAreaAdmin(admin.ModelAdmin):
+    list_display = ('name',)

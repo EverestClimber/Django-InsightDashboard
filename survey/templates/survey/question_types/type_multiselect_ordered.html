@@ -1,4 +1,4 @@
-<div class="question">{{ item.question.text }}</div>
+{% include "survey/question_with_translation.html" with question=item.question lang=request.user.secondary_language %}
 
 <div class="row fancy-ordered-controls">
     <div class="col-xs-6">

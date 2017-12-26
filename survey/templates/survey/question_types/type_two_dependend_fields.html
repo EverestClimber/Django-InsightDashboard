@@ -1,4 +1,4 @@
-<div class="question">{{ item.question.text }}</div>
+{% include "survey/question_with_translation.html" with question=item.question lang=request.user.secondary_language %}
 
 <div class="form-group text-center">
     <div class="centered">
@@ -32,7 +32,7 @@
 {% if item.question.question_set %}
     {% with dependend=item.question.get_subquestion %}
         <div class="additional" id="additional-{{ item.question_id }}">
-            <div class="question">{{ dependend.text }}</div>
+            {% include "survey/question_with_translation.html" with question=dependend lang=request.user.secondary_language %}
             <div class="form-group text-center">
                 <input
                         id="type_two_dependend_fields-other-{{ item.question_id }}"
