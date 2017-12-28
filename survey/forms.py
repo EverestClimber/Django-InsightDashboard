@@ -26,7 +26,7 @@ class StartForm(forms.Form):
         else:
             self.fields['region'] = forms.IntegerField(widget=forms.HiddenInput(), initial=None, required=False)
 
-        surveys = Survey.objects.filter(active=True)
+        surveys = Survey.objects.get_active()
         if survey_id is not None:
             surveys = surveys.filter(pk=survey_id)
         survey_choices = [(survey.pk, survey.name) for survey in surveys]
@@ -46,4 +46,10 @@ class StartForm(forms.Form):
             self.fields["organization"] = forms.ChoiceField(choices=organization_choices, widget=FancyRadioSelect, label='Organization')
         else:
             raise ValueError('There is no organizations yet, please add one')
+
+    def clean_survey(self):
+        survey_id = self.cleaned_data['survey']
+        if not Survey.objects.get(pk=survey_id).is_active():
+            raise ValidationError('Cannot start inactive survey')
+        return survey_id
 
