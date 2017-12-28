@@ -1,15 +1,42 @@
 {% extends "base.html" %}
 
-
+{% load i18n %}
+{% load get_countries from user_tags %}
 
 {% block content %}
 <div class="report">
   <div id="chartjs-tooltip">
     <table></table>
   </div>
-  <h1 class="survey-overview-title">
-    SURVEY OVERVIEW - {% if country %}{{ country.name | upper }}{% else %}EUROPE{% endif %}
-  </h1>
+  <div class="row report-survey-info-row">
+    <div class="col-md-5 report-survey-name-col">
+      <div class="report-survey-name">{{ survey.name }}</div>
+      <div class="report-survey-dates">
+        {{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}
+      </div>
+    </div>
+    <div class="col-md-5 report-survey-info-col">
+      <div class="report-survey-info">
+        <div class="report-survey-info-label">{% trans 'Therapeutic Area' %}</div>
+        <div class="report-survey-info-value">{{ survey.therapeutic_area }}</div>
+      </div>
+    </div>
+    <div class="col-md-2 report-survey-info-filter-col">
+      {# <label for="report-filter">{% trans 'Filter:' %}</label> #}
+      <select id="report-filter" class="report-filter selectpicker" data-width="100%" onchange="">
+        <option value="all" {% if not country %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.pk 'all' %}">All</option>
+        {% get_countries as countries %}
+        {% for c in countries %}
+          <option value="{{ c.pk }}" {% if c.pk == country.pk %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.pk c.pk %}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+      <script>
+        $('.report-filter').change(function () {
+          window.location.href = $(this).find(':selected').data('url');
+        });
+      </script>
+    </div>
+  </div>
   <div class="survey-cards">
     <div class="row equal-heights">
       <div class="col-md-3 col-sm-6">
@@ -24,7 +51,7 @@
           <div class="report-card-body">
             <div class="report-card-text-lg">
               {% if survey_stat.last %}
-                <div class="report-card-text-lesser left-1">{{ survey_stat.last|time:"H:i" }} CET</div>
+                <div class="report-card-text-lesser left-1">{{ survey_stat.last|time:"H:i T" }}</div>
                 {{ survey_stat.last|date:"d b o" | upper}}
               {% endif %}
 

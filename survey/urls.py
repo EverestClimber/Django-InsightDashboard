@@ -5,8 +5,10 @@ from survey import views
 
 urlpatterns = [
     url(r'^instructions/$', views.InstructionsView.as_view(), name='instructions'),
+    url(r'^list/$', views.SurveyListView.as_view(), name='list'),
     url(r'^definition/$', views.definition_view, name='definition'),
-    url(r'^start/$', views.start_view, name='start'),
+    url(r'^start/?$', views.start_view, name='start'),
+    url(r'^start/(?P<survey_id>\d+)/?$', views.start_view, name='start'),
     url(r'^pass/(?P<id>\d+)$', views.pass_view, name='pass'),
     url(r'^thanks/$', TemplateView.as_view(template_name='survey/thanks.html'), name='thanks'),
 ]

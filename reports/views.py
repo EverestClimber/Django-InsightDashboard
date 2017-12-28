@@ -18,12 +18,12 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
 
-        survey = Survey.objects.filter(active=True).first()
+        survey = Survey.objects.filter(pk=kwargs['survey_id']).first()
 
         if not survey:
             raise ValueError('There is no active surveys')
 
-        if kwargs['country'] == 'europe':
+        if kwargs['country'] in ('europe', 'all'):
             country_id = None
             country = None
         else:
@@ -51,7 +51,9 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         for qs in QuestionStat.objects.filter(survey=survey, country_id=country_id):
             kwargs['question_stat'].append(qs)
 
-        return super(self.__class__, self).get_context_data(**kwargs)
+        ctx = super(self.__class__, self).get_context_data(**kwargs)
+        ctx['survey'] = survey
+        return ctx
 
 
 @login_required()

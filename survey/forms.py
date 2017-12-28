@@ -16,6 +16,7 @@ class StartForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         region_choices = kwargs.pop('region_choices')
+        survey_id = kwargs.pop('survey_id')
 
         super(StartForm, self).__init__(*args, **kwargs)
 
@@ -25,7 +26,9 @@ class StartForm(forms.Form):
         else:
             self.fields['region'] = forms.IntegerField(widget=forms.HiddenInput(), initial=None, required=False)
 
-        surveys = Survey.objects.filter(active=True).all()
+        surveys = Survey.objects.filter(active=True)
+        if survey_id is not None:
+            surveys = surveys.filter(pk=survey_id)
         survey_choices = [(survey.pk, survey.name) for survey in surveys]
         survey_choices_len = len(survey_choices)
         if survey_choices_len > 1:

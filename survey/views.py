@@ -3,9 +3,9 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 
-from survey.models import Answer
+from survey.models import Answer, Survey
 from survey.forms import StartForm
 
 
@@ -27,10 +27,21 @@ class InstructionsView(LoginRequiredMixin, TemplateView):
         response.set_cookie(self.cookie_name, True, 365*24*60*60)
         return response
 
+class SurveyListView(LoginRequiredMixin, ListView):
+    model = Survey
+    template_name = 'survey/list.html'
+
+    def get_queryset(self):
+        qs = super(SurveyListView, self).get_queryset()
+        return (qs.get_active, qs.get_inactive)
+
 
 @login_required
 @permission_required('survey.can_add_answer', raise_exception=True)
-def start_view(request):
+def start_view(request, survey_id=None):
+    survey = None
+    if survey_id is not None:
+        survey = get_object_or_404(Survey, pk=survey_id)
     if request.user.country is None:
         raise ValueError('User country is not set')
 
@@ -40,7 +51,7 @@ def start_view(request):
     else:
         region_choices = []
 
-    form = StartForm(request.POST or None, region_choices=region_choices)
+    form = StartForm(request.POST or None, region_choices=region_choices, survey_id=survey_id)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -56,7 +67,7 @@ def start_view(request):
             return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
 
 
-    return render(request, 'survey/start.html', {'form': form})
+    return render(request, 'survey/start.html', {'form': form, 'survey': survey})
 
 
 @login_required

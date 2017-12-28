@@ -3,7 +3,10 @@
 
 {% block content %}
 
-    <form action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
+    <form class="start-form" action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
+        {% if survey %}
+          <h2 class="start-survey-title">{{ survey.name }}</h2>
+        {% endif %}
         <p>
             <label>Country: {{ request.user.country }}</label>
         </p>

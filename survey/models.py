@@ -1,5 +1,7 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from insights.users.models import User, Country, Language, TherapeuticArea
+from django.utils import timezone
 
 
 class Region(models.Model):
@@ -124,11 +126,36 @@ class Option(models.Model):
         return self.value
 
 
+class SurveyQuerySet(models.QuerySet):
+    def get_active(self):
+        now = timezone.now()
+        return self.filter(active=True, start__lte=now, end__gte=now)
+
+    def get_inactive(self):
+        now = timezone.now()
+        q = models.Q(active=False) | models.Q(start__gt=now) | models.Q(end__lt=now)
+        return self.filter(q)
+
+
 class Survey(models.Model):
+    objects = SurveyQuerySet.as_manager()
+
     name = models.CharField('Name of survey', max_length=100)
     therapeutic_area = models.ForeignKey(TherapeuticArea, on_delete=models.CASCADE, null=True)
     active = models.BooleanField('Is survey active or not', default=False, db_index=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
+    start = models.DateTimeField(_('Starts at'))
+    end = models.DateTimeField(_('Ends at'))
+
+    def get_last_answer(self):
+        try:
+            return self.answer_set.order_by('-created_at')[0]
+        except IndexError:
+            return None
+
+    def is_active(self):
+        now = timezone.now()
+        return self.active and self.start <= now <= self.end
 
     def __str__(self):
         return self.name

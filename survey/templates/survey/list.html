@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load svg %}
+
+{% block css %}
+  {{ block.super }}
+  <style>
+    .wrapper.wrapper-content {
+      padding: 40px 0px !important;
+    }
+
+    .container {
+      max-width: 1200px;
+    }
+  </style>
+{% endblock css %}
+
+{% block content %}
+  {% trans 'Active Surveys:' as active_label %}
+  {% trans 'Past Surveys:' as past_label %}
+  {% for sl in object_list %}
+    <div class="row">
+      <div class="col-xs-12 survey-list">
+        <p class="row"><label>{% cycle active_label past_label %}</label></p>
+        {% for survey in sl %}
+          <div class="row survey-row {% if survey.is_active %}survey-row-active{% endif %}">
+            <div class="col-sm-7 col-md-3 col-lg-4 survey-title-column">
+              <i class="svg-icon">
+                {% if survey.is_active %}
+                  {% svg 'survey-active' %}
+                {% else %}
+                  {% svg 'survey-inactive' %}
+                {% endif %}
+              </i>
+              <div class="survey-title">{{ survey.name }}</div>
+              <div class="survey-dates">{{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}</div>
+            </div>
+            <div class="col-md-5 col-lg-4 hidden-xs hidden-sm survey-info-column">
+              <span class="survey-info">
+                <div class="survey-info-label">{% trans 'Therapeutic area' %}</div>
+                <div class="survey-info-value">{{ survey.therapeutic_area.name }}</div>
+              </span>
+              <span class="survey-info">
+                <div class="survey-info-label">{% trans 'Responses' %}</div>
+                <div class="survey-info-value">{{ survey.answer_set.count }}</div>
+              </span>
+              {% with survey.get_last_answer as last_answer %}
+                {% if last_answer %}
+                  <span class="survey-info">
+                    <div class="survey-info-label">{% trans 'Last Entry' %}</div>
+                    <div class="survey-info-value">{{ last_answer.created_at|date:'d M H:m T' }}</div>
+                  </span>
+                {% endif %}
+              {% endwith %}
+            </div>
+            <div class="col-sm-5 col-md-4 survey-actions-column">
+              {% if survey.is_active %}
+                <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Survey' %}</a>
+              {% endif %}
+              <a href="{% url 'reports:advanced' survey.pk 'all' %}" class="btn btn-default">{% trans 'View Report' %}</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+{% endblock content %}
