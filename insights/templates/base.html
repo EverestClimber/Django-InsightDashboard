@@ -114,12 +114,14 @@
                                         {% trans "Instructions" %}
                                     </a>
                                 </li>
-                                <li class="">
-                                    <a href="{% url 'admin:app_list' 'users' %}">
-                                        <i class="svg-icon">{% svg 'menu-users' %}</i>
-                                        {% trans "Users" %}
-                                    </a>
-                                </li>
+                                {% if perms.users.add_user %}
+                                    <li class="">
+                                        <a href="{% url 'admin:app_list' 'users' %}">
+                                            <i class="svg-icon">{% svg 'menu-users' %}</i>
+                                            {% trans "Users" %}
+                                        </a>
+                                    </li>
+                                {% endif %}
 
 {% comment %}
                                 {% load get_countries from user_tags %}{% get_countries as countries %}

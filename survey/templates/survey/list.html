@@ -55,7 +55,9 @@
             </div>
             <div class="col-sm-5 col-md-4 survey-actions-column">
               {% if survey.is_active %}
-                <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Survey' %}</a>
+                {% if request.user.is_superuser or survey.therapeutic_area in request.user.therapeutic_areas.all %}
+                  <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Survey' %}</a>
+                {% endif %}
               {% endif %}
               <a href="{% url 'reports:advanced' survey.pk 'all' %}" class="btn btn-default">{% trans 'View Report' %}</a>
             </div>
