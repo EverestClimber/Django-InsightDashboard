@@ -35,6 +35,11 @@ class SurveyListView(LoginRequiredMixin, ListView):
         qs = super(SurveyListView, self).get_queryset()
         return (qs.get_active, qs.get_inactive)
 
+    def get(self, *args, **kwargs):
+        if not self.request.COOKIES.get(InstructionsView.cookie_name):
+            return HttpResponseRedirect(reverse('survey:instructions'))
+        return super(SurveyListView, self).get(*args, **kwargs)
+
 
 @login_required
 @permission_required('survey.can_add_answer', raise_exception=True)
