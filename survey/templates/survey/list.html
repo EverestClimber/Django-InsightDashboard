@@ -37,8 +37,8 @@
             </div>
             <div class="col-md-5 col-lg-4 hidden-xs hidden-sm survey-info-column">
               <span class="survey-info">
-                <div class="survey-info-label">{% trans 'Therapeutic area' %}</div>
-                <div class="survey-info-value">{{ survey.therapeutic_area.name }}</div>
+                <div class="survey-info-label">{% trans 'Therapeutic Area' %}</div>
+                <div class="survey-info-value">{{ survey.therapeutic_area.name|default:'-' }}</div>
               </span>
               <span class="survey-info">
                 <div class="survey-info-label">{% trans 'Responses' %}</div>

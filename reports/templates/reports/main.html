@@ -18,7 +18,7 @@
     <div class="col-md-5 report-survey-info-col">
       <div class="report-survey-info">
         <div class="report-survey-info-label">{% trans 'Therapeutic Area' %}</div>
-        <div class="report-survey-info-value">{{ survey.therapeutic_area }}</div>
+        <div class="report-survey-info-value">{{ survey.therapeutic_area|default:'-' }}</div>
       </div>
     </div>
     <div class="col-md-2 report-survey-info-filter-col">
