@@ -54,12 +54,12 @@
               {% endwith %}
             </div>
             <div class="col-sm-5 col-md-4 survey-actions-column">
-              {% if survey.is_active %}
-                {% if request.user.is_superuser or survey.therapeutic_area in request.user.therapeutic_areas.all %}
+              {% if survey.is_active and request.user.country in survey.countries.all %}
+                {% if request.user.is_superuser or survey.therapeutic_area in request.user.therapeutic_areas.all and perms.survey.add_answer %}
                   <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Survey' %}</a>
                 {% endif %}
               {% endif %}
-              <a href="{% url 'reports:advanced' survey.pk 'all' %}" class="btn btn-default">{% trans 'View Report' %}</a>
+              <a href="{% url 'reports:advanced' survey.pk request.user.country_id %}" class="btn btn-default">{% trans 'View Report' %}</a>
             </div>
           </div>
         {% endfor %}

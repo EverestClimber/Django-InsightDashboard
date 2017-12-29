@@ -23,6 +23,7 @@ urlpatterns = [
 
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
+    url(r'^nested_admin/', include('nested_admin.urls')),
 
     # User management
     url(r'^users/', include('insights.users.urls', namespace='users')),

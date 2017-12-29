@@ -43,6 +43,7 @@ THIRD_PARTY_APPS = (
     'allauth.socialaccount',  # registration
     "compressor",
     'svg',
+    'nested_admin',
 )
 
 # Apps specific for this project go here.
@@ -250,7 +251,7 @@ SOCIALACCOUNT_ADAPTER = 'insights.users.adapters.SocialAccountAdapter'
 ACCOUNT_LOGOUT_ON_GET = True
 
 ACCOUNT_SESSION_REMEMBER = True
-ACCOUNT_SESSION_COOKIE_AGE = 604800
+ACCOUNT_SESSION_COOKIE_AGE = 14*24*3600 # 2 weeks
 
 # Custom user app defaults
 # Select the correct user model

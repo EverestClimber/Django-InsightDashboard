@@ -42,13 +42,16 @@ class SurveyListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-@permission_required('survey.can_add_answer', raise_exception=True)
-def start_view(request, survey_id=None):
+@permission_required('survey.add_answer', raise_exception=True)
+def start_view(request, survey_id):
     survey = None
-    if survey_id is not None:
-        survey = get_object_or_404(Survey, pk=survey_id)
+    survey = get_object_or_404(Survey, pk=survey_id)
+    if not survey.is_active():
+        raise ValueError("Cannot start inactive survey")
     if request.user.country is None:
         raise ValueError('User country is not set')
+    if not survey.countries.filter(pk=request.user.country_id).exists():
+        raise ValueError('The survey is not available in {}'.format(request.user.country.name))
 
     regions = request.user.country.region_set.all()
     if len(regions):
@@ -76,19 +79,19 @@ def start_view(request, survey_id=None):
 
 
 @login_required
-@permission_required('survey.can_add_answer', raise_exception=True)
+@permission_required('survey.add_answer', raise_exception=True)
 def pass_view(request, id):
     answer = Answer.objects.select_related('survey').get(pk=id)
     if answer.body:
-        return HttpResponseRedirect(reverse('survey:start'))
+        return HttpResponseRedirect(reverse('survey:list'))
 
     if answer.user_id != request.user.pk:
-        return HttpResponseRedirect(reverse('survey:start'))
+        return HttpResponseRedirect(reverse('survey:list'))
 
     if request.method == 'POST':
         answer.body = request.POST.urlencode()
         answer.save()
-        return HttpResponseRedirect(reverse('survey:thanks'))
+        return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': answer.survey.pk}))
 
     items = answer.survey.survey_items.all().prefetch_related('question__option_set')
     return render(request, 'survey/pass.html', {'items': items})

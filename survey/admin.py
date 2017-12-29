@@ -33,7 +33,6 @@ class QuestionModelForm(forms.ModelForm):
 
 class QuestionTranslationInlineFormset(forms.models.BaseInlineFormSet):
     def clean(self):
-        print('clean')
         has_lang = {}
         for form in self.forms:
             try:
@@ -67,10 +66,17 @@ class OptionAdmin(admin.ModelAdmin):
     search_fields = ['question']
 
 
+class SurveyForm(forms.ModelForm):
+    def clean_organizations(self):
+        Survey.validate_organizations(self.cleaned_data['organizations'])
+        return self.cleaned_data['organizations']
+
+
 @admin.register(Survey)
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ('name', 'active', 'created_at')
     search_fields = ['name']
+    form = SurveyForm
 
 
 @admin.register(SurveyItem)

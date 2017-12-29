@@ -1,4 +1,5 @@
 from django import forms
+from django.shortcuts import get_object_or_404
 from .models import Answer, Survey, Organization
 from .widgets import FancyRadioSelect
 
@@ -26,23 +27,12 @@ class StartForm(forms.Form):
         else:
             self.fields['region'] = forms.IntegerField(widget=forms.HiddenInput(), initial=None, required=False)
 
-        surveys = Survey.objects.get_active()
-        if survey_id is not None:
-            surveys = surveys.filter(pk=survey_id)
-        survey_choices = [(survey.pk, survey.name) for survey in surveys]
-        survey_choices_len = len(survey_choices)
-        if survey_choices_len > 1:
-            # survey_choices = [('', '---')] + survey_choices
-            self.fields["survey"] = forms.ChoiceField(choices=survey_choices, widget=FancyRadioSelect)
-        elif survey_choices_len == 1:
-            self.fields['survey'] = forms.IntegerField(initial=survey_choices[0][0], widget=forms.HiddenInput())
-        else:
-            raise ValueError('There is no surveys yet, please add one')
+        survey = get_object_or_404(Survey, pk=survey_id)
+        self.fields['survey'] = forms.IntegerField(initial=survey.pk, widget=forms.HiddenInput())
 
-        organizations = Organization.objects.all()
+        organizations = survey.organizations.all()
         organization_choices = [(organization.pk, organization.name) for organization in organizations]
         if len(organization_choices):
-            # organization_choices = [('', '---')] + organization_choices
             self.fields["organization"] = forms.ChoiceField(choices=organization_choices, widget=FancyRadioSelect, label='Organization')
         else:
             raise ValueError('There is no organizations yet, please add one')
@@ -50,6 +40,6 @@ class StartForm(forms.Form):
     def clean_survey(self):
         survey_id = self.cleaned_data['survey']
         if not Survey.objects.get(pk=survey_id).is_active():
-            raise ValidationError('Cannot start inactive survey')
+            raise forms.ValidationError('Cannot start inactive survey')
         return survey_id
 

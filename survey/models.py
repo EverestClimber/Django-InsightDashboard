@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from insights.users.models import User, Country, Language, TherapeuticArea
 from django.utils import timezone
@@ -138,10 +139,14 @@ class SurveyQuerySet(models.QuerySet):
 
 
 class Survey(models.Model):
+    MAX_ORGANIZATIONS = 3
+
     objects = SurveyQuerySet.as_manager()
 
     name = models.CharField('Name of survey', max_length=100)
     therapeutic_area = models.ForeignKey(TherapeuticArea, on_delete=models.CASCADE, null=True)
+    countries = models.ManyToManyField(Country, related_name="surveys")
+    organizations = models.ManyToManyField(Organization, related_name="surveys", blank=True)
     active = models.BooleanField('Is survey active or not', default=False, db_index=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
     start = models.DateTimeField(_('Starts at'))
@@ -159,6 +164,18 @@ class Survey(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def on_organizations_changed(cls, sender, **kwargs):
+        cls.validate_organizations(kwargs['instance'].organizations)
+
+    @classmethod
+    def validate_organizations(cls, organizations):
+        if organizations.count() > cls.MAX_ORGANIZATIONS:
+            raise ValidationError(_('Cannot assign more than %(max_organizations)s organizations to survey')
+                                  % {'max_organizations': cls.MAX_ORGANIZATIONS})
+
+models.signals.m2m_changed.connect(Survey.on_organizations_changed, sender=Survey.organizations.through)
 
 
 class SurveyItem(models.Model):

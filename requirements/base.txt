@@ -49,3 +49,4 @@ querystring_parser
 django-jsonfield
 django-flat-responsive
 django-inline-svg
+django-nested-admin

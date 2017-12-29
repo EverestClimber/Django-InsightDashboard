@@ -4,7 +4,7 @@ from querystring_parser import parser as queryparser
 
 from django.db import transaction
 
-from survey.models import Country, Survey, Organization, Answer, Question
+from survey.models import Country, Survey, Answer, Question
 from .models import SurveyStat, OrganizationStat, QuestionStat, Representation, OptionDict
 
 logger = logging.getLogger(__name__)
@@ -282,7 +282,6 @@ class AbstractEvaluator(object):
     def fill_out(cls):
         countries = list(Country.objects.all())
         countries.append(None)
-        organizations = list(Organization.objects.all())
         representations = list(Representation.objects.prefetch_related('question').filter(active=True))
 
         for surv in Survey.objects.filter(active=True):
@@ -298,7 +297,7 @@ class AbstractEvaluator(object):
                     cls.survey_stat[surv_key] = SurveyStat(survey=surv, country=country)
 
                 # Fill out organizations stat
-                for org in organizations:
+                for org in surv.organizations.all():
                     org_key = (surv.pk, country_id, org.pk)
                     if org_key not in cls.organization_stat:
                         cls.organization_stat[org_key] = OrganizationStat(

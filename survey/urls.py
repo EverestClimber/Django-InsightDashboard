@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^start/?$', views.start_view, name='start'),
     url(r'^start/(?P<survey_id>\d+)/?$', views.start_view, name='start'),
     url(r'^pass/(?P<id>\d+)$', views.pass_view, name='pass'),
-    url(r'^thanks/$', TemplateView.as_view(template_name='survey/thanks.html'), name='thanks'),
+    url(r'^thanks/(?P<survey_id>\d+)/?$', TemplateView.as_view(template_name='survey/thanks.html'), name='thanks'),
 ]
