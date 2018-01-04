@@ -33,13 +33,14 @@ class StartForm(forms.Form):
         organizations = survey.organizations.all()
         organization_choices = [(organization.pk, organization.name) for organization in organizations]
         if len(organization_choices):
-            self.fields["organization"] = forms.ChoiceField(choices=organization_choices, widget=FancyRadioSelect, label='Organization')
+            self.fields["organization"] = forms.ChoiceField(choices=organization_choices,
+                                                            widget=FancyRadioSelect,
+                                                            label='Organization')
         else:
-            raise ValueError('There is no organizations yet, please add one')
+            raise ValueError('There are no organizations assigned to selected survey')
 
     def clean_survey(self):
         survey_id = self.cleaned_data['survey']
         if not Survey.objects.get(pk=survey_id).is_active():
             raise forms.ValidationError('Cannot start inactive survey')
         return survey_id
-

@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 
 from reports.evaluators import LastEvaluator
 
+
 class Command(BaseCommand):
     help = 'Update stat vars from stat data'
 

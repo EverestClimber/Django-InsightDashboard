@@ -12,6 +12,7 @@ from .models import User, Country, Language, TherapeuticArea
 class MyUserChangeForm(UserChangeForm):
     password = ReadOnlyPasswordHashField(label="Password",
                                          help_text='<a href="../password/">Change password</a>')
+
     class Meta(UserChangeForm.Meta):
         model = User
         fields = '__all__'
@@ -64,9 +65,11 @@ class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'use_in_reports', 'ordering', 'created_at')
     prepopulated_fields = {'slug': ('name',), }
 
+
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
     list_display = ('name', 'code')
+
 
 @admin.register(TherapeuticArea)
 class TherapeuticAreaAdmin(admin.ModelAdmin):

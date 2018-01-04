@@ -3,6 +3,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.assignment_tag
 def get_countries():
     return list(Country.objects.filter(use_in_reports=True))

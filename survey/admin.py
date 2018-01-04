@@ -84,7 +84,6 @@ class SurveyItemAdmin(admin.ModelAdmin):
     list_display = ('survey', 'question', 'ordering', 'created_at')
 
 
-
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('user', 'country', 'region', 'organization', 'survey', 'created_at', 'has_data', 'get_data')

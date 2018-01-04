@@ -40,7 +40,6 @@ class AbstractEvaluator(object):
         }
     ]
 
-
     @classmethod
     def type_average_percent_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
@@ -110,9 +109,6 @@ class AbstractEvaluator(object):
                 data['org_sum'][org_key] = main_float
                 data['org_cnt'][org_key] = 1
 
-
-
-
     @classmethod
     def type_yes_no_processor(cls, question_id, question_data, answer):
         q = cls.question_dict[question_id]
@@ -168,7 +164,6 @@ class AbstractEvaluator(object):
             else:
                 data['org_yes'][org_key] = yes
                 data['org_cnt'][org_key] = 1
-
 
     @classmethod
     def type_multiselect_top_processor(cls, question_id, question_data, answer):
@@ -254,7 +249,6 @@ class AbstractEvaluator(object):
     def get_answers():
         raise NotImplementedError
 
-
     @classmethod
     def clear(cls):
         cls.survey_stat = {}
@@ -323,8 +317,6 @@ class AbstractEvaluator(object):
                         if q.pk not in cls.question_dict:
                             cls.question_dict[q.pk] = q
 
-
-
     @classmethod
     def update_survey_stat(cls, surv_key, answer):
         survey_id, country_id = surv_key
@@ -363,7 +355,6 @@ class AbstractEvaluator(object):
     def parse_query_string(string):
         return queryparser.parse(string)
 
-
     @classmethod
     def process_dependencies(cls, data):
         if not isinstance(cls.dependencies, list):
@@ -379,14 +370,12 @@ class AbstractEvaluator(object):
             if dependency['type'] == 'set_radio':
                 if not dependency['source'] in data:
                     continue
-                if not '' in data[dependency['source']]:
+                if '' not in data[dependency['source']]:
                     continue
                 options_set = set(list_lower(dependency['additional']['options']))
                 data_set = set(list_lower(data[dependency['source']]['']))
                 if options_set & data_set:
                     data[dependency['target']] = dependency['additional']['anwser']
-
-
 
     @classmethod
     def process_answer(cls, answer):
@@ -395,14 +384,14 @@ class AbstractEvaluator(object):
 
         results = cls.parse_query_string(answer.body)
         if 'data' not in results:
-            raise KeyError("There is data in post results. Answer: %s" % answer.pk )
+            raise KeyError("There is data in post results. Answer: %s" % answer.pk)
 
         data = results['data']
 
         cls.process_dependencies(data)
 
         if type(data) != dict:
-            raise KeyError("Answer data should be dict. Answer: %s" % answer.pk )
+            raise KeyError("Answer data should be dict. Answer: %s" % answer.pk)
 
         survey_id = answer.survey_id
         country_id = answer.country_id
@@ -413,8 +402,6 @@ class AbstractEvaluator(object):
 
         org_key = (survey_id, country_id, organization_id)
         cls.update_organization_stat(org_key)
-
-
 
         for qid, question_data in data.items():
             if qid not in cls.question_dict:
@@ -430,7 +417,6 @@ class AbstractEvaluator(object):
         answer.is_updated = True
         answer.save(update_fields=['is_updated'])
 
-
     @classmethod
     def save(cls):
         for surv_stat in cls.survey_stat.values():
@@ -440,10 +426,6 @@ class AbstractEvaluator(object):
         for quest_stat in cls.question_stat.values():
             quest_stat.update_vars()
             quest_stat.save()
-
-
-
-
 
     @classmethod
     @transaction.atomic
@@ -482,5 +464,3 @@ class LastEvaluator(AbstractEvaluator):
     @staticmethod
     def get_answers():
         return Answer.objects.filter(is_updated=False)
-
-

@@ -6,6 +6,7 @@ from django.utils.encoding import (
 )
 from django.utils.safestring import mark_safe
 
+
 class ChoiseButton(ChoiceInput):
     def render(self, name=None, value=None, attrs=None):
         if value is None:
@@ -36,7 +37,6 @@ class ChoiseButton(ChoiceInput):
             choice_label=self.choice_label
         )
 
-
         # if self.id_for_label:
         #     label_for = format_html(' for="{}"', self.id_for_label)
         # else:
@@ -45,6 +45,7 @@ class ChoiseButton(ChoiceInput):
         # return format_html(
         #     '<label{}>{} {}</label>', label_for, self.tag(attrs), self.choice_label
         # )
+
 
 class FancyRadioFieldRenderer(RadioFieldRenderer):
     outer_html = '''
@@ -60,7 +61,7 @@ class FancyRadioFieldRenderer(RadioFieldRenderer):
             $(document).ready(function () {
                 %s
             });
-        </script>{% endverbatim %}''';
+        </script>{% endverbatim %}'''
     script = '''
 
     '''
@@ -97,7 +98,7 @@ class FancyRadioFieldRenderer(RadioFieldRenderer):
             fancy_required = 'fancy-required'
         else:
             fancy_required = ''
-        out =  format_html(
+        out = format_html(
             self.outer_html,
             id_attr=format_html(' id="{}"', id_) if id_ else '',
             content=mark_safe('\n'.join(output)),
@@ -108,6 +109,7 @@ class FancyRadioFieldRenderer(RadioFieldRenderer):
         return out
         out += self.outer_script % self.script
         return out
+
 
 class FancyRadioSelect(RadioSelect):
     renderer = FancyRadioFieldRenderer

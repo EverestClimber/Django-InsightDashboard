@@ -35,7 +35,6 @@ class TestOptionDict(TestCase):
         assert OptionDict.get('mm') == 'Mm'
         assert OptionDict.objects.get(lower='mm')
 
-
         assert OptionDict.get('xx') == 'xx'
 
 
@@ -186,7 +185,6 @@ class TestQuestionStat(TestCase):
             {'value': 1, 'meta': 20},
         ]
 
-
     def test_update_type_average_percent(self):
         data = {
             'main_sum': 90.0,
@@ -206,7 +204,8 @@ class TestQuestionStat(TestCase):
                           country=None,
                           type=QuestionStat.TYPE_AVERAGE_PERCENT)
         qs0.update_vars()
-        dist_labels = ['0-10%', '11-20%', '21-30%', '31-40%', '41-50%', '51-60%', '61-70%', '71-80%', '81-90%', '91-100%']
+        dist_labels = ['0-10%', '11-20%', '21-30%', '31-40%', '41-50%', '51-60%', '61-70%',
+                       '71-80%', '81-90%', '91-100%']
         dist_series_meta = [
             {'value': 0, 'meta': 0},
             {'value': 1, 'meta': 33},

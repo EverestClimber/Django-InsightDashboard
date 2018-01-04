@@ -21,11 +21,11 @@ class InstructionsView(LoginRequiredMixin, TemplateView):
     template_name = 'survey/instructions.html'
     cookie_name = 'instructions_was_viewed2'
 
-
     def get(self, request, *args, **kwargs):
         response = super(self.__class__, self).get(self, request, *args, **kwargs)
         response.set_cookie(self.cookie_name, True, 365*24*60*60)
         return response
+
 
 class SurveyListView(LoginRequiredMixin, ListView):
     model = Survey
@@ -44,7 +44,6 @@ class SurveyListView(LoginRequiredMixin, ListView):
 @login_required
 @permission_required('survey.add_answer', raise_exception=True)
 def start_view(request, survey_id):
-    survey = None
     survey = get_object_or_404(Survey, pk=survey_id)
     if not survey.is_active():
         raise ValueError("Cannot start inactive survey")
@@ -73,7 +72,6 @@ def start_view(request, survey_id):
                 response.region_id = form.cleaned_data['region']
             response.save()
             return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
-
 
     return render(request, 'survey/start.html', {'form': form, 'survey': survey})
 

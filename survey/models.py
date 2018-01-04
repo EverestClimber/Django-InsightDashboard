@@ -18,12 +18,11 @@ class Region(models.Model):
         return self.name
 
 
-
 class Organization(models.Model):
     name = models.CharField('Organization name', max_length=100, default='')
     name_plural = models.CharField('Organization name in plural form', max_length=100, default='')
     name_plural_short = models.CharField('Short organization name in plural form', max_length=100, default='')
-    label1 =  models.CharField('Label1 for reports', max_length=200, default='')
+    label1 = models.CharField('Label1 for reports', max_length=200, default='')
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
     ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
 
@@ -32,15 +31,6 @@ class Organization(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-# class HCPCategory(models.Model):
-#     name = models.CharField('Name of HCP', max_length=100)
-#     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
-#
-#     class Meta:
-#         verbose_name = 'Category of HCP'
 
 
 class Question(models.Model):
@@ -214,4 +204,3 @@ class Answer(models.Model):
 
     def __str__(self):
         return "%s - %s Response" % (self.pk, self.created_at)
-

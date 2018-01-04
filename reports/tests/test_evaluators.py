@@ -75,11 +75,11 @@ class TestTotalEvaluator(TestCase):
         assert len(self.evaluator.question_stat) == 3
 
     def test_fill_out(self):
-        s1 = mixer.blend(Survey, active=True)
         c1 = mixer.blend(Country, use_in_reports=True)
         c2 = mixer.blend(Country, use_in_reports=True)
         o1 = mixer.blend(Organization)
         o2 = mixer.blend(Organization)
+        s1 = mixer.blend(Survey, countries=[c1, c2], organizations=[o1, o2], active=True)
         q1 = mixer.blend(Question)
         q2 = mixer.blend(Question)
         mixer.blend(Question)
@@ -230,7 +230,6 @@ class TestTotalEvaluator(TestCase):
         self.evaluator.process_dependencies(d2)
         assert d2[5] == 'Yes'
 
-
     def test_update_survey_stat(self):
         d1 = timezone.make_aware(datetime(2017, 1, 1))
         d2 = timezone.make_aware(datetime(2017, 1, 2))
@@ -284,7 +283,7 @@ class TestTotalEvaluator(TestCase):
         qs2.save.assert_called_once_with()
 
     def test_parse_query_string(self):
-        results = self.evaluator.parse_query_string('data%5B12%5D%5B%5D=&data%5B4%5D%5B%5D=Age&data%5B4%5D%5B%5D=Preference+of+the+patients&data%5B4%5D%5B%5D=Efficacy+profile&data%5B4%5D%5B%5D=&csrfmiddlewaretoken=C7UlUxD6GI60dwB3PnGtA9en518LhHhRfqQwzXRb6pMVAs9jgaMIgWK0mq2AH8a6&data%5B14%5D%5B%5D=&data%5B3%5D%5Bother%5D=&data%5B7%5D=No&data%5B9%5D%5Badditional%5D=&data%5B2%5D=Yes&data%5B3%5D%5B%5D=Ari-oral&data%5B3%5D%5B%5D=Resperidol-oral&data%5B3%5D%5B%5D=Ari-LAI&data%5B3%5D%5B%5D=&data%5B11%5D%5Bother%5D=&data%5B9%5D%5Bmain%5D=&data%5B6%5D%5B%5D=Age&data%5B6%5D%5B%5D=Mechanism+of+Action&data%5B6%5D%5B%5D=Preference+of+the+patients&data%5B6%5D%5B%5D=&data%5B16%5D=xxx&data%5B11%5D%5B%5D=&data%5B14%5D%5Bother%5D=&data%5B1%5D%5Bmain%5D=10&data%5B4%5D%5Bother%5D=&data%5B12%5D%5Bother%5D=&data%5B6%5D%5Bother%5D=&data%5B1%5D%5Badditional%5D=')
+        results = self.evaluator.parse_query_string('data%5B12%5D%5B%5D=&data%5B4%5D%5B%5D=Age&data%5B4%5D%5B%5D=Preference+of+the+patients&data%5B4%5D%5B%5D=Efficacy+profile&data%5B4%5D%5B%5D=&csrfmiddlewaretoken=C7UlUxD6GI60dwB3PnGtA9en518LhHhRfqQwzXRb6pMVAs9jgaMIgWK0mq2AH8a6&data%5B14%5D%5B%5D=&data%5B3%5D%5Bother%5D=&data%5B7%5D=No&data%5B9%5D%5Badditional%5D=&data%5B2%5D=Yes&data%5B3%5D%5B%5D=Ari-oral&data%5B3%5D%5B%5D=Resperidol-oral&data%5B3%5D%5B%5D=Ari-LAI&data%5B3%5D%5B%5D=&data%5B11%5D%5Bother%5D=&data%5B9%5D%5Bmain%5D=&data%5B6%5D%5B%5D=Age&data%5B6%5D%5B%5D=Mechanism+of+Action&data%5B6%5D%5B%5D=Preference+of+the+patients&data%5B6%5D%5B%5D=&data%5B16%5D=xxx&data%5B11%5D%5B%5D=&data%5B14%5D%5Bother%5D=&data%5B1%5D%5Bmain%5D=10&data%5B4%5D%5Bother%5D=&data%5B12%5D%5Bother%5D=&data%5B6%5D%5Bother%5D=&data%5B1%5D%5Badditional%5D=')  # noqa
         assert results['data'] == {
 
             1: {'main': '10', 'additional': ''},

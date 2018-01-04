@@ -51,7 +51,7 @@ LOCAL_APPS = (
     # custom users app
     'insights.users.apps.UsersConfig',
     # Your stuff: custom apps go here
-    'survey',
+    'survey.apps.SurveyConfig',
     'reports',
 )
 
@@ -251,7 +251,7 @@ SOCIALACCOUNT_ADAPTER = 'insights.users.adapters.SocialAccountAdapter'
 ACCOUNT_LOGOUT_ON_GET = True
 
 ACCOUNT_SESSION_REMEMBER = True
-ACCOUNT_SESSION_COOKIE_AGE = 14*24*3600 # 2 weeks
+ACCOUNT_SESSION_COOKIE_AGE = 14*24*3600  # 2 weeks
 
 # Custom user app defaults
 # Select the correct user model
