@@ -71,7 +71,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     vars = jsonfield.JSONField()
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
 
-    report_type = 'basic'
+    report_type = 'advanced'
     regions_cache = {}
     organizations_cache = []
 
@@ -308,7 +308,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
 
     @classmethod
     def clear(cls):
-        cls.report_type = 'basic'
+        cls.report_type = 'advanced'
         cls.regions_cache = {}
 
 

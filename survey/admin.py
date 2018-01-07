@@ -6,7 +6,7 @@ from django import forms
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe, mark_for_escaping
 from .models import (Region, Organization, Question, QuestionTranslation,
-                     Option, Survey, SurveyItem, Answer, HCPCategory)
+                     Option, Survey, Answer, HCPCategory)
 
 
 @admin.register(Region)
@@ -77,11 +77,7 @@ class SurveyAdmin(admin.ModelAdmin):
     list_display = ('name', 'active', 'created_at')
     search_fields = ['name']
     form = SurveyForm
-
-
-@admin.register(SurveyItem)
-class SurveyItemAdmin(admin.ModelAdmin):
-    list_display = ('survey', 'question', 'ordering', 'created_at')
+    prepopulated_fields = {'slug': ('name',), }
 
 
 @admin.register(Answer)

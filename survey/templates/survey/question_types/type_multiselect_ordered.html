@@ -1,4 +1,4 @@
-{% include "survey/question_with_translation.html" with question=item.question lang=request.user.secondary_language %}
+{% include "survey/question_with_translation.html" with question=question lang=request.user.secondary_language %}
 
 <div class="row fancy-ordered-controls">
     <div class="col-xs-6">
@@ -11,21 +11,21 @@
 
 <div class="row fancy-select fancy-ordered-select">
     <div class="col-xs-6">
-        <div class="btn-group-vertical group-left w-100p" role="group" id="fancy-ordered-select-left-{{ item.question_id }}">
-            {% for option in item.question.option_set.all %}
+        <div class="btn-group-vertical group-left w-100p" role="group" id="fancy-ordered-select-left-{{ question.pk }}">
+            {% for option in question.options.all %}
 
                 <div class="btn-group" role="group">
                     <button
                             type="button"
                             class="text-left btn btn-default"
                             data-value="{{ option.value }}"
-                            data-name="{{ item.question_id }}"
+                            data-name="{{ question.pk }}"
                             data-checkbox-for="type_multiselect_ordered-checkbox-{{ option.pk }}"
 
                     >
                         <span class="cell"><span class="badge"></span></span>
                         <span class="text">{{ option.value }}</span>
-                        <input id="type_multiselect_ordered-checkbox-{{ option.pk }}" type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" style="display:none">
+                        <input id="type_multiselect_ordered-checkbox-{{ option.pk }}" type="checkbox" name="data[{{ question.pk }}][]" value="{{ option.value }}" style="display:none">
                     </button>
                 </div>
 
@@ -34,24 +34,24 @@
     </div>
 
     <div class="col-xs-6">
-        <div class="btn-group-vertical group-right w-100p" role="group" id="fancy-ordered-select-right-{{ item.question_id }}">
+        <div class="btn-group-vertical group-right w-100p" role="group" id="fancy-ordered-select-right-{{ question.pk }}">
 
         </div>
     </div>
 </div>
 
-<div class="btn-group template" role="group" id="type_multiselect_ordered_option_template-{{ item.question_id }}">
+<div class="btn-group template" role="group" id="type_multiselect_ordered_option_template-{{ question.pk }}">
     <button
             type="button"
             class="text-left btn btn-default fancy-checked"
             data-value="{{ option.value }}"
-            data-name="{{ item.question_id }}"
+            data-name="{{ question.pk }}"
             data-checkbox-for="type_multiselect_ordered-checkbox-{{ option.pk }}"
 
     >
         <span class="cell"><span class="badge"></span></span>
         <span class="text">{{ option.value }}</span>
-        <input type="checkbox" name="data[{{ item.pk }}][]" value="{{ option.value }}" checked="true" style="display:none">
+        <input type="checkbox" name="data[{{ question.pk }}][]" value="{{ option.value }}" checked="true" style="display:none">
     </button>
 </div>
 
@@ -59,7 +59,7 @@
     <input
             type="text"
             class="form-control input-other"
-            name="data[{{ item.question_id }}][other]"
-            data-id="{{ item.question_id }}"
+            name="data[{{ question.pk }}][other]"
+            data-id="{{ question.pk }}"
             placeholder="Other">
 </div>

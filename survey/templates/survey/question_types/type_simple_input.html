@@ -1,8 +1,8 @@
-{% include "survey/question_with_translation.html" with question=item.question lang=request.user.secondary_language %}
+{% include "survey/question_with_translation.html" with question=question lang=request.user.secondary_language %}
 <div class="form-group text-center">
     <textarea
             rows="4"
             class="form-control"
-            name="data[{{ item.question_id }}]"
+            name="data[{{ question.pk }}]"
     ></textarea>
 </div>

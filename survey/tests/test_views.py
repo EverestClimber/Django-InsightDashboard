@@ -1,4 +1,4 @@
-from ..views import start_view, pass_view, definition_view, InstructionsView
+from ..views import start_view, pass_view, SurveyListView, InstructionsView
 
 from mixer.backend.django import mixer
 from with_asserts.mixin import AssertHTMLMixin
@@ -14,6 +14,50 @@ from insights.users.models import User, Country
 from ..models import Survey, Organization, HCPCategory, Region, Answer
 
 pytestmark = pytest.mark.django_db
+
+
+class SurveyListViewTest(AssertHTMLMixin, TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(SurveyListViewTest, cls).setUpClass()
+        cls.req = RequestFactory().get(reverse('survey:list'))
+        cls.req.COOKIES[InstructionsView.cookie_name] = True
+        cls.country = mixer.blend(Country)
+        user = mixer.blend(User, country=cls.country, groups=[Group.objects.get(name='Otsuka User')])
+        cls.req.user = user
+
+    def test_only_active_shown(self):
+        now = timezone.now()
+        s = mixer.blend(Survey, active=True, countries=[self.country],
+                        start=now - timezone.timedelta(days=1),
+                        end=now + timezone.timedelta(days=1))
+        resp = SurveyListView.as_view()(self.req)
+        self.response_200(resp)
+        resp.render()
+        with self.assertHTML(resp, '.survey-list>p>label') as elems:
+            self.assertEqual(1, len(elems), 'More than one survey list is shown')
+            self.assertIn('Active', elems[0].text)
+
+    def test_only_past_shown(self):
+        now = timezone.now()
+        s = mixer.blend(Survey, active=True, countries=[self.country],
+                        start=now - timezone.timedelta(days=2),
+                        end=now - timezone.timedelta(days=1))
+        resp = SurveyListView.as_view()(self.req)
+        self.response_200(resp)
+        resp.render()
+        with self.assertHTML(resp, '.survey-list>p>label') as elems:
+            self.assertEqual(1, len(elems), 'More than one survey list is shown')
+            self.assertIn('Past', elems[0].text)
+
+    def test_empty_list(self):
+        resp = SurveyListView.as_view()(self.req)
+        self.response_200(resp)
+        resp.render()
+        self.assertNotHTML(resp, '.survey-list>p>label')
+        with self.assertHTML(resp, '.no-surveys') as elems:
+            self.assertIn('No surveys', elems[0].text)
 
 
 class SurveyStartViewTest(AssertHTMLMixin, TestCase):
@@ -33,19 +77,19 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         cls.s1 = s1
 
     def test_anonimous(self):
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         req.user = AnonymousUser()
         resp = start_view(req)
         assert resp.status_code == 302, 'Should redirect to auth'
 
     def test_authenticated_without_country(self):
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         user = mixer.blend(User, country=None, groups=[Group.objects.get(name='Otsuka User')])
         req.user = user
         self.assertRaisesRegex(ValueError, 'User country is not set', start_view, req, self.s1.pk)
 
     def test_authenticated_with_country_and_survey_without_organization(self):
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country, groups=[Group.objects.get(name='Otsuka User')])
         self.s1.countries.add(country)
@@ -56,7 +100,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
 
     def test_authenticated_with_country_and_survey_and_organization_inactive_survey(self):
         # user = mixer.blend(User, is_anonymous=True)
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country, groups=[Group.objects.get(name='Otsuka User')])
         req.user = user
@@ -69,7 +113,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         self.assertRaisesRegex(ValueError, 'Cannot start inactive survey', start_view, req, s.pk)
 
     def test_survey_not_available_in_country(self):
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         user = mixer.blend(User, country__name="Legoland", groups=[Group.objects.get(name='Otsuka User')])
         req.user = user
         org = mixer.blend(Organization)
@@ -82,7 +126,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         self.assertRaisesRegex(ValueError, 'not available in Legoland', start_view, req, s.pk)
 
     def test_authenticated_with_country_and_survey_and_organization(self):
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country, groups=[Group.objects.get(name='Otsuka User')])
         req.user = user
@@ -97,7 +141,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
 
     def test_authenticated_with_country_and_survey_and_organization_and_category(self):
         # user = mixer.blend(User, is_anonymous=True)
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country, groups=[Group.objects.get(name='Otsuka User')])
         req.user = user
@@ -111,7 +155,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
 
     def test_authenticated_with_country_and_survey_and_organization_and_region(self):
         # user = mixer.blend(User, is_anonymous=True)
-        req = RequestFactory().get(reverse('survey:start'))
+        req = RequestFactory().get(reverse('survey:list'))
         country = mixer.blend(Country)
         region = mixer.blend(Region, country=country)
         mixer.blend(Region, country=country)
@@ -132,7 +176,7 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         self.assertHTML(resp, 'input[name="survey"]').__enter__()
 
         request = RequestFactory().post(
-            reverse('survey:start'),
+            reverse('survey:start', kwargs={"survey_id": self.s1.pk}),
             {
                 'country': country.pk,
                 'region': region.pk,
@@ -176,7 +220,7 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
             pass
 
         request = RequestFactory().post(
-            reverse('survey:start'),
+            reverse('survey:start', kwargs={"survey_id": 1}),
             {'data[6][]': ['Health care system specific'], 'data[3][]': ['Quetapin-oral', 'Aloperidol-oral'],
              'data[4][other]': [''], 'data[6][other]': [''],
              'data[7][other]': [''], 'data[1][main]': ['33'], 'data[3][other]': [''], 'data[1][additional]': ['']}
@@ -185,7 +229,7 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
         resp = pass_view(request, answer.pk)
 
         self.response_302(resp)
-        assert resp.url == reverse('survey:thanks', kwargs={"survey_id": 1})
+        assert resp.url == reverse('survey:thanks', kwargs={"survey_id": 'test'})
         answer.refresh_from_db()
         assert answer.body
 
@@ -193,30 +237,31 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
 class TestSurveyDefinition(AssertHTMLMixin, TestCase):
 
     def test_defines_unauthorized(self):
-        request = RequestFactory().get(reverse('survey:definition'))
+        request = RequestFactory().get(reverse('survey:list'))
         request.user = AnonymousUser()
-        response = definition_view(request)
+        response = SurveyListView.as_view()(request)
         self.response_302(response)
         assert '/accounts/login/' in response.url
 
     def test_definitions_wo_cookies(self):
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country)
-        request = RequestFactory().get(reverse('survey:definition'))
+        request = RequestFactory().get(reverse('survey:list'))
         request.user = user
-        response = definition_view(request)
+        response = SurveyListView.as_view()(request)
         self.response_302(response)
         assert '/survey/instructions/' in response.url
 
     def test_with_cookies(self):
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country)
-        request = RequestFactory().get(reverse('survey:definition'))
+        request = RequestFactory().get(reverse('survey:list'))
         request.user = user
         request.COOKIES[InstructionsView.cookie_name] = True
-        response = definition_view(request)
+        response = SurveyListView.as_view()(request)
         self.response_200(response)
-        with self.assertHTML(response, 'a.btn'):
+        response.render()
+        with self.assertHTML(response, '.no-surveys'):
             pass
 
 
@@ -224,7 +269,7 @@ class TestSurveyInstructions(AssertHTMLMixin, TestCase):
     def test_instructions_unauthorized(self):
         request = RequestFactory().get(reverse('survey:instructions'))
         request.user = AnonymousUser()
-        response = definition_view(request)
+        response = SurveyListView.as_view()(request)
         self.response_302(response)
         assert '/accounts/login/' in response.url
 
@@ -234,8 +279,8 @@ class TestSurveyInstructions(AssertHTMLMixin, TestCase):
         request = RequestFactory().get(reverse('survey:instructions'))
         request.user = user
         response = InstructionsView.as_view()(request)
-        response.render()
         self.response_200(response)
+        response.render()
         assert response.cookies.get(InstructionsView.cookie_name)
         with self.assertHTML(response, 'a.btn'):
             pass

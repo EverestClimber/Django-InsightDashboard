@@ -1,14 +1,14 @@
-{% include "survey/question_with_translation.html" with question=item.question lang=request.user.secondary_language %}
+{% include "survey/question_with_translation.html" with question=question lang=request.user.secondary_language %}
 
 <div class="form-group text-center">
     <div class="centered">
         <div class="input-group">
             <div class="input-group-addon">%</div>
             <input
-                    id="type_two_dependend_fields-main-{{ item.question_id }}"
+                    id="type_two_dependend_fields-main-{{ question.pk }}"
                     type="number"
                     class="form-control percents"
-                    name="data[{{ item.question_id }}][main]"
+                    name="data[{{ question.pk }}][main]"
                     pattern="[0-9]*"
                     data-rule-number="true"
                     data-rule-min="0"
@@ -23,22 +23,22 @@
 
 
 <div class="checkbox">
-    <input id="checkbox1" type="checkbox" class="additional-switcher" data-item-id="{{ item.question_id }}">
+    <input id="checkbox1" type="checkbox" class="additional-switcher" data-item-id="{{ question.pk }}">
     <label for="checkbox1">
         Not sure
     </label>
 </div>
 
-{% if item.question.question_set %}
-    {% with dependend=item.question.get_subquestion %}
-        <div class="additional" id="additional-{{ item.question_id }}">
+{% if question.question_set %}
+    {% with dependend=question.get_subquestion %}
+        <div class="additional" id="additional-{{ question.pk }}">
             {% include "survey/question_with_translation.html" with question=dependend lang=request.user.secondary_language %}
             <div class="form-group text-center">
                 <input
-                        id="type_two_dependend_fields-other-{{ item.question_id }}"
+                        id="type_two_dependend_fields-other-{{ question.pk }}"
                         type="number"
                         class="form-control amount"
-                        name="data[{{ item.question_id }}][additional]"
+                        name="data[{{ question.pk }}][additional]"
                         pattern="[0-9]*"
                         data-rule-number="true"
                         data-rule-min="0"

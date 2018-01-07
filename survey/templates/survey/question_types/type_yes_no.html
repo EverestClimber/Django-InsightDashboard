@@ -1,11 +1,11 @@
-{% include "survey/question_with_translation.html" with question=item.question lang=request.user.secondary_language %}
+{% include "survey/question_with_translation.html" with question=question lang=request.user.secondary_language %}
 <div class="type_yes_no">
 
     <button
-            id="btn-type_yes_no-Yes-{{ item.question_id }}"
+            id="btn-type_yes_no-Yes-{{ question.pk }}"
             class="btn btn-default"
             type="button"
-            data-id="type_yes_no-Yes-{{ item.question_id }}"
+            data-id="type_yes_no-Yes-{{ question.pk }}"
             data-type="Yes"
     >
         <i class="fa fa-check-circle" aria-hidden="true"></i>
@@ -14,10 +14,10 @@
 
 
     <button
-            id="btn-type_yes_no-No-{{ item.question_id }}"
+            id="btn-type_yes_no-No-{{ question.pk }}"
             class="btn btn-default"
             type="button"
-            data-id="type_yes_no-No-{{ item.question_id }}"
+            data-id="type_yes_no-No-{{ question.pk }}"
             data-type="No"
     >
         <i class="fa fa-check-circle" aria-hidden="true"></i>
@@ -25,7 +25,7 @@
     </button>
 
 
-      <input id="type_yes_no-Yes-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="Yes">
-      <input id="type_yes_no-No-{{ item.question_id }}" type="radio" name="data[{{ item.question_id }}]" value="No">
+      <input id="type_yes_no-Yes-{{ question.pk }}" type="radio" name="data[{{ question.pk }}]" value="Yes">
+      <input id="type_yes_no-No-{{ question.pk }}" type="radio" name="data[{{ question.pk }}]" value="No">
 
 </div>

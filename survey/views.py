@@ -33,7 +33,7 @@ class SurveyListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super(SurveyListView, self).get_queryset()
-        return (qs.get_active, qs.get_inactive)
+        return (qs.get_active(), qs.get_inactive())
 
     def get(self, *args, **kwargs):
         if not self.request.COOKIES.get(InstructionsView.cookie_name):
@@ -89,7 +89,7 @@ def pass_view(request, id):
     if request.method == 'POST':
         answer.body = request.POST.urlencode()
         answer.save()
-        return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': answer.survey.pk}))
+        return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': answer.survey.slug}))
 
-    items = answer.survey.survey_items.all().prefetch_related('question__option_set')
-    return render(request, 'survey/pass.html', {'items': items})
+    questions = answer.survey.questions.prefetch_related('options')
+    return render(request, 'survey/pass.html', {'questions': questions})

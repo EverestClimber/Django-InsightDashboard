@@ -60,21 +60,21 @@ class TestReports(TestCase):
         TotalEvaluator.process_answers()
 
     def test_anonimous_advanced(self):
-        kwargs = {'country': 'europe', 'report_type': 'advanced', 'survey_id': self.s1.pk}
+        kwargs = {'country': 'europe', 'survey_id': self.s1.pk}
         req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = AnonymousUser()
         resp = ReportsView.as_view()(req, **kwargs)
         assert resp.status_code == 302, 'Should redirect to auth'
 
     def test_non_staff_advanced(self):
-        kwargs = {'country': 'europe', 'report_type': 'advanced', 'survey_id': self.s1.pk}
+        kwargs = {'country': 'europe', 'survey_id': self.s1.pk}
         req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = mixer.blend(User)
         resp = ReportsView.as_view()(req, **kwargs)
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_advanced(self):
-        kwargs = {'country': 'europe', 'report_type': 'advanced', 'survey_id': self.s1.pk}
+        kwargs = {'country': 'europe', 'survey_id': self.s1.pk}
         req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
         resp = ReportsView.as_view()(req, **kwargs)
@@ -82,7 +82,7 @@ class TestReports(TestCase):
         assert resp.status_code == 200, 'Allowed'
 
     def test_staff_advanced_country(self):
-        kwargs = {'country': self.c1.slug, 'report_type': 'advanced', 'survey_id': self.s1.pk}
+        kwargs = {'country': self.c1.slug, 'survey_id': self.s1.pk}
         req = RequestFactory().get(reverse('reports:advanced', kwargs=kwargs))
         req.user = mixer.blend(User, is_staff=True)
         resp = ReportsView.as_view()(req, **kwargs)

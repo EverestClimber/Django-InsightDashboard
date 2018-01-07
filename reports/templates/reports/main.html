@@ -24,10 +24,10 @@
     <div class="col-md-2 report-survey-info-filter-col">
       {# <label for="report-filter">{% trans 'Filter:' %}</label> #}
       <select id="report-filter" class="report-filter selectpicker" data-width="100%" onchange="">
-        <option value="all" {% if not country %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.pk 'all' %}">All</option>
+        <option value="all" {% if not country %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug 'all' %}">All</option>
         {% get_countries as countries %}
         {% for c in countries %}
-          <option value="{{ c.pk }}" {% if c.pk == country.pk %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.pk c.pk %}">{{ c.name }}</option>
+          <option value="{{ c.pk }}" {% if c.pk == country.pk %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug c.slug %}">{{ c.name }}</option>
         {% endfor %}
       </select>
       <script>

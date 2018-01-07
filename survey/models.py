@@ -33,6 +33,58 @@ class Organization(models.Model):
         return self.name
 
 
+class SurveyQuerySet(models.QuerySet):
+    def get_active(self):
+        now = timezone.now()
+        return self.filter(active=True, start__lte=now, end__gte=now)
+
+    def get_inactive(self):
+        now = timezone.now()
+        q = models.Q(active=False) | models.Q(start__gt=now) | models.Q(end__lt=now)
+        return self.filter(q)
+
+
+class Survey(models.Model):
+    MAX_ORGANIZATIONS = 3
+
+    objects = SurveyQuerySet.as_manager()
+
+    name = models.CharField(_('Name of survey'), max_length=100)
+    slug = models.SlugField(_('Survey slug'), unique=True)
+    therapeutic_area = models.ForeignKey(TherapeuticArea, on_delete=models.CASCADE, null=True)
+    countries = models.ManyToManyField(Country, related_name="surveys")
+    organizations = models.ManyToManyField(Organization, related_name="surveys", blank=True)
+    active = models.BooleanField('Is survey active or not', default=False, db_index=True)
+    created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
+    start = models.DateTimeField(_('Starts at'))
+    end = models.DateTimeField(_('Ends at'))
+
+    def get_last_answer(self):
+        try:
+            return self.answer_set.order_by('-created_at')[0]
+        except IndexError:
+            return None
+
+    def is_active(self):
+        now = timezone.now()
+        return self.active and self.start <= now <= self.end
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def on_organizations_changed(cls, sender, **kwargs):
+        cls.validate_organizations(kwargs['instance'].organizations)
+
+    @classmethod
+    def validate_organizations(cls, organizations):
+        if organizations.count() > cls.MAX_ORGANIZATIONS:
+            raise ValidationError(_('Cannot assign more than %(max_organizations)s organizations to survey')
+                                  % {'max_organizations': cls.MAX_ORGANIZATIONS})
+
+models.signals.m2m_changed.connect(Survey.on_organizations_changed, sender=Survey.organizations.through)
+
+
 class Question(models.Model):
 
     TYPE_TWO_DEPENDEND_FIELDS = 'type_two_dependend_fields'
@@ -68,6 +120,9 @@ class Question(models.Model):
         (DEPENDENCY_CONTEXTUAL, 'Question availability depends of other question'),
     )
 
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='questions',
+                               null=True, blank=True)
+    ordering = models.PositiveIntegerField('Order', default=0)
     type = models.CharField('Question Type', choices=TYPE_CHOICES, max_length=50)
     field = models.PositiveIntegerField('Field Type', null=True, blank=True, choices=FIELD_CHOICES)
     text = models.CharField('Question text', max_length=1000)
@@ -77,7 +132,7 @@ class Question(models.Model):
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
 
     class Meta:
-        ordering = ['id']
+        ordering = ['survey_id', 'ordering', 'created_at']
 
     def __str__(self):
         return self.text
@@ -105,7 +160,7 @@ class QuestionTranslation(models.Model):
 
 
 class Option(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="options")
     value = models.CharField('Option value', max_length=200)
     ordering = models.PositiveIntegerField('Order', default=0)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
@@ -115,71 +170,6 @@ class Option(models.Model):
 
     def __str__(self):
         return self.value
-
-
-class SurveyQuerySet(models.QuerySet):
-    def get_active(self):
-        now = timezone.now()
-        return self.filter(active=True, start__lte=now, end__gte=now)
-
-    def get_inactive(self):
-        now = timezone.now()
-        q = models.Q(active=False) | models.Q(start__gt=now) | models.Q(end__lt=now)
-        return self.filter(q)
-
-
-class Survey(models.Model):
-    MAX_ORGANIZATIONS = 3
-
-    objects = SurveyQuerySet.as_manager()
-
-    name = models.CharField('Name of survey', max_length=100)
-    therapeutic_area = models.ForeignKey(TherapeuticArea, on_delete=models.CASCADE, null=True)
-    countries = models.ManyToManyField(Country, related_name="surveys")
-    organizations = models.ManyToManyField(Organization, related_name="surveys", blank=True)
-    active = models.BooleanField('Is survey active or not', default=False, db_index=True)
-    created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
-    start = models.DateTimeField(_('Starts at'))
-    end = models.DateTimeField(_('Ends at'))
-
-    def get_last_answer(self):
-        try:
-            return self.answer_set.order_by('-created_at')[0]
-        except IndexError:
-            return None
-
-    def is_active(self):
-        now = timezone.now()
-        return self.active and self.start <= now <= self.end
-
-    def __str__(self):
-        return self.name
-
-    @classmethod
-    def on_organizations_changed(cls, sender, **kwargs):
-        cls.validate_organizations(kwargs['instance'].organizations)
-
-    @classmethod
-    def validate_organizations(cls, organizations):
-        if organizations.count() > cls.MAX_ORGANIZATIONS:
-            raise ValidationError(_('Cannot assign more than %(max_organizations)s organizations to survey')
-                                  % {'max_organizations': cls.MAX_ORGANIZATIONS})
-
-models.signals.m2m_changed.connect(Survey.on_organizations_changed, sender=Survey.organizations.through)
-
-
-class SurveyItem(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='survey_items')
-    question = models.ForeignKey(Question)
-    ordering = models.PositiveIntegerField('Order', default=0)
-    created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
-
-    class Meta:
-        ordering = ['survey_id', 'ordering', 'created_at']
-        verbose_name = 'Survey Item'
-
-    def __str__(self):
-        return "%s/%s" % (self.ordering, self.pk)
 
 
 class HCPCategory(models.Model):

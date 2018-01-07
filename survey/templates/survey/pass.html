@@ -6,12 +6,11 @@
     <form action="" method="post" id="survey-pass-form">{% csrf_token %}
 
         <div id="wizard" style="display:none">
-            {% for item in items %}
+            {% for q in questions %}
                 <h1>1</h1>
                 <div class="step-content">
-                    <div class="text-center m-t-md {{ item.question.type }}">
-{#                        <h2>{{ item.question.get_type_template_name }}</h2>#}
-                        {% include item.question.get_type_template_name with item=item %}
+                    <div class="text-center m-t-md {{ q.type }}">
+                        {% include q.get_type_template_name with question=q %}
                     </div>
                 </div>
             {% endfor %}

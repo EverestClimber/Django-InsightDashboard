@@ -1,8 +1,8 @@
-{% include "survey/question_with_translation.html" with question=item.question lang=request.user.secondary_language %}
+{% include "survey/question_with_translation.html" with question=question lang=request.user.secondary_language %}
 
 <div class="fancy-select fancy-checkbox">
     <div class="btn-group-vertical" role="group">
-        {% for option in item.question.option_set.all %}
+        {% for option in question.options.all %}
 
             <div class="btn-group" role="group">
                 <button
@@ -20,12 +20,12 @@
 
         {% endfor %}
     </div>
-{% for option in item.question.option_set.all %}
-    <input type="checkbox" name="data[{{ item.question_id }}][]" id="type_multiselect_with_other-checkbox-{{ option.pk }}" value="{{ option.value }}">
+{% for option in question.options.all %}
+    <input type="checkbox" name="data[{{ question.pk }}][]" id="type_multiselect_with_other-checkbox-{{ option.pk }}" value="{{ option.value }}">
 {% endfor %}
 
     <div class="input-group w-100p field-other text-left">
-        <input type="text" class="tagsinput form-control" name="data[{{ item.question_id }}][other]" placeholder="Other">
+        <input type="text" class="tagsinput form-control" name="data[{{ question.pk }}][other]" placeholder="Other">
     </div>
 
 
