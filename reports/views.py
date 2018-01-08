@@ -12,31 +12,29 @@ from .models import SurveyStat, OrganizationStat, QuestionStat
 from .evaluators import LastEvaluator, TotalEvaluator
 
 
+def get_by_slug_or_pk(cls, obj_id):
+    try:
+        return cls.objects.get(slug=obj_id)
+    except Survey.DoesNotExist:
+        try:
+            return get_object_or_404(cls, pk=obj_id)
+        except ValueError:
+            raise Http404
+
+
 class ReportsView(LoginRequiredMixin, TemplateView):
     template_name = 'reports/main.html'
     country_dict = {}
 
     def get_context_data(self, **kwargs):
 
-        try:
-            survey = Survey.objects.get(slug=kwargs['survey_id'])
-        except Survey.DoesNotExist:
-            try:
-                survey = get_object_or_404(Survey, pk=kwargs['survey_id'])
-            except ValueError:
-                raise Http404
+        survey = get_by_slug_or_pk(Survey, kwargs['survey_id'])
 
         if kwargs['country'] in ('europe', 'all'):
             country_id = None
             country = None
         else:
-            try:
-                country = Country.objects.get(slug=kwargs['country'])
-            except Country.DoesNotExist:
-                try:
-                    country = get_object_or_404(Country, pk=kwargs['country'])
-                except ValueError:
-                    raise Http404
+            country = get_by_slug_or_pk(Country, kwargs['country'])
             country_id = country.pk
 
         ctx = super(self.__class__, self).get_context_data(**kwargs)
@@ -54,22 +52,26 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
 
 @login_required()
-def update_stat(request):
-    if 'total' in request.GET:
-        evaluator = TotalEvaluator
-    else:
-        evaluator = LastEvaluator
-    evaluator.process_answers()
+def update_stat(request, survey_id):
+    survey = get_by_slug_or_pk(Survey, survey_id)
+    evaluator = TotalEvaluator if 'total' in request.GET else LastEvaluator
+    evaluator.process_answers(survey)
     return HttpResponse('console.log("stat was successfully updated");', "application/javascript")
 
 
 @staff_member_required
 def recalculate(request):
-    TotalEvaluator.process_answers()
-    return render(request, 'reports/recalculate.html', {'evaluator_messages': TotalEvaluator.messages})
+    messages = []
+    for survey in Survey.objects.all():
+        evaluator = TotalEvaluator.process_answers(survey)
+        messages += evaluator.messages
+    return render(request, 'reports/recalculate.html', {'evaluator_messages': messages})
 
 
 @staff_member_required
 def update_vars(request):
-    LastEvaluator.process_answers()
-    return render(request, 'reports/update_vars.html', {'evaluator_messages': LastEvaluator.messages})
+    messages = []
+    for survey in Survey.objects.all():
+        evaluator = LastEvaluator.process_answers(survey)
+        messages += evaluator.messages
+    return render(request, 'reports/update_vars.html', {'evaluator_messages': messages})

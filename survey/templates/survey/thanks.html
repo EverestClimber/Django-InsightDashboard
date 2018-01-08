@@ -8,7 +8,7 @@
         <a href="{% url 'survey:list' %}" class="btn btn-primary">Start New Survey</a>
         <a href="{% url 'reports:advanced' survey_id request.user.country.slug %}" class="btn btn-primary">View Report</a>
     </div>
-    <script type="text/javascript" async src="{% url "reports:update_stat" %}?t={% now "jSFYHis" %}"></script>
+    <script type="text/javascript" async src="{% url "reports:update_stat" survey_id %}?t={% now "jSFYHis" %}"></script>
 
 
 {% endblock %}

@@ -7,6 +7,8 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe, mark_for_escaping
 from .models import (Region, Organization, Question, QuestionTranslation,
                      Option, Survey, Answer, HCPCategory)
+from reports.models import Representation
+import nested_admin
 
 
 @admin.register(Region)
@@ -37,7 +39,6 @@ class QuestionTranslationInlineFormset(forms.models.BaseInlineFormSet):
         for form in self.forms:
             try:
                 if form.cleaned_data and not form.cleaned_data['DELETE']:
-                    print(form.cleaned_data)
                     lang = form.cleaned_data['lang'].pk
                     if lang in has_lang:
                         raise forms.ValidationError(_('Only one translation per language is allowed'))
@@ -66,6 +67,28 @@ class OptionAdmin(admin.ModelAdmin):
     search_fields = ['question']
 
 
+class QTranslationInline(nested_admin.NestedStackedInline):
+    formset = QuestionTranslationInlineFormset
+    model = QuestionTranslation
+    extra = 0
+
+
+class OptionInline(nested_admin.NestedStackedInline):
+    model = Option
+    extra = 0
+
+
+class RepresentationInline(nested_admin.NestedStackedInline):
+    model = Representation
+    extra = 0
+
+
+class QuestionInline(nested_admin.NestedStackedInline):
+    model = Question
+    extra = 0
+    inlines = [QTranslationInline, OptionInline, RepresentationInline]
+
+
 class SurveyForm(forms.ModelForm):
     def clean_organizations(self):
         Survey.validate_organizations(self.cleaned_data['organizations'])
@@ -73,11 +96,17 @@ class SurveyForm(forms.ModelForm):
 
 
 @admin.register(Survey)
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(nested_admin.NestedModelAdmin):
     list_display = ('name', 'active', 'created_at')
     search_fields = ['name']
     form = SurveyForm
     prepopulated_fields = {'slug': ('name',), }
+    inlines = [QuestionInline]
+
+    class Media:
+        css = {
+            'all': ('css/custom_admin.css',)
+        }
 
 
 @admin.register(Answer)

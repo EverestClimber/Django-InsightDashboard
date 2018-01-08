@@ -61,7 +61,7 @@ class Survey(models.Model):
 
     def get_last_answer(self):
         try:
-            return self.answer_set.order_by('-created_at')[0]
+            return self.answers.order_by('-created_at')[0]
         except IndexError:
             return None
 
@@ -187,7 +187,7 @@ class Answer(models.Model):
     region = models.ForeignKey(Region, null=True, blank=True)
     organization = models.ForeignKey(Organization)
     hcp_category = models.ForeignKey(HCPCategory, null=True, blank=True)
-    survey = models.ForeignKey(Survey)
+    survey = models.ForeignKey(Survey, related_name="answers")
     body = models.TextField(default='')
     created_at = models.DateTimeField(auto_now_add=True)
     is_updated = models.BooleanField(db_index=True, default=False)

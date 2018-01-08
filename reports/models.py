@@ -48,8 +48,7 @@ class RepresentationTypeMixin(models.Model):
 
 
 class Representation(RepresentationTypeMixin, models.Model):
-    survey = models.ForeignKey(Survey)
-    question = models.ManyToManyField(Question)
+    question = models.OneToOneField(Question, on_delete=models.CASCADE, null=True)
     active = models.BooleanField(blank=True, default=True, db_index=True)
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
     label1 = models.CharField('Label 1', max_length=400, default='', blank=True)
@@ -281,7 +280,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
 
     def update_vars(self):
         try:
-            self.vars['question_text'] = self.representation.question.first().text
+            self.vars['question_text'] = self.representation.question.text
         except Exception:
             return
 

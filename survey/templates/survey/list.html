@@ -52,7 +52,7 @@
                   </span>
                   <span class="survey-info">
                     <div class="survey-info-label">{% trans 'Responses' %}</div>
-                    <div class="survey-info-value">{{ survey.answer_set.count }}</div>
+                    <div class="survey-info-value">{{ survey.answers.count }}</div>
                   </span>
                   {% with survey.get_last_answer as last_answer %}
                     {% if last_answer %}

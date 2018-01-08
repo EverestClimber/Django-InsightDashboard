@@ -12,12 +12,6 @@ logger = logging.getLogger(__name__)
 
 class AbstractEvaluator(object):
 
-    survey_stat = {}
-    organization_stat = {}
-    question_stat = {}
-    question_representation_link = {}
-    question_dict = {}
-    messages = []
     # https://app.asana.com/0/232511650961646/257462747620886
     dependencies = [
         {
@@ -40,9 +34,18 @@ class AbstractEvaluator(object):
         }
     ]
 
-    @classmethod
-    def type_average_percent_processor(cls, question_id, question_data, answer):
-        q = cls.question_dict[question_id]
+    def __init__(self, survey):
+        self.survey = survey
+        self.survey_stat = {}
+        self.organization_stat = {}
+        self.question_stat = {}
+        self.question_representation_link = {}
+        self.question_dict = {}
+        self.messages = []
+        self.load_stat()
+
+    def type_average_percent_processor(self, question_id, question_data, answer):
+        q = self.question_dict[question_id]
         if q.type != Question.TYPE_TWO_DEPENDEND_FIELDS:
             raise ValueError("type_average_percent_processor doesn't process %s, Question: %s" % (q.type, q.pk))
 
@@ -66,7 +69,7 @@ class AbstractEvaluator(object):
         country_id = answer.country_id
         survey_id = answer.survey_id
 
-        r = cls.question_representation_link[question_id]
+        r = self.question_representation_link[question_id]
 
         k0 = (survey_id, None, r.pk)
         k1 = (survey_id, country_id, r.pk)
@@ -74,7 +77,7 @@ class AbstractEvaluator(object):
 
         for k, cur_reg_id in regs:
             reg_key = str(cur_reg_id)
-            data = cls.question_stat[k].data
+            data = self.question_stat[k].data
             if not data:
                 data.update({
                     'main_sum': 0.0,
@@ -86,7 +89,7 @@ class AbstractEvaluator(object):
                     'org_cnt': {}
                 })
 
-            data = cls.question_stat[k].data
+            data = self.question_stat[k].data
             data['main_sum'] += main_float
             data['main_cnt'] += 1
 
@@ -109,9 +112,8 @@ class AbstractEvaluator(object):
                 data['org_sum'][org_key] = main_float
                 data['org_cnt'][org_key] = 1
 
-    @classmethod
-    def type_yes_no_processor(cls, question_id, question_data, answer):
-        q = cls.question_dict[question_id]
+    def type_yes_no_processor(self, question_id, question_data, answer):
+        q = self.question_dict[question_id]
         if q.type != Question.TYPE_YES_NO and q.type != Question.TYPE_YES_NO_JUMPING:
             raise ValueError("type_yes_no_processor doesn't process %s. Question: %s" % (q.type, q.pk))
 
@@ -129,7 +131,7 @@ class AbstractEvaluator(object):
         country_id = answer.country_id
         survey_id = answer.survey_id
 
-        r = cls.question_representation_link[question_id]
+        r = self.question_representation_link[question_id]
 
         k0 = (survey_id, None, r.pk)
         k1 = (survey_id, country_id, r.pk)
@@ -137,7 +139,7 @@ class AbstractEvaluator(object):
 
         for k, cur_reg_id in regs:
             reg_key = str(cur_reg_id)
-            data = cls.question_stat[k].data
+            data = self.question_stat[k].data
             if not data:
                 data.update({
                     'main_yes': 0,
@@ -148,7 +150,7 @@ class AbstractEvaluator(object):
                     'org_cnt': {}
                 })
 
-            data = cls.question_stat[k].data
+            data = self.question_stat[k].data
             data['main_yes'] += yes
             data['main_cnt'] += 1
             if reg_key in data['reg_yes']:
@@ -165,9 +167,8 @@ class AbstractEvaluator(object):
                 data['org_yes'][org_key] = yes
                 data['org_cnt'][org_key] = 1
 
-    @classmethod
-    def type_multiselect_top_processor(cls, question_id, question_data, answer):
-        q = cls.question_dict[question_id]
+    def type_multiselect_top_processor(self, question_id, question_data, answer):
+        q = self.question_dict[question_id]
         if q.type != Question.TYPE_MULTISELECT_ORDERED:
             raise ValueError("type_multiselect_top_processor doesn't process %s. Question: %s" % (q.type, q.pk))
 
@@ -196,7 +197,7 @@ class AbstractEvaluator(object):
             if len(top3) == 3:
                 break
 
-        r = cls.question_representation_link[question_id]
+        r = self.question_representation_link[question_id]
         org_key = str(answer.organization_id)
         country_id = answer.country_id
         survey_id = answer.survey_id
@@ -204,7 +205,7 @@ class AbstractEvaluator(object):
         k1 = (survey_id, country_id, r.pk)
 
         for k in [k0, k1]:
-            data = cls.question_stat[k].data
+            data = self.question_stat[k].data
             if not data:
                 data.update({
                     'cnt': 0,
@@ -245,119 +246,105 @@ class AbstractEvaluator(object):
                 else:
                     data['org'][org_key]['top3'][top_i] = 1
 
-    @staticmethod
-    def get_answers():
+    def get_answers(self):
         raise NotImplementedError
 
-    @classmethod
-    def clear(cls):
-        cls.survey_stat = {}
-        cls.organization_stat = {}
-        cls.question_stat = {}
-        cls.question_representation_link = {}
-        cls.question_dict = {}
-        cls.messages = []
-
-    @classmethod
-    def load_stat(cls):
+    def load_stat(self):
         surveys = SurveyStat.objects.all()
         for survey in surveys:
-            cls.survey_stat[(survey.survey_id, survey.country_id)] = survey
+            self.survey_stat[(survey.survey_id, survey.country_id)] = survey
 
         orgs = OrganizationStat.objects.all()
         for org in orgs:
-            cls.organization_stat[(org.survey_id, org.country_id, org.organization_id)] = org
+            self.organization_stat[(org.survey_id, org.country_id, org.organization_id)] = org
 
         quests = QuestionStat.objects.all()
         for quest in quests:
-            cls.question_stat[(quest.survey_id, quest.country_id, quest.representation_id)] = quest
+            self.question_stat[(quest.survey_id, quest.country_id, quest.representation_id)] = quest
 
-    @classmethod
-    def fill_out(cls):
-        countries = list(Country.objects.all())
+    def fill_out(self):
+        countries = list(self.survey.countries.all())
         countries.append(None)
-        representations = list(Representation.objects.prefetch_related('question').filter(active=True))
+        representations = list(
+            Representation.objects.filter(question__survey_id=self.survey.pk).
+                select_related('question').filter(active=True))
 
-        for surv in Survey.objects.filter(active=True):
-            for country in countries:
-                # Fill out survey stat
-                if country is None:
-                    country_id = country
+        for country in countries:
+            # Fill out survey stat
+            if country is None:
+                country_id = country
+            else:
+                country_id = country.pk
+            surv_key = (self.survey.pk, country_id)
+
+            if surv_key not in self.survey_stat:
+                self.survey_stat[surv_key] = SurveyStat(survey=self.survey, country=country)
+
+            # Fill out organizations stat
+            for org in self.survey.organizations.all():
+                org_key = (self.survey.pk, country_id, org.pk)
+                if org_key not in self.organization_stat:
+                    self.organization_stat[org_key] = OrganizationStat(
+                        survey=self.survey, country=country, organization=org, ordering=org.ordering)
                 else:
-                    country_id = country.pk
-                surv_key = (surv.pk, country_id)
+                    if self.organization_stat[org_key].ordering != org.ordering:
+                        self.organization_stat[org_key].ordering = org.ordering
 
-                if surv_key not in cls.survey_stat:
-                    cls.survey_stat[surv_key] = SurveyStat(survey=surv, country=country)
+            # Fill out question stat
+            for repr in representations:
+                q_key = (self.survey.pk, country_id, repr.pk)
+                if q_key not in self.question_stat:
+                    self.question_stat[q_key] = QuestionStat(
+                        survey=self.survey, country=country, representation=repr,
+                        ordering=repr.ordering, type=repr.type)
+                else:
+                    if self.question_stat[q_key].ordering != repr.ordering:
+                        self.question_stat[q_key].ordering = repr.ordering
 
-                # Fill out organizations stat
-                for org in surv.organizations.all():
-                    org_key = (surv.pk, country_id, org.pk)
-                    if org_key not in cls.organization_stat:
-                        cls.organization_stat[org_key] = OrganizationStat(
-                            survey=surv, country=country, organization=org, ordering=org.ordering)
-                    else:
-                        if cls.organization_stat[org_key].ordering != org.ordering:
-                            cls.organization_stat[org_key].ordering = org.ordering
+                # Fill out question representation links
+                if hasattr(repr, 'question'):
+                    self.question_representation_link[repr.question.pk] = repr
+                    if repr.question.pk not in self.question_dict:
+                        self.question_dict[repr.question.pk] = repr.question
 
-                # Fill out question stat
-                for repr in representations:
-                    q_key = (surv.pk, country_id, repr.pk)
-                    if q_key not in cls.question_stat:
-                        cls.question_stat[q_key] = QuestionStat(
-                            survey=surv, country=country, representation=repr, ordering=repr.ordering, type=repr.type)
-                    else:
-                        if cls.question_stat[q_key].ordering != repr.ordering:
-                            cls.question_stat[q_key].ordering = repr.ordering
-
-                    # Fill out question representation links
-                    questions = repr.question.all()
-                    for q in questions:
-                        cls.question_representation_link[q.pk] = repr
-                        if q.pk not in cls.question_dict:
-                            cls.question_dict[q.pk] = q
-
-    @classmethod
-    def update_survey_stat(cls, surv_key, answer):
+    def update_survey_stat(self, surv_key, answer):
         survey_id, country_id = surv_key
-        if surv_key not in cls.survey_stat:
-            cls.survey_stat[surv_key] = SurveyStat(survey_id=survey_id, country_id=country_id, last=answer.created_at)
-        cls.survey_stat[surv_key].total += 1
-        if cls.survey_stat[surv_key].last:
-            cls.survey_stat[surv_key].last = max(cls.survey_stat[surv_key].last, answer.created_at)
+        if surv_key not in self.survey_stat:
+            self.survey_stat[surv_key] = SurveyStat(survey_id=survey_id, country_id=country_id, last=answer.created_at)
+        self.survey_stat[surv_key].total += 1
+        if self.survey_stat[surv_key].last:
+            self.survey_stat[surv_key].last = max(self.survey_stat[surv_key].last, answer.created_at)
         else:
-            cls.survey_stat[surv_key].last = answer.created_at
+            self.survey_stat[surv_key].last = answer.created_at
 
         surv_key_all = (survey_id, None)
-        if surv_key_all not in cls.survey_stat:
-            cls.survey_stat[surv_key_all] = SurveyStat(survey_id=survey_id, country_id=None)
-        cls.survey_stat[surv_key_all].total += 1
-        if cls.survey_stat[surv_key_all].last:
-            cls.survey_stat[surv_key_all].last = max(cls.survey_stat[surv_key_all].last, answer.created_at)
+        if surv_key_all not in self.survey_stat:
+            self.survey_stat[surv_key_all] = SurveyStat(survey_id=survey_id, country_id=None)
+        self.survey_stat[surv_key_all].total += 1
+        if self.survey_stat[surv_key_all].last:
+            self.survey_stat[surv_key_all].last = max(self.survey_stat[surv_key_all].last, answer.created_at)
         else:
-            cls.survey_stat[surv_key_all].last = answer.created_at
+            self.survey_stat[surv_key_all].last = answer.created_at
 
-    @classmethod
-    def update_organization_stat(cls, org_key):
+    def update_organization_stat(self, org_key):
         survey_id, country_id, organization_id = org_key
-        if org_key not in cls.organization_stat:
-            cls.organization_stat[org_key] = OrganizationStat(
+        if org_key not in self.organization_stat:
+            self.organization_stat[org_key] = OrganizationStat(
                 survey_id=survey_id, country_id=country_id, organization_id=organization_id)
-        cls.organization_stat[org_key].total += 1
+        self.organization_stat[org_key].total += 1
 
         org_key_all = (survey_id, None, organization_id)
-        if org_key_all not in cls.organization_stat:
-            cls.organization_stat[org_key_all] = OrganizationStat(
+        if org_key_all not in self.organization_stat:
+            self.organization_stat[org_key_all] = OrganizationStat(
                 survey_id=survey_id, country_id=None, organization_id=organization_id)
-        cls.organization_stat[org_key_all].total += 1
+        self.organization_stat[org_key_all].total += 1
 
     @staticmethod
     def parse_query_string(string):
         return queryparser.parse(string)
 
-    @classmethod
-    def process_dependencies(cls, data):
-        if not isinstance(cls.dependencies, list):
+    def process_dependencies(self, data):
+        if not isinstance(self.dependencies, list):
             return
 
         if not isinstance(data, dict):
@@ -366,7 +353,7 @@ class AbstractEvaluator(object):
         def list_lower(data):
             return [x.lower() for x in data]
 
-        for dependency in cls.dependencies:
+        for dependency in self.dependencies:
             if dependency['type'] == 'set_radio':
                 if not dependency['source'] in data:
                     continue
@@ -377,18 +364,17 @@ class AbstractEvaluator(object):
                 if options_set & data_set:
                     data[dependency['target']] = dependency['additional']['anwser']
 
-    @classmethod
-    def process_answer(cls, answer):
+    def process_answer(self, answer):
         if not answer.body:
             return
 
-        results = cls.parse_query_string(answer.body)
+        results = self.parse_query_string(answer.body)
         if 'data' not in results:
             raise KeyError("There is data in post results. Answer: %s" % answer.pk)
 
         data = results['data']
 
-        cls.process_dependencies(data)
+        self.process_dependencies(data)
 
         if type(data) != dict:
             raise KeyError("Answer data should be dict. Answer: %s" % answer.pk)
@@ -398,69 +384,63 @@ class AbstractEvaluator(object):
         organization_id = answer.organization_id
 
         surv_key = (survey_id, country_id)
-        cls.update_survey_stat(surv_key, answer)
+        self.update_survey_stat(surv_key, answer)
 
         org_key = (survey_id, country_id, organization_id)
-        cls.update_organization_stat(org_key)
+        self.update_organization_stat(org_key)
 
         for qid, question_data in data.items():
-            if qid not in cls.question_dict:
+            if qid not in self.question_dict:
                 logger.warning("Question %s is not expected" % qid)
                 continue
-            if qid not in cls.question_representation_link:
+            if qid not in self.question_representation_link:
                 logger.warning("Question %s is not connected to any of representations" % qid)
                 continue
-            repr = cls.question_representation_link[qid]
+            repr = self.question_representation_link[qid]
             processor = "%s_processor" % repr.type
-            getattr(cls, processor)(qid, question_data, answer)
+            getattr(self, processor)(qid, question_data, answer)
 
         answer.is_updated = True
         answer.save(update_fields=['is_updated'])
 
-    @classmethod
-    def save(cls):
-        for surv_stat in cls.survey_stat.values():
+    def save(self):
+        for surv_stat in self.survey_stat.values():
             surv_stat.save()
-        for org_stat in cls.organization_stat.values():
+        for org_stat in self.organization_stat.values():
             org_stat.save()
-        for quest_stat in cls.question_stat.values():
+        for quest_stat in self.question_stat.values():
             quest_stat.update_vars()
             quest_stat.save()
 
     @classmethod
     @transaction.atomic
-    def process_answers(cls):
-        cls.clear()
-        cls.load_stat()
-        cls.fill_out()
-        answers = cls.get_answers()
+    def process_answers(cls, survey):
+        evaluator = cls(survey)
+        evaluator.fill_out()
+        answers = evaluator.get_answers()
         for answer in answers:
             try:
-                cls.process_answer(answer)
+                evaluator.process_answer(answer)
             except Exception as e:
-                cls.messages.append(str(e))
+                evaluator.messages.append(str(e))
                 logger.warning("Answer can't be processed. Exception: %s" % e)
 
-        cls.save()
-
-    def evaluate(self):
-        pass
+        evaluator.save()
+        return evaluator
 
 
 class TotalEvaluator(AbstractEvaluator):
-    @staticmethod
-    def get_answers():
-        return Answer.objects.all()
+    def __init__(self, survey):
+        survey.surveystat_set.all().delete()
+        survey.organizationstat_set.all().delete()
+        survey.questionstat_set.all().delete()
 
-    @classmethod
-    def clear(cls):
-        super(TotalEvaluator, cls).clear()
-        SurveyStat.objects.all().delete()
-        OrganizationStat.objects.all().delete()
-        QuestionStat.objects.all().delete()
+        super().__init__(survey)
+
+    def get_answers(self):
+        return self.survey.answers.all()
 
 
 class LastEvaluator(AbstractEvaluator):
-    @staticmethod
-    def get_answers():
-        return Answer.objects.filter(is_updated=False)
+    def get_answers(self):
+        return self.survey.answers.filter(is_updated=False)

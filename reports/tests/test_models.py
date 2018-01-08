@@ -59,7 +59,7 @@ class TestQuestionStat(TestCase):
         self.org3 = mixer.blend(Organization, name='Org3', name_plural_short='org3', ordering=3)
 
         self.q = mixer.blend(Question, text='Question text')
-        self.r = mixer.blend(Representation, question=[self.q], label1='label1', label2='label2', label3='label3')
+        self.r = mixer.blend(Representation, question=self.q, label1='label1', label2='label2', label3='label3')
 
         QuestionStat.clear()
         OptionDict.clear()

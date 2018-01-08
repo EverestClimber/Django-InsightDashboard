@@ -18,28 +18,31 @@ pytestmark = pytest.mark.django_db
 
 class TestUpdateStat(TestCase):
     def test_anonimous(self):
-        req = RequestFactory().get(reverse('reports:update_stat'))
+        req = RequestFactory().get(reverse('reports:update_stat', kwargs={'survey_id': 'test'}))
         req.user = AnonymousUser()
-        resp = update_stat(req)
+        resp = update_stat(req, 'test')
         assert resp.status_code == 302, 'Should redirect to auth'
 
     @patch('reports.views.LastEvaluator')
     def test_user_last(self, last_evaluator):
-        req = RequestFactory().get(reverse('reports:update_stat'))
+        survey = mixer.blend(Survey)
+        req = RequestFactory().get(reverse('reports:update_stat', kwargs={'survey_id': survey.slug}))
 
         req.user = mixer.blend(User)
-        resp = update_stat(req)
+        resp = update_stat(req, survey.slug)
         assert resp.status_code == 200, 'Allowed'
         last_evaluator.process_answers.assert_called_once_with()
 
     @patch('reports.views.TotalEvaluator')
     def test_user_last(self, total_evaluator):
-        req = RequestFactory().get(reverse('reports:update_stat') + '?total=1')
+        survey = mixer.blend(Survey)
+        req = RequestFactory().get(reverse('reports:update_stat',
+                                           kwargs={'survey_id': survey.slug}) + '?total=1')
 
         req.user = mixer.blend(User)
-        resp = update_stat(req)
+        resp = update_stat(req, survey.slug)
         assert resp.status_code == 200, 'Allowed'
-        total_evaluator.process_answers.assert_called_once_with()
+        total_evaluator.process_answers.assert_called_once_with(survey)
 
 
 class TestReports(TestCase):
@@ -57,7 +60,7 @@ class TestReports(TestCase):
         mixer.blend(SurveyStat, survey=s1, country=c1)
         mixer.blend(OrganizationStat, survey=s1, country_id=None, organization=o1)
         mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
-        TotalEvaluator.process_answers()
+        TotalEvaluator.process_answers(s1)
 
     def test_anonimous_advanced(self):
         kwargs = {'country': 'europe', 'survey_id': self.s1.pk}
