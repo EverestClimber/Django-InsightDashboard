@@ -97,7 +97,8 @@ class SurveyForm(forms.ModelForm):
 
 @admin.register(Survey)
 class SurveyAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('name', 'active', 'created_at')
+    list_display = ('name', 'therapeutic_area', 'get_countries', 'get_organizations',
+                    'active', 'start', 'end')
     search_fields = ['name']
     form = SurveyForm
     prepopulated_fields = {'slug': ('name',), }
@@ -107,6 +108,14 @@ class SurveyAdmin(nested_admin.NestedModelAdmin):
         css = {
             'all': ('css/custom_admin.css',)
         }
+
+    def get_countries(self, survey):
+        return ", ".join(c.name for c in survey.countries.all())
+    get_countries.short_description = _('Countries')
+
+    def get_organizations(self, survey):
+        return ", ".join(o.name for o in survey.organizations.all())
+    get_organizations.short_description = _('Organizations')
 
 
 @admin.register(Answer)

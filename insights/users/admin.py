@@ -51,13 +51,17 @@ class MyUserAdmin(AuthUserAdmin):
                                        'groups')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-    list_display = ('username', 'name', 'email', 'country',
+    list_display = ('username', 'name', 'email', 'country', 'get_ta',
                     'get_groups', 'is_staff', 'is_superuser')
     search_fields = ['name', 'email']
 
     def get_groups(self, user):
         return ", ".join(g.name for g in user.groups.all())
     get_groups.short_description = _('Groups')
+
+    def get_ta(self, user):
+        return ", ".join(ta.name for ta in user.therapeutic_areas.all())
+    get_ta.short_description = _('Therapeutic Areas')
 
 
 @admin.register(Country)

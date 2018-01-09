@@ -54,7 +54,7 @@ class Survey(models.Model):
     therapeutic_area = models.ForeignKey(TherapeuticArea, on_delete=models.CASCADE, null=True)
     countries = models.ManyToManyField(Country, related_name="surveys")
     organizations = models.ManyToManyField(Organization, related_name="surveys", blank=True)
-    active = models.BooleanField('Is survey active or not', default=False, db_index=True)
+    active = models.BooleanField('Is active', default=False, db_index=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
     start = models.DateTimeField(_('Starts at'))
     end = models.DateTimeField(_('Ends at'))
