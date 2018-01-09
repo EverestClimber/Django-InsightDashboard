@@ -7,10 +7,12 @@ from django.db import migrations
 
 def items_to_questions(apps, schema_editor):
     SurveyItem = apps.get_model('survey', 'SurveyItem')
-    for item in SurveyItem.objects.order_by('created_at'):
+    order = 1
+    for item in SurveyItem.objects.all():
         q = item.question
         q.survey_id = item.survey_id
-        q.ordering = item.ordering
+        q.ordering = order
+        order += 1
         q.save()
 
 

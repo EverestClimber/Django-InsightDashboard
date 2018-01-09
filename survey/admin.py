@@ -56,7 +56,7 @@ class QuestionTranslationInline(admin.StackedInline):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [QuestionTranslationInline]
-    list_display = ('id', 'type', 'field', 'text', 'created_at', 'depends_of', 'dependency_type')
+    list_display = ('id', 'ordering', 'type', 'field', 'text', 'created_at', 'depends_of', 'dependency_type')
     search_fields = ['text']
     form = QuestionModelForm
 
