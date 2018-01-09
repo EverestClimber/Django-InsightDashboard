@@ -165,7 +165,7 @@
                                   </li>
                                 {% endif %}
                                 <li>
-                                    <a class="user-link" href="#">
+                                    <a class="user-link" href="{% url 'users:detail' request.user.username %}">
                                         <div class="username">{{ request.user.name }}</div>
                                         <div class="userinfo">{{ request.user.country }}</div>
                                     </a>

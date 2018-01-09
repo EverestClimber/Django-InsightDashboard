@@ -265,9 +265,8 @@ class AbstractEvaluator(object):
     def fill_out(self):
         countries = list(self.survey.countries.all())
         countries.append(None)
-        representations = list(
-            Representation.objects.filter(question__survey_id=self.survey.pk).
-                select_related('question').filter(active=True))
+        representations = list(Representation.objects.filter(question__survey_id=self.survey.pk).
+                               select_related('question').filter(active=True))
 
         for country in countries:
             # Fill out survey stat
