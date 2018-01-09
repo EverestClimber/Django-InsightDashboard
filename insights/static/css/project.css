@@ -355,19 +355,19 @@ div.bootstrap-tagsinput input{
 .survey-row {
   background-color: white;
   border-radius: 5px;
-  margin-bottom: 25px;
-  font-size: 16px;
+  margin-bottom: 12px;
   border: 1px solid #eaecee;
   font-weight: 200;
+  font-size: 12px;
 }
 
 .survey-title-column, .survey-info-column, .survey-actions-column {
-  padding-top: 18px;
-  padding-bottom: 18px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .survey-row .svg-icon svg {
-  width: 46px;
+  width: 34px;
   fill: #a4a6a7;
   float: left;
   margin-right: 15px;
@@ -382,7 +382,6 @@ div.bootstrap-tagsinput input{
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  margin-bottom: 3px;
 }
 
 .survey-info-column {
@@ -393,12 +392,12 @@ div.bootstrap-tagsinput input{
   display: inline-block;
   text-align: center;
   margin-right: 30px;
-  padding-top: 5px;
+  padding-top: 2px;
 }
 
 .survey-info-label, .report-survey-info-label {
   color: #b9bbbb;
-  font-size: 14px;
+  font-size: 10px;
 }
 .report-survey-info-label {
   color: #999;
@@ -406,16 +405,6 @@ div.bootstrap-tagsinput input{
 
 .survey-actions-column {
   text-align: right;
-}
-
-.survey-actions-column .btn {
-  font-size: 18px;
-  font-weight: 200;
-  padding: 10px 10px;
-}
-
-.survey-actions-column .btn {
-  margin-right: 15px;
 }
 
 .survey-actions-column .btn:last-child {

@@ -34,7 +34,7 @@
             </label></p>
             {% for survey in sl %}
               <div class="row survey-row {% if survey.is_active %}survey-row-active{% endif %}">
-                <div class="col-sm-7 col-md-3 col-lg-4 survey-title-column">
+                <div class="col-sm-7 col-md-5 col-lg-4 survey-title-column">
                   <i class="svg-icon">
                     {% if survey.is_active %}
                       {% svg 'survey-active' %}
@@ -45,7 +45,7 @@
                   <div class="survey-title">{{ survey.name }}</div>
                   <div class="survey-dates">{{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}</div>
                 </div>
-                <div class="col-md-5 col-lg-4 hidden-xs hidden-sm survey-info-column">
+                <div class="col-md-3 col-lg-4 hidden-xs hidden-sm survey-info-column">
                   <span class="survey-info">
                     <div class="survey-info-label">{% trans 'Therapeutic Area' %}</div>
                     <div class="survey-info-value">{{ survey.therapeutic_area.name|default:'-' }}</div>
