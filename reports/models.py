@@ -77,23 +77,23 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     class Meta:
         ordering = ['ordering', 'id']
 
-    @classmethod
-    def get_regions(cls, country_id):
-        if country_id in cls.regions_cache:
-            return cls.regions_cache[country_id]
+    def get_regions(self, country_id):
+        return Region.objects.filter(country_id=country_id)
+        # if country_id in cls.regions_cache:
+        #     return cls.regions_cache[country_id]
 
-        if country_id:
-            regions = list(Region.objects.filter(country_id=country_id))
-        else:
-            regions = list(Country.objects.filter(use_in_reports=True))
-        cls.regions_cache[country_id] = regions
-        return regions
+        # if country_id:
+        #     regions = list(Region.objects.filter(country_id=country_id))
+        # else:
+        #     regions = list(Country.objects.filter(use_in_reports=True))
+        # cls.regions_cache[country_id] = regions
+        # return regions
 
-    @classmethod
-    def get_organizations(cls):
-        if not cls.organizations_cache:
-            cls.organizations_cache = list(Organization.objects.all())
-        return cls.organizations_cache
+    def get_organizations(self):
+        return self.survey.organizations.all()
+        # if not cls.organizations_cache:
+        #     cls.organizations_cache = list(Organization.objects.all())
+        # return cls.organizations_cache
 
     @staticmethod
     def extract_dist_data(dist):
@@ -208,8 +208,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['pie_data'] = [data['main_cnt'] - data['main_yes'], data['main_yes']]
         self.vars['label1'] = self.representation.label1
 
-    @classmethod
-    def _calculate_top(cls, top, name_top=None, org_tops=None):
+    def _calculate_top(self, top, name_top=None, org_tops=None):
         # Initial data for Main Top table
         pack = []
         total = sum(top.values())
@@ -219,7 +218,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         if org_tops is None:
             org_tops = {}
 
-        orgs = cls.get_organizations()
+        orgs = self.get_organizations()
 
         for prop, s in top.items():
             prop_name = OptionDict.get(prop)
