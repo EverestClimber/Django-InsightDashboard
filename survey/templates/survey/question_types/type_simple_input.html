@@ -1,8 +1,29 @@
 {% include "survey/question_with_translation.html" with question=question lang=request.user.secondary_language %}
 <div class="form-group text-center">
+  {% if question.field == question.FIELD_PERCENT %}
+    <div class="centered">
+      <div class="input-group">
+        <div class="input-group-addon">%</div>
+        <input
+          id="type_simple_input-{{ question.pk }}"
+          type="number"
+          class="form-control percents"
+          name="data[{{ question.pk }}][main]"
+          pattern="[0-9]*"
+          data-rule-number="true"
+          data-rule-min="0"
+          data-msg-min="Please enter value between 0% and 100%"
+          data-rule-max="100"
+          data-msg-max="Please enter value between 0% and 100%"
+          onkeyup="$(this).valid(); return true;"
+          />
+      </div>
+    </div>
+  {% else %}
     <textarea
             rows="4"
             class="form-control"
             name="data[{{ question.pk }}]"
     ></textarea>
+  {% endif %}
 </div>

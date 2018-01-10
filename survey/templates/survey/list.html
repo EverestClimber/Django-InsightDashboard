@@ -34,7 +34,7 @@
             </label></p>
             {% for survey in sl %}
               <div class="row survey-row {% if survey.is_active %}survey-row-active{% endif %}">
-                <div class="col-sm-7 col-md-5 col-lg-4 survey-title-column">
+                <div class="col-sm-6 col-md-4 col-lg-4 survey-title-column">
                   <i class="svg-icon">
                     {% if survey.is_active %}
                       {% svg 'survey-active' %}
@@ -45,18 +45,18 @@
                   <div class="survey-title">{{ survey.name }}</div>
                   <div class="survey-dates">{{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}</div>
                 </div>
-                <div class="col-md-3 col-lg-4 hidden-xs hidden-sm survey-info-column">
+                <div class="col-sm-1 col-md-4 col-lg-4 survey-info-column">
                   <span class="survey-info">
                     <div class="survey-info-label">{% trans 'Therapeutic Area' %}</div>
                     <div class="survey-info-value">{{ survey.therapeutic_area.name|default:'-' }}</div>
                   </span>
-                  <span class="survey-info">
+                  <span class="survey-info hidden-sm">
                     <div class="survey-info-label">{% trans 'Responses' %}</div>
                     <div class="survey-info-value">{{ survey.answers.count }}</div>
                   </span>
                   {% with survey.get_last_answer as last_answer %}
                     {% if last_answer %}
-                      <span class="survey-info">
+                      <span class="survey-info hidden-sm">
                         <div class="survey-info-label">{% trans 'Last Entry' %}</div>
                         <div class="survey-info-value">{{ last_answer.created_at|date:'d M H:m T' }}</div>
                       </span>
@@ -69,7 +69,12 @@
                       <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Survey' %}</a>
                     {% endif %}
                   {% endif %}
-                  <a href="{% url 'reports:advanced' survey.slug request.user.country.slug %}" class="btn btn-default">{% trans 'View Report' %}</a>
+                  <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-default">{% trans 'View Report' %}</a>
+                  {% comment %}
+                  <a href="#" class="btn btn-default" title="{% trans 'More' %}">
+                    <i class="fa fa-ellipsis-v"></i>
+                  </a>
+                  {% endcomment %}
                 </div>
               </div>
             {% endfor %}

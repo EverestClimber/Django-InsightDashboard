@@ -211,11 +211,12 @@ div.bootstrap-tagsinput input{
 }
 
 
-.type_two_dependend_fields input.percents {
+input.form-control.percents {
   width: 100px;
 }
 
-.type_two_dependend_fields .centered {
+.type_two_dependend_fields .centered,
+.type_simple_input .centered {
   display: inline-block;
   width: 139px;
 }
@@ -403,8 +404,10 @@ div.bootstrap-tagsinput input{
   color: #999;
 }
 
-.survey-actions-column {
-  text-align: right;
+@media (min-width: 768px) {
+  .survey-actions-column {
+    text-align: right;
+  }
 }
 
 .survey-actions-column .btn:last-child {
