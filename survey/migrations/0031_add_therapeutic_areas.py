@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('survey', '0030_populate_survey_with_countnry_and_organization'),
-        ('users', '__latest__'),
+        ('users', '0014_auto_20180106_0559'),
     ]
 
     operations = [
