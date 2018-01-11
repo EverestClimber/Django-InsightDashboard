@@ -78,22 +78,13 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         ordering = ['ordering', 'id']
 
     def get_regions(self, country_id):
-        return Region.objects.filter(country_id=country_id)
-        # if country_id in cls.regions_cache:
-        #     return cls.regions_cache[country_id]
-
-        # if country_id:
-        #     regions = list(Region.objects.filter(country_id=country_id))
-        # else:
-        #     regions = list(Country.objects.filter(use_in_reports=True))
-        # cls.regions_cache[country_id] = regions
-        # return regions
+        if country_id is None:
+            return list(self.survey.countries.all())
+        else:
+            return list(Region.objects.filter(country_id=country_id))
 
     def get_organizations(self):
-        return self.survey.organizations.all()
-        # if not cls.organizations_cache:
-        #     cls.organizations_cache = list(Organization.objects.all())
-        # return cls.organizations_cache
+        return list(self.survey.organizations.all())
 
     @staticmethod
     def extract_dist_data(dist):
@@ -208,7 +199,8 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['pie_data'] = [data['main_cnt'] - data['main_yes'], data['main_yes']]
         self.vars['label1'] = self.representation.label1
 
-    def _calculate_top(self, top, name_top=None, org_tops=None):
+    @staticmethod
+    def _calculate_top(orgs, top, name_top=None, org_tops=None):
         # Initial data for Main Top table
         pack = []
         total = sum(top.values())
@@ -217,8 +209,6 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         org_pack = []
         if org_tops is None:
             org_tops = {}
-
-        orgs = self.get_organizations()
 
         for prop, s in top.items():
             prop_name = OptionDict.get(prop)
@@ -270,10 +260,11 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['label1'] = self.representation.label1
         self.vars['label2'] = self.representation.label2
         data = self.data
-        self.vars['top1'] = self._calculate_top(data['top1'], 'top1', data['org'])
-        self.vars['top3'] = self._calculate_top(data['top3'], 'top3', data['org'])
+        organizations = self.get_organizations()
+        self.vars['top1'] = self._calculate_top(organizations, data['top1'], 'top1', data['org'])
+        self.vars['top3'] = self._calculate_top(organizations, data['top3'], 'top3', data['org'])
         org_names = []
-        for org in self.get_organizations():
+        for org in organizations:
             org_names.append(org.name_plural_short.upper())
         self.vars['org_names'] = org_names
 

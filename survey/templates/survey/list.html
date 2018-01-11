@@ -71,9 +71,14 @@
                   {% endif %}
                   <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-default">{% trans 'View Report' %}</a>
                   {% comment %}
-                  <a href="#" class="btn btn-default" title="{% trans 'More' %}">
-                    <i class="fa fa-ellipsis-v"></i>
-                  </a>
+                  <span class="dropdown">
+                    <a href="#" id="dropdown_more_{{ survey.pk }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="{% trans 'More' %}">
+                      <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_more_{{ survey.pk }}">
+                      <li><a href="#">Preview</a></li>
+                    </ul>
+                  </span>
                   {% endcomment %}
                 </div>
               </div>

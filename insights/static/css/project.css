@@ -478,3 +478,7 @@ input.form-control.percents {
 .report-survey-name {
   font-size: 18px;
 }
+
+.dropdown-menu-right {
+  left: auto !important;
+}

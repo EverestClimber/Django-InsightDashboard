@@ -3,7 +3,7 @@ import pytest
 
 from django.test import TestCase
 
-from survey.models import Option, Region, Organization, Question
+from survey.models import Option, Region, Organization, Question, Survey
 from insights.users.models import User, Country
 from ..models import OptionDict, QuestionStat, Representation
 
@@ -48,7 +48,6 @@ class TestQuestionStat(TestCase):
         self.c1 = mixer.blend(Country, name='Spain', ordering=1, use_in_reports=True)
         self.c2 = mixer.blend(Country, name='France', ordering=2, use_in_reports=True)
         self.c3 = mixer.blend(Country, name='Italy', ordering=3, use_in_reports=True)
-        self.c3 = mixer.blend(Country, name='Other', ordering=3, use_in_reports=False)
 
         self.reg1 = mixer.blend(Region, country=self.c1, name='East', ordering=1)
         self.reg2 = mixer.blend(Region, country=self.c1, name='West', ordering=2)
@@ -58,7 +57,10 @@ class TestQuestionStat(TestCase):
         self.org2 = mixer.blend(Organization, name='Org2', name_plural_short='org2', ordering=2)
         self.org3 = mixer.blend(Organization, name='Org3', name_plural_short='org3', ordering=3)
 
-        self.q = mixer.blend(Question, text='Question text')
+        self.s = mixer.blend(Survey, countries=[self.c1, self.c2, self.c3],
+                             organizations=[self.org1, self.org2, self.org3])
+
+        self.q = mixer.blend(Question, text='Question text', survey=self.s)
         self.r = mixer.blend(Representation, question=self.q, label1='label1', label2='label2', label3='label3')
 
         QuestionStat.clear()
@@ -199,6 +201,7 @@ class TestQuestionStat(TestCase):
             'dist': {'20': 1, '30': 1, '40': 1}
         }
         qs0 = mixer.blend(QuestionStat,
+                          survey=self.s,
                           representation=self.r,
                           data=data,
                           country=None,
@@ -241,6 +244,7 @@ class TestQuestionStat(TestCase):
         }
 
         qs1 = mixer.blend(QuestionStat,
+                          survey=self.s,
                           representation=self.r,
                           data=data,
                           country=self.c1,
@@ -277,6 +281,7 @@ class TestQuestionStat(TestCase):
         }
 
         qs0 = mixer.blend(QuestionStat,
+                          survey=self.s,
                           representation=self.r,
                           data=data,
                           country=None,
@@ -301,6 +306,7 @@ class TestQuestionStat(TestCase):
         }
 
         qs1 = mixer.blend(QuestionStat,
+                          survey=self.s,
                           representation=self.r,
                           data=data,
                           country=self.c1,
@@ -338,7 +344,7 @@ class TestQuestionStat(TestCase):
             'x10': 5,
             'x11': 5
         }
-        result = QuestionStat._calculate_top(top)
+        result = QuestionStat._calculate_top(Organization.objects.all(), top)
 
         assert result['pie'] == {
             'labels': ('x1', 'x2', 'x3', 'Other'),
@@ -366,7 +372,7 @@ class TestQuestionStat(TestCase):
             'x3': 20,
             'x4': 10,
         }
-        result = QuestionStat._calculate_top(top)
+        result = QuestionStat._calculate_top(Organization.objects.all(), top)
         assert result['pie'] == {
             'labels': ('x1', 'x2', 'x3', 'Other'),
             'data': (40, 30, 20, 10),
@@ -384,7 +390,7 @@ class TestQuestionStat(TestCase):
             'x2': 30,
             'x3': 20
         }
-        result = QuestionStat._calculate_top(top)
+        result = QuestionStat._calculate_top(Organization.objects.all(), top)
         assert result['pie'] == {
             'labels': ('x1', 'x2', 'x3', ''),
             'data': (50, 30, 20, 0),
@@ -395,7 +401,7 @@ class TestQuestionStat(TestCase):
             'x1': 50,
             'x2': 30,
         }
-        result = QuestionStat._calculate_top(top)
+        result = QuestionStat._calculate_top(Organization.objects.all(), top)
         assert result['pie'] == {
             'labels': ('x1', 'x2', '', ''),
             'data': (50, 30, 0, 0),
@@ -405,7 +411,7 @@ class TestQuestionStat(TestCase):
         top = {
             'x1': 50,
         }
-        result = QuestionStat._calculate_top(top)
+        result = QuestionStat._calculate_top(Organization.objects.all(), top)
         assert result['pie'] == {
             'labels': ('x1', '', '', ''),
             'data': (50, 0, 0, 0),
@@ -434,6 +440,7 @@ class TestQuestionStat(TestCase):
         mixer.blend(OptionDict, lower='x1', original='X1')
 
         qs0 = mixer.blend(QuestionStat,
+                          survey=self.s,
                           representation=self.r,
                           data=data,
                           country=None,
@@ -484,6 +491,7 @@ class TestQuestionStat(TestCase):
         }
 
         qs1 = mixer.blend(QuestionStat,
+                          survey=self.s,
                           representation=self.r,
                           data=data,
                           country=self.c1,
