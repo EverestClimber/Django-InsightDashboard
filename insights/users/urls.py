@@ -17,9 +17,24 @@ urlpatterns = [
         name='redirect'
     ),
     url(
-        regex=r'^(?P<username>[\w.@+-]+)/$',
+        regex=r'^(?P<username>[\w.@+-]+)/?$',
         view=views.UserDetailView.as_view(),
         name='detail'
+    ),
+    url(
+        regex=r'^(?P<username>[\w.@+-]+)/change/?$',
+        view=views.UserUpdateView.as_view(),
+        name='update_user'
+    ),
+    url(
+        regex=r'^(?P<username>[\w.@+-]+)/set_password/?$',
+        view=views.UserSetPasswordView.as_view(),
+        name='set_password'
+    ),
+    url(
+        regex=r'^~create/?$',
+        view=views.UserCreateView.as_view(),
+        name='create_user'
     ),
     url(
         regex=r'^~update/$',

@@ -1,17 +1,80 @@
 {% extends "base.html" %}
 {% load static i18n %}
-{% block title %}Members{% endblock %}
+
+{% block css %}
+  {# from https://cdn.datatables.net/r/bs-3.3.5/dt-1.10.8,b-1.0.1/datatables.min.css #}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}"/>
+  {{ block.super }}
+  <style>
+    .wrapper.wrapper-content {
+      padding: 40px 0px !important;
+    }
+
+    .container {
+      max-width: 1200px;
+    }
+
+    .users-list {
+      background-color: #f9f9f9;
+    }
+
+    th {
+      white-space: nowrap;
+    }
+  </style>
+{% endblock css %}
+
+{% block javascript %}
+  {{ block.super }}
+    {# from https://cdn.datatables.net/r/bs-3.3.5/dt-1.10.8,b-1.0.1/datatables.min.js #}
+    <script type="text/javascript" src="{% static 'js/datatables.min.js' %}"></script>
+{% endblock javascript %}
 
 {% block content %}
-<div class="container">
-  <h2>Users</h2>
-
-  <div class="list-group">
-    {% for user in user_list %}
-      <a href="{% url 'users:detail' user.username %}" class="list-group-item">
-        <h4 class="list-group-item-heading">{{ user.username }}</h4>
-      </a>
-    {% endfor %}
-  </div>
-</div>
+  <table class="users-list table table-bordered table-hover" data-add_user_url="{% url 'users:create_user' %}">
+    <thead>
+      <tr>
+        <th>{% trans 'Name' %}</th>
+        <th>{% trans 'Email' %}</th>
+        <th>{% trans 'Therapeutic Area' %}</th>
+        <th>{% trans 'Country' %}</th>
+        <th>{% trans 'Last Login' %}</th>
+        <th>{% trans 'Groups' %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in user_list %}
+        <tr>
+          <td><a href="{% url 'users:update_user' user.username %}">{{ user.name|default:'<i>Not defined</i>' }}</a></td>
+          <td>{{ user.email }}</td>
+          <td>
+            {% for ta in user.therapeutic_areas.all %}
+              {% if not forloop.first %}, {% endif %}
+              {{ ta.name }}
+            {% endfor %}
+          </td>
+          <td>{{ user.country }}</td>
+          <td>{{ user.last_login }}</td>
+          <td>
+            {{ user.get_flags }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script type="text/javascript" charset="utf-8">
+    $('.users-list').DataTable({
+      scrollX: true,
+      dom:
+        "<'row'<'col-sm-4'l><'col-sm-4 text-center'B><'col-sm-4'f>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      buttons: [{
+        text: 'Add User',
+        action: function (e, dt, node, config) {
+          window.location.href = $('.users-list').data('add_user_url');
+        }
+      }]
+    });
+  </script>
 {% endblock content %}

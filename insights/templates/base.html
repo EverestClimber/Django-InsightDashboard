@@ -116,7 +116,7 @@
                                 </li>
                                 {% if perms.users.add_user %}
                                     <li class="">
-                                        <a href="{% url 'admin:app_list' 'users' %}">
+                                        <a href="{% url 'users:list' %}">
                                             <i class="svg-icon">{% svg 'menu-users' %}</i>
                                             {% trans "Users" %}
                                         </a>

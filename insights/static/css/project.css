@@ -482,3 +482,7 @@ input.form-control.percents {
 .dropdown-menu-right {
   left: auto !important;
 }
+
+.help-block {
+  margin-bottom: 0;
+}
