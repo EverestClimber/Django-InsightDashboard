@@ -396,12 +396,18 @@ input.form-control.percents {
   padding-top: 2px;
 }
 
-.survey-info-label, .report-survey-info-label {
+.survey-info-label {
   color: #b9bbbb;
   font-size: 10px;
 }
+
 .report-survey-info-label {
   color: #999;
+  font-size: 14px;
+}
+
+.report-survey-info-value {
+  padding: 4px 0;
 }
 
 @media (min-width: 768px) {
@@ -471,12 +477,23 @@ input.form-control.percents {
   }
 }
 
-.report-survey-name-col, .report-survey-info-col, .report-survey-filter-col {
+.report-survey-name-col, .report-survey-info-col, .report-survey-info-filter-col {
   margin-bottom: 15px;
+}
+
+.report-survey-info-filter-col label {
+  font-weight: 200;
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 0;
 }
 
 .report-survey-name {
   font-size: 18px;
+}
+
+.report-survey-dates {
+  padding-bottom: 3px;
 }
 
 .dropdown-menu-right {

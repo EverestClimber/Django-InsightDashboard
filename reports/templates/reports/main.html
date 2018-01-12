@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="col-md-2 report-survey-info-filter-col">
-      {# <label for="report-filter">{% trans 'Filter:' %}</label> #}
+      <label for="report-filter">{% trans 'Country' %}</label>
       <select id="report-filter" class="report-filter selectpicker" data-width="100%" onchange="">
         <option value="all" {% if not country %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug 'all' %}">All</option>
         {% get_countries as countries %}
