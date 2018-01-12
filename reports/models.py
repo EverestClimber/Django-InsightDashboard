@@ -33,12 +33,16 @@ class OrganizationStat(Stat):
 class RepresentationTypeMixin(models.Model):
     TYPE_AVERAGE_PERCENT = 'type_average_percent'
     TYPE_YES_NO = 'type_yes_no'
+    TYPE_MULTISELECT = 'type_multiselect'
     TYPE_MULTISELECT_TOP = 'type_multiselect_top'
+    TYPE_MULTISELECT_TOP5 = 'type_multiselect_top5'
 
     TYPE_CHOICES = (
         (TYPE_AVERAGE_PERCENT, 'Average percent representation'),
         (TYPE_YES_NO, 'Representation for "yes" or "no" answers'),
+        (TYPE_MULTISELECT, 'Pie chart for multiselect'),
         (TYPE_MULTISELECT_TOP, 'Top 1 and top 3 representation for ordered multiselect'),
+        (TYPE_MULTISELECT_TOP5, 'Top 5 representation for ordered multiselect'),
 
     )
     type = models.CharField('Representation Type', choices=TYPE_CHOICES, max_length=50, null=True)
@@ -230,8 +234,9 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         org_pack.sort(key=lambda x: (-x[0], x[1]))
 
         # Pies:
-        pied = pack[:3]
-        other = pack[3:]
+        threshold = 5 if name_top == 'top5' else 3
+        pied = pack[:threshold]
+        other = pack[threshold:]
         hide_last_legend_item = 'false'  # !! this is correct
         if other:
             other_s = sum([x[0] for x in other])
@@ -267,6 +272,20 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         for org in organizations:
             org_names.append(org.name_plural_short.upper())
         self.vars['org_names'] = org_names
+
+    def update_type_multiselect_top5(self):
+        self.vars['label1'] = self.representation.label1
+        self.vars['label2'] = self.representation.label2
+        data = self.data
+        organizations = self.get_organizations()
+        self.vars['top5'] = self._calculate_top(organizations, data['top5'], 'top5', data['org'])
+        org_names = []
+        for org in organizations:
+            org_names.append(org.name_plural_short.upper())
+        self.vars['org_names'] = org_names
+
+    def update_type_multiselect(self):
+        raise NotImplementedError()
 
     def update_vars(self):
         try:

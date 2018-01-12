@@ -117,7 +117,7 @@ class Question(models.Model):
 
     DEPENDENCY_CHOICES = (
         (DEPENDENCY_INCLUSION, 'Question is included to other question with TYPE_TWO_DEPENDEND_FIELDS type'),
-        (DEPENDENCY_CONTEXTUAL, 'Question availability depends of other question'),
+        (DEPENDENCY_CONTEXTUAL, 'Question availability depends on other question'),
     )
 
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='questions',
@@ -126,7 +126,8 @@ class Question(models.Model):
     type = models.CharField('Question Type', choices=TYPE_CHOICES, max_length=50)
     field = models.PositiveIntegerField('Field Type', null=True, blank=True, choices=FIELD_CHOICES)
     text = models.CharField('Question text', max_length=1000)
-    depends_of = models.ForeignKey('self', null=True, blank=True)
+    depends_on = models.ForeignKey('self', null=True, blank=True)
+    available_if = models.CharField(_('Dependent question answer'), max_length=200, blank=True)
     dependency_type = models.PositiveIntegerField('Dependency Type', null=True, blank=True, choices=DEPENDENCY_CHOICES)
     script = models.CharField('Additional script', max_length=5000, null=True, blank=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)

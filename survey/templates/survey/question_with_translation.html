@@ -1,6 +1,6 @@
 {% load get_translation from survey_tags %}
 
-<div class="question">{{ question.text }}</div>
+<div class="question question-main" data-depends_on="{{ question.depends_on_id }}" data-available_if="{{ question.available_if }}">{{ question.text }}</div>
 {% get_translation question lang as t %}
 {% if t %}
   <div class="question">{{ t }}</div>

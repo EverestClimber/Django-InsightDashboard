@@ -32,7 +32,8 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
-    fields = ['name', 'email', 'therapeutic_areas', 'country', 'secondary_language', 'groups', 'is_superuser' ]
+    fields = ['name', 'email', 'therapeutic_areas', 'country',
+              'secondary_language', 'groups', 'is_superuser']
 
     model = User
     slug_field = 'username'
@@ -59,7 +60,9 @@ class CreateUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password1', 'password2', 'name', 'therapeutic_areas', 'country', 'secondary_language', 'groups', 'is_superuser' ]
+        fields = ['email', 'password1', 'password2', 'name',
+                  'therapeutic_areas', 'country', 'secondary_language',
+                  'groups', 'is_superuser']
 
     def clean(self):
         cleaned_data = super().clean()

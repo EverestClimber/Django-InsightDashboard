@@ -17,6 +17,100 @@
         </div>
 
     </form>
+    <script>
+        (function () {
+
+            var form = $('#survey-pass-form');
+            var already_jumped = false;
+            form.validate({
+                onkeyup: true,
+                highlight: function (element) {
+                    $(element).closest('.form-group').addClass('has-error');
+                },
+                unhighlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error');
+                },
+                errorElement: 'div',
+                errorClass: 'help-block',
+                errorPlacement: function (error, element) {
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+
+            $("#wizard").steps({
+                titleTemplate: '<span class="number">#index#</span>',
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    // console.log('test');
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    // console.log(form.valid());
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    var q = $('.body:eq(' + currentIndex + ') .question-main', form);
+                    var depends_on = q.data('depends_on');
+                    if (depends_on) {
+                        var available_if = q.attr('data-available_if');
+                        var dependend_input = $('[name=data\\[' + depends_on + '\\]]', form);
+                        if (dependend_input.length === 0) {
+                            dependend_input = $('[name=data\\[' + depends_on + '\\]\\[main\\]]', form);
+                            if (dependend_input.length === 0) {
+                                dependend_input = $('[name=data\\[' + depends_on + '\\]\\[\\]]:checked', form);
+                            }
+                        }
+                        var dependend_answer = [];
+                        dependend_input.each(function () {
+                            dependend_answer.push($(this).val());
+                        });
+                        console.log('=============', q, depends_on, available_if, dependend_answer);
+                        if (dependend_answer.indexOf(available_if) === -1) {
+                            $('#wizard .actions').find('a[href=#next]:visible, a[href=#finish]:visible').click();
+                        }
+                    }
+
+                    // TODO remove this dirty hack
+                    connect_dependend_widget_list([1, 2], 5);
+                    connect_dependend_widget_list([26, 27], 13);
+
+                    if (priorIndex == 6) {
+                        if ($(".btn-type_yes_no-breaking-No.fancy-checked").length && !already_jumped) {
+                            for (i=7; i<=14; i++) {
+                                $('#wizard .actions a[href="#next"]').get(0).click();
+                            }
+                            already_jumped = true;
+                        }
+                    }
+
+
+                },
+
+                onFinished: function (event, currentIndex) {
+                    $('#survey-pass-form').submit();
+                },
+            });
+
+            $("#wizard").show();
+        })();
+    </script>
 {% endblock content %}
 
 {% block css %}{{ block.super }}
@@ -29,77 +123,3 @@
 
         <script type="text/javascript" src="{% static 'js/plugins/jquery.validate.min.js' %}"></script>
 {% endblock javascript %}
-
-
-{% block inlinescript %}
-
-        var form = $('#survey-pass-form');
-        var already_jumped = false;
-        form.validate({
-            onkeyup: true,
-            highlight: function (element) {
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error');
-            },
-            errorElement: 'div',
-            errorClass: 'help-block',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
-
-        $("#wizard").steps({
-            titleTemplate: '<span class="number">#index#</span>',
-            onStepChanging: function (event, currentIndex, newIndex) {
-                // Always allow going backward even if the current step contains invalid fields!
-                // console.log('test');
-                if (currentIndex > newIndex) {
-                    return true;
-                }
-
-
-                // Clean up if user went backward before
-                if (currentIndex < newIndex) {
-                    // To remove error styles
-                    $(".body:eq(" + newIndex + ") label.error", form).remove();
-                    $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-                }
-
-                // Disable validation on fields that are disabled or hidden.
-                form.validate().settings.ignore = ":disabled,:hidden";
-
-                // Start validation; Prevent going forward if false
-                // console.log(form.valid());
-                return form.valid();
-            },
-            onStepChanged: function (event, currentIndex, priorIndex) {
-                connect_dependend_widget_list([1, 2], 5);
-                connect_dependend_widget_list([26, 27], 13);
-
-                if (priorIndex == 6) {
-                    if ($(".btn-type_yes_no-breaking-No.fancy-checked").length && !already_jumped) {
-                        for (i=7; i<=14; i++) {
-                            $('#wizard .actions a[href="#next"]').get(0).click();
-                        }
-                        already_jumped = true;
-                    }
-                }
-
-
-            },
-
-            onFinished: function (event, currentIndex) {
-                $('#survey-pass-form').submit();
-            },
-        });
-
-        $("#wizard").show();
-
-
-{% endblock inlinescript %}
