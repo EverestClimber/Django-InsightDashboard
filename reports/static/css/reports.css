@@ -744,23 +744,28 @@
   font-size: 20px;
 }
 
-.report-multiselect tr:nth-child(1) {
+.report-multiselect tr:nth-child(1),
+.report-multiselect-top5 tr:nth-child(1) {
   background-color: #b8103b;
   color: white;
 }
-.report-multiselect tr:nth-child(2) {
+.report-multiselect tr:nth-child(2),
+.report-multiselect-top5 tr:nth-child(2) {
   background-color: #328ec9;
   color: white;
 }
-.report-multiselect tr:nth-child(3) {
+.report-multiselect tr:nth-child(3),
+.report-multiselect-top5 tr:nth-child(3) {
   background-color: #84bbdf;
   color: white;
 }
-.report-multiselect tr:nth-child(4) {
+.report-multiselect tr:nth-child(4),
+.report-multiselect-top5 tr:nth-child(4) {
   background-color: #79a7ac;
   color: white;
 }
-.report-multiselect tr:nth-child(5) {
+.report-multiselect tr:nth-child(5),
+.report-multiselect-top5 tr:nth-child(5) {
   background-color: #65b847;
   color: white;
 }
