@@ -234,7 +234,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         org_pack.sort(key=lambda x: (-x[0], x[1]))
 
         # Pies:
-        threshold = 5 if name_top == 'top5' else (3 if name_top == 'top3' else len(pack))
+        threshold = 5 if name_top == 'top5' else (3 if name_top in ('top1', 'top3') else len(pack))
         pied = pack[:threshold]
         other = pack[threshold:]
         hide_last_legend_item = 'false'  # !! this is correct
