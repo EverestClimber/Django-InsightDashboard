@@ -10,7 +10,7 @@
       <div class="col-sm-12 col-md-6">
         <div class="report-card chart-card q1-pie-card report-card-blue">
           <div class="report-card-head">
-            <div class="title">{{ stat.vars.region_name | upper }} TOP #5</div>
+            <div class="title">{{ stat.vars.region_name | upper }} TOP</div>
             <div class="head-delim"></div>
           </div>
           <div class="report-card-body">
@@ -33,15 +33,15 @@
       <div class="col-sm-12 col-md-6">
         <div class="report-card report-card-table report-card-blue">
           <div class="report-card-head text-center">
-            <div class="title">{{ stat.vars.region_name | upper }} TOP #5</div>
+            <div class="title">{{ stat.vars.region_name | upper }} TOP</div>
             <div class="head-delim"></div>
           </div>
           <div class="report-card-body">
             <table class="table report-table report-multiselect">
               <tbody>
 
-                {% for x in stat.vars.top5.table %}
-                  <tr class="">
+                {% for x in stat.vars.top.table %}
+                  <tr>
                     <td>{{ forloop.counter }}. {{ x.1 }}</td>
                     <td class="text-right">{{ x.2|floatformat:"0" }}%</td>
                   </tr>
@@ -58,16 +58,20 @@
   <script>
     function drawQ{{ i }}RightPie() {
       var RightPieData = {
-        labels: {{ stat.vars.top5.pie.labels | safe }},
+        labels: {{ stat.vars.top.pie.labels | safe }},
         datasets: [
           {
-            data: {{ stat.vars.top5.pie.data }},
+            data: {{ stat.vars.top.pie.data }},
             backgroundColor: [
               "#b8103b",
               "#328ec9",
               '#84bbdf',
               '#79a7ac',
               '#65b847',
+              '#c0c2a8',
+              '#7b8988',
+              '#884d9e',
+              '#86516b',
               '#f9f9f9'
             ],
             hoverBackgroundColor: [
@@ -76,11 +80,39 @@
               '#84bbdf',
               '#79a7ac',
               '#65b847',
+              '#c0c2a8',
+              '#7b8988',
+              '#884d9e',
+              '#86516b',
               '#f9f9f9'
             ]
           }],
-        hideLastLegendItem: {{ stat.vars.top5.pie.hide_last_legend_item }}
+        hideLastLegendItem: {{ stat.vars.top.pie.hide_last_legend_item }}
       };
+
+NEW_COLORS_SET = [
+    '#2db8c7',
+    '#1d99d5',
+    '#77c2e6',
+    '#d0f4f9',
+    '#79a7ac',
+    '#afcacd',
+    '#d4d5d6',
+    '#65b847',
+    '#a3d491',
+    '#85a678',
+    '#c0c2a8',
+    '#7b8988',
+    '#b0b8b8',
+    '#c4a294',
+    '#f2e6e0',
+    '#bd9ac1',
+    '#a9b4cc',
+    '#7d8699',
+    '#485066',
+    '#86516b',
+    '#884d9e',
+];
 
       ChartDrawer.drawPie(RightPieData, '#q{{ i }}RightPie', '#q{{ i }}RightPieLegend');
     }

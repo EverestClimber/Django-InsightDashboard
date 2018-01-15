@@ -20,9 +20,7 @@
             <tbody>
               {% for x in stat.vars.top1.org_table %}
                 <tr class="
-                  {% if forloop.counter == 1 %}report-table-first-gray{% endif %}
-                  {% if forloop.counter == 2 %}report-table-second-gray{% endif %}
-                  {% if forloop.counter == 3 %}report-table-third-gray{% endif %}
+                  report-table-{{ forloop.counter }}-gray
                  ">
                   <td>{{ forloop.counter }}. {{ x.1 }}</td>
                   {% for p in x.2 %}
@@ -53,9 +51,7 @@
             <tbody>
               {% for x in stat.vars.top3.org_table %}
                 <tr class="
-                  {% if forloop.counter == 1 %}report-table-first-gray{% endif %}
-                  {% if forloop.counter == 2 %}report-table-second-gray{% endif %}
-                  {% if forloop.counter == 3 %}report-table-third-gray{% endif %}
+                  report-table-{{ forloop.counter }}-gray
                  ">
                   <td>{{ forloop.counter }}. {{ x.1 }}</td>
                   {% for p in x.2 %}

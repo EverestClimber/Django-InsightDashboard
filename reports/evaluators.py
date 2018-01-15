@@ -244,7 +244,66 @@ class AbstractEvaluator(object):
                     data['org'][org_key]['top3'][top_i] = 1
 
     def type_multiselect_processor(self, question_id, question_data, answer):
-        raise NotImplementedError()
+        q = self.question_dict[question_id]
+        if q.type != Question.TYPE_MULTISELECT_WITH_OTHER:
+            raise ValueError("type_multiselect_processor doesn't process %s. Question: %s" % (q.type, q.pk))
+
+        if not question_data or '' not in question_data:
+            return
+
+        options = question_data['']
+        if not options:
+            return
+
+        top = []
+
+        for i, opt in enumerate(options):
+            opt = opt.strip()
+            if not opt:
+                continue
+
+            lower = opt.lower()
+            OptionDict.register(lower, opt)
+
+            if lower not in top:
+                top.append(lower)
+
+        r = self.question_representation_link[question_id]
+        org_key = str(answer.organization_id)
+        country_id = answer.country_id
+        survey_id = answer.survey_id
+        k0 = (survey_id, None, r.pk)
+        k1 = (survey_id, country_id, r.pk)
+
+        for k in [k0, k1]:
+            data = self.question_stat[k].data
+            if not data:
+                data.update({
+                    'cnt': 0,
+                    'top': {},
+                    'org': {},
+                })
+
+            data['cnt'] += 1
+
+            if org_key not in data['org']:
+                data['org'][org_key] = {
+                    'cnt': 0,
+                    'top': {},
+                }
+
+            data['org'][org_key]['cnt'] += 1
+
+            for top_i in top:
+                if top_i in data['top']:
+                    data['top'][top_i] += 1
+                else:
+                    data['top'][top_i] = 1
+
+                if top_i in data['org'][org_key]['top']:
+                    data['org'][org_key]['top'][top_i] += 1
+                else:
+                    data['org'][org_key]['top'][top_i] = 1
 
     def type_multiselect_top5_processor(self, question_id, question_data, answer):
         q = self.question_dict[question_id]

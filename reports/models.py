@@ -234,7 +234,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         org_pack.sort(key=lambda x: (-x[0], x[1]))
 
         # Pies:
-        threshold = 5 if name_top == 'top5' else 3
+        threshold = 5 if name_top == 'top5' else (3 if name_top == 'top3' else len(pack))
         pied = pack[:threshold]
         other = pack[threshold:]
         hide_last_legend_item = 'false'  # !! this is correct
@@ -285,7 +285,15 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         self.vars['org_names'] = org_names
 
     def update_type_multiselect(self):
-        raise NotImplementedError()
+        self.vars['label1'] = self.representation.label1
+        self.vars['label2'] = self.representation.label2
+        data = self.data
+        organizations = self.get_organizations()
+        self.vars['top'] = self._calculate_top(organizations, data['top'], 'top', data['org'])
+        org_names = []
+        for org in organizations:
+            org_names.append(org.name_plural_short.upper())
+        self.vars['org_names'] = org_names
 
     def update_vars(self):
         try:

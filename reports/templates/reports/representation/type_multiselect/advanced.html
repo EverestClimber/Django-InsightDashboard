@@ -6,7 +6,7 @@
     <div class="col-sm-12 col-md-6">
       <div class="report-card report-card-table report-card-gray">
         <div class="report-card-head text-center">
-          <div class="title">BY ORGANIZATION TOP #5</div>
+          <div class="title">BY ORGANIZATION TOP</div>
           <div class="head-delim"></div>
         </div>
         <div class="report-card-body">
@@ -18,7 +18,7 @@
             {% endfor %}
             </thead>
             <tbody>
-              {% for x in stat.vars.top5.org_table %}
+              {% for x in stat.vars.top.org_table %}
                 <tr class="
                   report-table-{{ forloop.counter }}-gray
                  ">
