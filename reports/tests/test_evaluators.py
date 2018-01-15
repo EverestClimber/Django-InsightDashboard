@@ -502,35 +502,39 @@ class TestTypeProcessor(TestCase):
                                 country=self.c1, region=self.reg11)
         a2 = self.create_answer(body='data[{0}][]=x1&data[{0}][]=x2'.format(qid), region=self.reg12)
         a3 = self.create_answer(body='data[{0}][]=x2&data[{0}][]=x3'.format(qid), country=self.c2, region=self.reg21)
+        a4 = self.create_answer(body='data[{0}][]=x3'.format(qid), country=self.c2, region=self.reg21)
 
         self.evaluator.type_multiselect_top_processor(qid, {'': ['x1', 'x2', 'x3', 'x4', ''], 'other': ''}, a1)
         self.evaluator.type_multiselect_top_processor(qid, {'': ['X1', 'x2', ''], 'other': ''}, a2)
         self.evaluator.type_multiselect_top_processor(qid, {'': ['x2', 'X3', 'x3', ''], 'other': ''}, a3)
+        self.evaluator.type_multiselect_top_processor(qid, {'': 'x3', 'other': ''}, a4)
 
         k0 = (self.surv.pk, None, self.r.pk)
         k1 = (self.surv.pk, self.c1.pk, self.r.pk)
         data = self.evaluator.question_stat[k0].data
-        assert data['cnt'] == 3
+        assert data['cnt'] == 4
         assert data['top1'] == {
             'x1': 2,
-            'x2': 1
+            'x2': 1,
+            'x3': 1,
         }
         assert data['top3'] == {
             'x1': 2,
             'x2': 3,
-            'x3': 2
+            'x3': 3
         }
         assert data['org'] == {
             str(self.org.pk): {
-                'cnt': 3,
+                'cnt': 4,
                 'top1': {
                     'x1': 2,
-                    'x2': 1
+                    'x2': 1,
+                    'x3': 1,
                 },
                 'top3': {
                     'x1': 2,
                     'x2': 3,
-                    'x3': 2
+                    'x3': 3
                 }
             }
         }
@@ -543,7 +547,7 @@ class TestTypeProcessor(TestCase):
         assert data['top3'] == {
             'x1': 2,
             'x2': 2,
-            'x3': 1
+            'x3': 1,
         }
         assert data['org'] == {
             str(self.org.pk): {

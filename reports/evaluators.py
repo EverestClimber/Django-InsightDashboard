@@ -175,6 +175,9 @@ class AbstractEvaluator(object):
         options = question_data['']
         if not options:
             return
+        if isinstance(options, str):
+            options = [options]
+
 
         top3 = []
 
@@ -254,6 +257,8 @@ class AbstractEvaluator(object):
         options = question_data['']
         if not options:
             return
+        if isinstance(options, str):
+            options = [options]
 
         top = []
 
@@ -316,6 +321,8 @@ class AbstractEvaluator(object):
         options = question_data['']
         if not options:
             return
+        if isinstance(options, str):
+            options = [options]
 
         top5 = []
 
@@ -492,7 +499,7 @@ class AbstractEvaluator(object):
 
         results = self.parse_query_string(answer.body)
         if 'data' not in results:
-            raise KeyError("There is data in post results. Answer: %s" % answer.pk)
+            raise KeyError("There is no data in post results. Answer: %s" % answer.pk)
 
         data = results['data']
 
