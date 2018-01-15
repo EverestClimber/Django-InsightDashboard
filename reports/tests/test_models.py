@@ -344,7 +344,7 @@ class TestQuestionStat(TestCase):
             'x10': 5,
             'x11': 5
         }
-        result = QuestionStat._calculate_top(Organization.objects.all(), top)
+        result = QuestionStat._calculate_top(Organization.objects.all(), top, 'top3')
 
         assert result['pie'] == {
             'labels': ('x1', 'x2', 'x3', 'Other'),
@@ -372,7 +372,7 @@ class TestQuestionStat(TestCase):
             'x3': 20,
             'x4': 10,
         }
-        result = QuestionStat._calculate_top(Organization.objects.all(), top)
+        result = QuestionStat._calculate_top(Organization.objects.all(), top, 'top3')
         assert result['pie'] == {
             'labels': ('x1', 'x2', 'x3', 'Other'),
             'data': (40, 30, 20, 10),
