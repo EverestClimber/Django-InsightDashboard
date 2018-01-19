@@ -560,9 +560,7 @@ class AbstractEvaluator(object):
 
 class TotalEvaluator(AbstractEvaluator):
     def __init__(self, survey):
-        survey.surveystat_set.all().delete()
-        survey.organizationstat_set.all().delete()
-        survey.questionstat_set.all().delete()
+        survey.clear_stats()
 
         super().__init__(survey)
 

@@ -45,7 +45,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_more_{{ survey.pk }}">
                       <li class="report-dropdown-item"><a href="{% url 'reports:advanced' survey.slug 'all' %}">{% trans 'View Report' %}</a></li>
-                      <li><a href="#">Preview</a></li>
+                      {# <li><a href="#">Preview</a></li> #}
+                      <li><a href="#" data-toggle="modal" data-target="#clear-survey-modal" data-survey_id="{{ survey.pk }}">{% trans 'Clear Survey Data' %}</a></li>
                     </ul>
                   </span>
                 </div>
@@ -73,5 +74,40 @@
         </div>
       {% endif %}
     {% endfor %}
+    <div id="clear-survey-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>{% trans 'Are you sure?' %}</h3>
+          </div>
+          <div class="modal-body" style="font-size: 18px; font-weight: 200">
+            {% trans 'All data submitted to <span class="confirm-survey-title"></span> survey wil be lost.' %}
+            <form style="display: none" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="survey_id" />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+            <button type="button" class="btn btn-primary">{% trans 'Clear Survey Data' %}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $('#clear-survey-modal').on('show.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+        var row = button.closest('.survey-row');
+        var title = row.find('.survey-title').text();
+        $(this).find('.confirm-survey-title').text(title);
+
+        var survey_id = button.data('survey_id');
+        $(this).find('input[name=survey_id]').val(survey_id);
+      });
+      $('#clear-survey-modal .btn-primary').click(function () {
+        $(this).prop('disabled', true);
+        $('#clear-survey-modal form').submit();
+      });
+    </script>
   {% endif %}
 {% endblock content %}

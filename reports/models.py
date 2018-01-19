@@ -3,7 +3,7 @@ import jsonfield
 from django.db import models
 
 from insights.users.models import Country
-from survey.models import Survey, Organization, Answer, Question, Option, Region
+from survey.models import Survey, Organization, Question, Option, Region
 
 
 class Stat(models.Model):

@@ -82,6 +82,15 @@ class Survey(models.Model):
             raise ValidationError(_('Cannot assign more than %(max_organizations)s organizations to survey')
                                   % {'max_organizations': cls.MAX_ORGANIZATIONS})
 
+    def clear(self):
+        self.answers.all().delete()
+        self.clear_stats()
+
+    def clear_stats(self):
+        self.surveystat_set.all().delete()
+        self.organizationstat_set.all().delete()
+        self.questionstat_set.all().delete()
+
 models.signals.m2m_changed.connect(Survey.on_organizations_changed, sender=Survey.organizations.through)
 
 

@@ -5,7 +5,7 @@ from with_asserts.mixin import AssertHTMLMixin
 import pytest
 
 from django.core.urlresolvers import reverse, resolve
-from django.test import RequestFactory
+from django.test import RequestFactory, Client
 from test_plus import TestCase
 from django.contrib.auth.models import AnonymousUser, Group
 from django.utils import timezone
@@ -24,8 +24,8 @@ class SurveyListViewTest(AssertHTMLMixin, TestCase):
         cls.req = RequestFactory().get(reverse('survey:list'))
         cls.req.COOKIES[InstructionsView.cookie_name] = True
         cls.country = mixer.blend(Country)
-        user = mixer.blend(User, country=cls.country, groups=[Group.objects.get(name='Otsuka User')])
-        cls.req.user = user
+        cls.user = mixer.blend(User, country=cls.country, groups=[Group.objects.get(name='Otsuka User')])
+        cls.req.user = cls.user
 
     def test_only_active_shown(self):
         now = timezone.now()
@@ -58,6 +58,40 @@ class SurveyListViewTest(AssertHTMLMixin, TestCase):
         self.assertNotHTML(resp, '.survey-list>p>label')
         with self.assertHTML(resp, '.no-surveys') as elems:
             self.assertIn('No surveys', elems[0].text)
+
+    def test_clear_data_wrong_id(self):
+        now = timezone.now()
+        s = mixer.blend(Survey, active=True, countries=[self.country],
+                        start=now - timezone.timedelta(days=1),
+                        end=now + timezone.timedelta(days=1))
+
+        c = Client()
+        c.force_login(self.user)
+        resp = c.post(reverse('survey:list'), {'survey_id': -1})
+        self.response_302(resp)
+        assert resp.url == reverse('survey:list')
+        messages = list(resp.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual("{}".format(messages[0]), 'Survey with id=-1 does not exist.')
+        self.assertEqual(messages[0].tags, 'warning')
+
+    def test_clear_data_success(self):
+        now = timezone.now()
+        s = mixer.blend(Survey, active=True, countries=[self.country],
+                        start=now - timezone.timedelta(days=1),
+                        end=now + timezone.timedelta(days=1))
+        mixer.blend(Answer, survey=s)
+
+        c = Client()
+        c.force_login(self.user)
+        resp = c.post(reverse('survey:list'), {'survey_id': s.pk})
+        self.response_302(resp)
+        assert resp.url == reverse('survey:list')
+        messages = list(resp.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual("{}".format(messages[0]), 'The survey data is cleared successfully.')
+        self.assertEqual(messages[0].tags, 'success')
+        self.assertEqual(s.answers.count(), 0)
 
 
 class SurveyStartViewTest(AssertHTMLMixin, TestCase):

@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView, ListView
+from django.utils.translation import ugettext_lazy as _
 
 from survey.models import Answer, Survey
 from survey.forms import StartForm
@@ -32,13 +34,26 @@ class SurveyListView(LoginRequiredMixin, ListView):
     template_name = 'survey/list.html'
 
     def get_queryset(self):
-        qs = super(SurveyListView, self).get_queryset()
+        qs = super().get_queryset()
         return (qs.get_active(), qs.get_inactive())
 
     def get(self, *args, **kwargs):
         if not self.request.COOKIES.get(InstructionsView.cookie_name):
             return HttpResponseRedirect(reverse('survey:instructions'))
-        return super(SurveyListView, self).get(*args, **kwargs)
+        return super().get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        if "survey_id" in self.request.POST:
+            survey_id = self.request.POST['survey_id']
+            try:
+                survey = Survey.objects.get(pk=survey_id)
+                survey.clear()
+                messages.success(self.request, _('The survey data is cleared successfully.'))
+            except Survey.DoesNotExist:
+                messages.warning(
+                    self.request,
+                    _('Survey with id=%(survey_id)s does not exist.') % {'survey_id': survey_id})
+        return HttpResponseRedirect(reverse('survey:list'))
 
 
 @login_required
