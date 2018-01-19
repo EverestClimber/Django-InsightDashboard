@@ -21,11 +21,13 @@
         searchPlaceholder: 'Search users ...'
       },
       fnDrawCallback: function (oSettings) {
+        // apply tooltip every time because of paging
+        $('[title]').tooltip({container: 'body'})
+
         // this hack is required for dataTable to resize top header properly
         // after initial load
         setTimeout(function () { $(window).resize(); }, 1000);
       },
       order: [ [ $('th.default-sort').index(),  'asc' ] ]
     });
-    $('[title]').tooltip({container: 'body'})
 })();
