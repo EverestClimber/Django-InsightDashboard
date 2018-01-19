@@ -150,7 +150,7 @@
 }
 
 .wizard a[href='#finish'] {
-  background-color: #df3343 !important;
+  background-color: #bc172d !important;
 }
 
 
@@ -457,14 +457,16 @@ input.form-control.percents {
   margin-right: 0;
 }
 
-.survey-actions-column .btn-default {
+.btn-info {
   color: #487FBF;
   border-color: #487FBF;
+  background-color: white;
 }
 
-.survey-actions-column .btn-default:hover,
-.survey-actions-column .btn-default:active,
-.survey-actions-column .btn-default:focus {
+.btn-info:hover,
+.btn-info:active,
+.btn-info:focus,
+.btn-info:active:focus {
   background-color: #ecf2f8;
   border-color: #487FBF;
   color: #487FBF;
@@ -552,6 +554,7 @@ input.form-control.percents {
   margin-bottom: 0;
   padding: 0 10px;
   color: #a4a6a7;
+  font-weight: 200;
 }
 
 .thanks-wrapper {

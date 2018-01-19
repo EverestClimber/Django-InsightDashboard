@@ -38,7 +38,7 @@
                       <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Survey' %}</a>
                     {% endif %}
                   {% endif %}
-                  <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-default report-button">{% trans 'View Report' %}</a>
+                  <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-info report-button">{% trans 'View Report' %}</a>
                   <span class="dropdown">
                     <a href="#" id="dropdown_more_{{ survey.pk }}" class="btn btn-link dropdown-toggle" data-toggle="dropdown" title="{% trans 'More' %}">
                       <i class="fa fa-ellipsis-v"></i>
@@ -88,8 +88,8 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
             <button type="button" class="btn btn-primary">{% trans 'Clear Survey Data' %}</button>
+            <button type="button" class="btn btn-link" data-dismiss="modal">{% trans 'Cancel' %}</button>
           </div>
         </div>
       </div>

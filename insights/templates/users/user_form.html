@@ -15,17 +15,14 @@
 {% endblock css %}
 
 {% block content %}
-  <form method="post" action="">
-    {% csrf_token %}
-    {% crispy form %}
-    <div class="form-group">
-      <div class="controls">
-        <button type="submit" class="btn btn-primary">{% if object %}{% trans 'Update' %}{% else %}{% trans 'Create' %}{% endif %}</button>
-        {% if object %}
-          <a href="{% url 'users:set_password' object.username %}" class="btn btn-default">{% trans 'Set Password' %}</a>
-        {% endif %}
-        <a href="{% url 'users:list' %}" class="btn btn-link">{% trans 'Cancel' %}</a>
-      </div>
+  {% crispy form %}
+  <div class="form-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-primary" onclick="(function () { $('form').submit() })()">{% if object %}{% trans 'Update' %}{% else %}{% trans 'Create' %}{% endif %}</button>
+      {% if object %}
+        <a href="{% url 'users:set_password' object.username %}" class="btn btn-info">{% trans 'Set Password' %}</a>
+      {% endif %}
+      <a href="{% url 'users:list' %}" class="btn btn-link">{% trans 'Cancel' %}</a>
     </div>
-  </form>
+  </div>
 {% endblock %}
