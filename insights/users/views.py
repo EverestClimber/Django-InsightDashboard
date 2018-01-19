@@ -12,6 +12,9 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
+from crispy_forms.layout import Div, Layout, Fieldset, Field
+from crispy_forms.helper import FormHelper
+
 from .models import User
 
 
@@ -30,12 +33,42 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
                        kwargs={'username': self.request.user.username})
 
 
+class UpdateUserForm(forms.ModelForm):
+    helper = FormHelper()
+    helper.layout = Layout(
+        Div(
+            Div(
+                Fieldset(
+                    '',
+                    'name',
+                    'email',
+                    Field('country', css_class='selectpicker', data_style='btn selectpicker-btn'),
+                    Field('secondary_language', css_class='selectpicker', data_style='btn selectpicker-btn'),
+                ),
+                css_class="col-sm-6"),
+            Div(
+                Fieldset(
+                    '',
+                    'therapeutic_areas',
+                    'groups',
+                ),
+                css_class="col-sm-6"),
+            css_class="row",
+        ),
+    )
+
+    email = forms.EmailField(label=_('Email address'), required=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'name',
+                  'therapeutic_areas', 'country', 'secondary_language',
+                  'groups']
+
+
 class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-
-    fields = ['name', 'email', 'therapeutic_areas', 'country',
-              'secondary_language', 'groups']
-
     model = User
+    form_class = UpdateUserForm
     slug_field = 'username'
     slug_url_kwarg = 'username'
 
@@ -47,6 +80,30 @@ class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 
 class CreateUserForm(forms.ModelForm):
+    helper = FormHelper()
+    helper.layout = Layout(
+        Div(
+            Div(
+                Fieldset(
+                    '',
+                    'name',
+                    'email',
+                    'password1',
+                    'password2',
+                    Field('country', css_class='selectpicker', data_style='btn selectpicker-btn'),
+                    Field('secondary_language', css_class='selectpicker', data_style='btn selectpicker-btn'),
+                ),
+                css_class="col-sm-6"),
+            Div(
+                Fieldset(
+                    '',
+                    'therapeutic_areas',
+                    'groups',
+                ),
+                css_class="col-sm-6"),
+            css_class="row",
+        ),
+    )
     password1 = forms.CharField(
         label=_('Password'),
         strip=False,

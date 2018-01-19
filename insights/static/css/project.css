@@ -550,6 +550,8 @@ input.form-control.percents {
 
 .help-block {
   margin-bottom: 0;
+  padding: 0 10px;
+  color: #a4a6a7;
 }
 
 .thanks-wrapper {
@@ -578,4 +580,8 @@ input.form-control.percents {
 
 .form-control, .single-line {
   padding: 8px 16px;
+}
+
+.selectpicker-btn {
+  padding-left: 16px;
 }

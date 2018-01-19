@@ -178,7 +178,6 @@ class AbstractEvaluator(object):
         if isinstance(options, str):
             options = [options]
 
-
         top3 = []
 
         for i, opt in enumerate(options):

@@ -1,16 +1,28 @@
-{% extends "base.html" %}
+{% extends "base-full-width.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
 
+{% block css %}
+  {{ block.super }}
+  <style>
+    .container {
+      max-width: 970px;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+  </style>
+{% endblock css %}
+
 {% block content %}
-  <form class="form-horizontal" method="post" action="">
+  <form method="post" action="">
     {% csrf_token %}
-    {{ form|crispy }}
+    {% crispy form %}
     <div class="form-group">
       <div class="controls">
         <button type="submit" class="btn btn-primary">{% if object %}{% trans 'Update' %}{% else %}{% trans 'Create' %}{% endif %}</button>
         {% if object %}
-          <a href="{% url 'users:set_password' object.username %}" class="btn btn-default">{% trans 'Set Password' %}</button>
+          <a href="{% url 'users:set_password' object.username %}" class="btn btn-default">{% trans 'Set Password' %}</a>
         {% endif %}
         <a href="{% url 'users:list' %}" class="btn btn-link">{% trans 'Cancel' %}</a>
       </div>
