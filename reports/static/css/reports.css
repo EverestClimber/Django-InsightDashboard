@@ -756,32 +756,25 @@
 }
 .report-multiselect tr:nth-child(3),
 .report-multiselect-top5 tr:nth-child(3) {
-  background-color: #84bbdf;
+  background-color: #f28d9e;
   color: white;
 }
 .report-multiselect tr:nth-child(4),
 .report-multiselect-top5 tr:nth-child(4) {
-  background-color: #79a7ac;
+  background-color: #84bbdf;
   color: white;
 }
 .report-multiselect tr:nth-child(5),
 .report-multiselect-top5 tr:nth-child(5) {
-  background-color: #65b847;
+  background-color: #929292;
   color: white;
 }
 .report-multiselect tr:nth-child(6) {
-  background-color: #c0c2a8;
-  color: white;
+  background-color: #cdcccc;
 }
 .report-multiselect tr:nth-child(7) {
-  background-color: #7b8988;
-  color: white;
+  background-color: #dedede;
 }
 .report-multiselect tr:nth-child(8) {
-  background-color: #884d9e;
-  color: white;
-}
-.report-multiselect tr:nth-child(9) {
-  background-color: #86516b;
-  color: white;
+  background-color: #f2f2f2;
 }

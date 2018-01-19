@@ -62,7 +62,7 @@
 
   function _drawPercentageForSegment(percentage, element, ctx) {
     //Check for almost white background TODO: change this comparison - too fragile
-    if (element._model.backgroundColor == '#f9f9f9') {
+    if (['#cdcccc', '#dedede', '#f2f2f2', '#f9f9f9'].indexOf(element._model.backgroundColor) !== -1) {
       ctx.fillStyle = 'rgb(61, 61, 61)';
     } else {
       ctx.fillStyle = 'rgb(255, 255, 255)';

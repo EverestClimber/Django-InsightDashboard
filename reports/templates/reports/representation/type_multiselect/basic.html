@@ -57,62 +57,27 @@
 
   <script>
     function drawQ{{ i }}RightPie() {
+      var colors = [
+        "#b8103b",
+        "#328ec9",
+        '#f28d9e',
+        '#84bbdf',
+        '#929292',
+        '#cdcccc',
+        '#dedede',
+        '#f2f2f2',
+        '#f9f9f9'
+      ];
       var RightPieData = {
         labels: {{ stat.vars.top.pie.labels | safe }},
         datasets: [
           {
             data: {{ stat.vars.top.pie.data }},
-            backgroundColor: [
-              "#b8103b",
-              "#328ec9",
-              '#84bbdf',
-              '#79a7ac',
-              '#65b847',
-              '#c0c2a8',
-              '#7b8988',
-              '#884d9e',
-              '#86516b',
-              '#f9f9f9'
-            ],
-            hoverBackgroundColor: [
-              "#b8103b",
-              "#328ec9",
-              '#84bbdf',
-              '#79a7ac',
-              '#65b847',
-              '#c0c2a8',
-              '#7b8988',
-              '#884d9e',
-              '#86516b',
-              '#f9f9f9'
-            ]
+            backgroundColor: colors,
+            hoverBackgroundColor: colors
           }],
         hideLastLegendItem: {{ stat.vars.top.pie.hide_last_legend_item }}
       };
-
-NEW_COLORS_SET = [
-    '#2db8c7',
-    '#1d99d5',
-    '#77c2e6',
-    '#d0f4f9',
-    '#79a7ac',
-    '#afcacd',
-    '#d4d5d6',
-    '#65b847',
-    '#a3d491',
-    '#85a678',
-    '#c0c2a8',
-    '#7b8988',
-    '#b0b8b8',
-    '#c4a294',
-    '#f2e6e0',
-    '#bd9ac1',
-    '#a9b4cc',
-    '#7d8699',
-    '#485066',
-    '#86516b',
-    '#884d9e',
-];
 
       ChartDrawer.drawPie(RightPieData, '#q{{ i }}RightPie', '#q{{ i }}RightPieLegend');
     }

@@ -1,19 +1,6 @@
-{% extends "base.html" %}
+{% extends "base-full-width.html" %}
 {% load i18n %}
 {% load svg %}
-
-{% block css %}
-  {{ block.super }}
-  <style>
-    .wrapper.wrapper-content {
-      padding: 40px 0px !important;
-    }
-
-    .container {
-      max-width: 1200px;
-    }
-  </style>
-{% endblock css %}
 
 {% block content %}
   {% if object_list.0.count == 0 and object_list.1.count == 0 %}
@@ -34,7 +21,7 @@
             </label></p>
             {% for survey in sl %}
               <div class="row survey-row {% if survey.is_active %}survey-row-active{% endif %}">
-                <div class="col-sm-6 col-md-4 col-lg-4 survey-title-column">
+                <div class="col-xs-6 col-md-4 survey-title-column">
                   <i class="svg-icon">
                     {% if survey.is_active %}
                       {% svg 'survey-active' %}
@@ -45,41 +32,40 @@
                   <div class="survey-title">{{ survey.name }}</div>
                   <div class="survey-dates">{{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}</div>
                 </div>
-                <div class="col-sm-1 col-md-4 col-lg-4 survey-info-column">
-                  <span class="survey-info">
-                    <div class="survey-info-label">{% trans 'Therapeutic Area' %}</div>
-                    <div class="survey-info-value">{{ survey.therapeutic_area.name|default:'-' }}</div>
-                  </span>
-                  <span class="survey-info hidden-sm">
-                    <div class="survey-info-label">{% trans 'Responses' %}</div>
-                    <div class="survey-info-value">{{ survey.answers.count }}</div>
-                  </span>
-                  {% with survey.get_last_answer as last_answer %}
-                    {% if last_answer %}
-                      <span class="survey-info hidden-sm">
-                        <div class="survey-info-label">{% trans 'Last Entry' %}</div>
-                        <div class="survey-info-value">{{ last_answer.created_at|date:'d M H:m T' }}</div>
-                      </span>
-                    {% endif %}
-                  {% endwith %}
-                </div>
-                <div class="col-sm-5 col-md-4 survey-actions-column">
+                <div class="col-xs-6 col-md-4 col-md-push-4 survey-actions-column">
                   {% if survey.is_active and request.user.country in survey.countries.all %}
                     {% if request.user.is_superuser or survey.therapeutic_area in request.user.therapeutic_areas.all and perms.survey.add_answer %}
                       <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Survey' %}</a>
                     {% endif %}
                   {% endif %}
-                  <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-default">{% trans 'View Report' %}</a>
-                  {% comment %}
+                  <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-default report-button">{% trans 'View Report' %}</a>
                   <span class="dropdown">
-                    <a href="#" id="dropdown_more_{{ survey.pk }}" class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="{% trans 'More' %}">
+                    <a href="#" id="dropdown_more_{{ survey.pk }}" class="btn btn-link dropdown-toggle" data-toggle="dropdown" title="{% trans 'More' %}">
                       <i class="fa fa-ellipsis-v"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_more_{{ survey.pk }}">
+                      <li class="report-dropdown-item"><a href="{% url 'reports:advanced' survey.slug 'all' %}">{% trans 'View Report' %}</a></li>
                       <li><a href="#">Preview</a></li>
                     </ul>
                   </span>
-                  {% endcomment %}
+                </div>
+                <div class="col-xs-12 col-md-4 col-md-pull-4 survey-info-column">
+                  <span class="survey-info">
+                    <div class="survey-info-label">{% trans 'Therapeutic Area' %}</div>
+                    <div class="survey-info-value">{{ survey.therapeutic_area.name|default:'-' }}</div>
+                  </span>
+                  <span class="survey-info">
+                    <div class="survey-info-label">{% trans 'Responses' %}</div>
+                    <div class="survey-info-value">{{ survey.answers.count }}</div>
+                  </span>
+                  {% with survey.get_last_answer as last_answer %}
+                    {% if last_answer %}
+                      <span class="survey-info">
+                        <div class="survey-info-label">{% trans 'Last Entry' %}</div>
+                        <div class="survey-info-value">{{ last_answer.created_at|date:'d M H:m T' }}</div>
+                      </span>
+                    {% endif %}
+                  {% endwith %}
                 </div>
               </div>
             {% endfor %}

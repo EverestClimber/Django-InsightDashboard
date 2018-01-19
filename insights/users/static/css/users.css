@@ -1,0 +1,76 @@
+.admin-user-icon svg {
+  fill: #bc172d;
+}
+.super-user-icon svg {
+  stroke: #bc172d;
+}
+.user-type {
+  width: 1px !important;
+  white-space: nowrap;
+}
+.users-list {
+  background-color: white;
+}
+.users-list .svg-icon svg {
+  width: 18px;
+}
+
+.users-list th {
+  color: #a4a6a7 !important;
+  background-color: #f9f9f9 !important;
+  font-weight: 200 !important;
+  font-size: 11px !important;
+}
+
+th {
+  white-space: nowrap;
+}
+
+.users-list.table > tbody > tr > td {
+  border-right: none;
+}
+
+.users-list.table > tbody > tr:hover {
+  background-color: #fdfdfd;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  padding-left: 10px !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dataTables_filter label {
+  margin: 0 !important;
+  margin-bottom: 10px !important;
+  display: block;
+}
+.dataTables_filter input {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 18px;
+  border-radius: 4px;
+}
+.bottom-table-toolbar {
+  margin-top: 16px;
+}
+.dataTables_info, .dataTables_paginate {
+  display: inline-block;
+  vertical-align: middle;
+}
+.dataTables_info {
+  margin-right: 20px;
+  margin-top: -2px;
+  padding: 0 !important;
+}
+.pagination > li > a, .pagination > li > span {
+  padding: 8px 14px;
+}
+
+.tooltip-inner {
+  background-color: #676a6c;
+}
+
+.tooltip-arrow {
+  border-top-color: #676a6c !important;
+}

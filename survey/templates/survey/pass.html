@@ -81,7 +81,6 @@
                         dependend_input.each(function () {
                             dependend_answer.push($(this).val());
                         });
-                        console.log('=============', q, depends_on, available_if, dependend_answer);
                         if (dependend_answer.indexOf(available_if) === -1) {
                             $('#wizard .actions').find('a[href=#next]:visible, a[href=#finish]:visible').click();
                         }
@@ -115,7 +114,6 @@
 
 {% block css %}{{ block.super }}
         <link href="{% static 'css/plugins/steps/jquery.steps.css' %}" rel="stylesheet">
-
 {% endblock css %}
 
 {% block javascript %}{{ block.super }}

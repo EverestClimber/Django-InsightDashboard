@@ -33,13 +33,13 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
     fields = ['name', 'email', 'therapeutic_areas', 'country',
-              'secondary_language', 'groups', 'is_superuser']
+              'secondary_language', 'groups']
 
     model = User
     slug_field = 'username'
     slug_url_kwarg = 'username'
 
-    permission_required = 'users.can_change'
+    permission_required = 'users.change_user'
     raise_exception = True
 
     def get_success_url(self):
@@ -62,7 +62,7 @@ class CreateUserForm(forms.ModelForm):
         model = User
         fields = ['email', 'password1', 'password2', 'name',
                   'therapeutic_areas', 'country', 'secondary_language',
-                  'groups', 'is_superuser']
+                  'groups']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -85,7 +85,7 @@ class CreateUserForm(forms.ModelForm):
 
 class UserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, FormView):
     template_name = 'account/password_change.html'
-    permission_required = 'users.can_change'
+    permission_required = 'users.change_user'
     raise_exception = True
 
     def get_form(self, form_class=None):
@@ -105,7 +105,7 @@ class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     slug_field = 'username'
     slug_url_kwarg = 'username'
 
-    permission_required = 'users.can_add'
+    permission_required = 'users.change_user'
     raise_exception = True
 
     def get_success_url(self):
@@ -118,5 +118,11 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     slug_field = 'username'
     slug_url_kwarg = 'username'
 
-    permission_required = 'users.can_change'
+    permission_required = 'users.change_user'
     raise_exception = True
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_superuser:
+            qs = qs.filter(is_superuser=False)
+        return qs

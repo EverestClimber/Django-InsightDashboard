@@ -47,7 +47,9 @@ class User(AbstractUser):
     name = models.CharField(_('Name of User'), blank=True, max_length=255)
     country = models.ForeignKey(Country, null=True)
     secondary_language = models.ForeignKey(Language, null=True, blank=True)
-    therapeutic_areas = models.ManyToManyField(TherapeuticArea, related_name="users", blank=True)
+    therapeutic_areas = models.ManyToManyField(
+        TherapeuticArea, related_name="users", blank=True,
+        help_text=_('Hold down "Control", or "Command" on a Mac, to select more than one.'))
 
     def __str__(self):
         return self.username
@@ -57,8 +59,8 @@ class User(AbstractUser):
 
     def get_flags(self):
         if self.is_superuser:
-            return 'Superuser'
-        return ", ".join(g.name for g in self.groups.all())
+            return ['Superuser']
+        return list(g.name for g in self.groups.all())
 
 
 class AnonymousUser(User, DjangoAnonymousUser):
