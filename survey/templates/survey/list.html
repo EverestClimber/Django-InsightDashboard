@@ -40,8 +40,8 @@
                   {% endif %}
                   <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-info report-button">{% trans 'View Report' %}</a>
                   <span class="dropdown">
-                    <a href="#" id="dropdown_more_{{ survey.pk }}" class="btn btn-link dropdown-toggle" data-toggle="dropdown" title="{% trans 'More' %}">
-                      <i class="fa fa-ellipsis-v"></i>
+                    <a href="#" id="dropdown_more_{{ survey.pk }}" class="btn btn-link dropdown-toggle more-actions-button" data-toggle="dropdown" title="{% trans 'More' %}">
+                      <i class="svg-icon">{% svg 'ellipsis' %}</i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_more_{{ survey.pk }}">
                       <li class="report-dropdown-item"><a href="{% url 'reports:advanced' survey.slug 'all' %}">{% trans 'View Report' %}</a></li>
