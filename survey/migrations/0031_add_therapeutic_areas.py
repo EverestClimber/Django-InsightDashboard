@@ -10,33 +10,7 @@ def forward(apps, schema_editor):
     TA = apps.get_model('users', 'TherapeuticArea')
     User = apps.get_model('users', 'User')
 
-    for ta_name in ["Bone / Osteoporosis",
-                    "Immunology ",
-                    "Orthopaedics",
-                    "Cardiovascular",
-                    "Infectious diseases",
-                    "Pulmonology",
-                    "CNS",
-                    "Inflammation",
-                    "Psychiatry",
-                    "Dermatology",
-                    "Internal diseases",
-                    "Respiratory",
-                    "Diabetes",
-                    "Metabolic diseases",
-                    "Rheumatology",
-                    "Endocrinology",
-                    "Nephrology",
-                    "Surgery",
-                    "ENT",
-                    "Neurology",
-                    "Urology",
-                    "Gastroenterology",
-                    "Oncology",
-                    "Vaccines",
-                    "Haematology",
-                    "Ophthalmology",
-                    "Thrombosis",]:
+    for ta_name in ["Psychiatry", "Speciality"]:
         TA.objects.get_or_create(name=ta_name)
 
     default_ta = TA.objects.get(name='Psychiatry')
