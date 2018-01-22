@@ -377,19 +377,23 @@ input.form-control.percents {
 .survey-actions-column {
   padding-top: 15px;
   padding-bottom: 15px;
+  padding-right: 0;
   white-space: nowrap;
   text-align: right;
 }
 
-.survey-row .svg-icon svg {
+.survey-title-column .svg-icon svg {
   width: 34px;
   fill: #a4a6a7;
   float: left;
   margin-right: 15px;
 }
 
-.survey-row-active .svg-icon svg {
-  /* fill: #5579bd; */
+.survey-row-active .survey-title-column .svg-icon svg {
+  fill: #487FBF;
+}
+
+.survey-actions-column .svg-icon svg {
   fill: #487FBF;
 }
 
@@ -433,7 +437,7 @@ input.form-control.percents {
   padding: 4px 0;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   .survey-info-column {
     padding-top: 0;
     padding-left: 63px;
@@ -453,7 +457,11 @@ input.form-control.percents {
 }
 }
 
-.survey-actions-column .btn:last-child {
+.survey-actions-column .btn {
+  margin-right: 5px;
+}
+
+.survey-actions-column .btn.more-actions-button {
   margin-right: 0;
 }
 

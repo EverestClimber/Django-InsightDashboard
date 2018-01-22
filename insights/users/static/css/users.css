@@ -2,7 +2,7 @@
   fill: #bc172d;
 }
 .super-user-icon svg {
-  stroke: #bc172d;
+  fill: orange;
 }
 .user-type {
   width: 1px !important;
