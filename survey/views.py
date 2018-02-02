@@ -42,8 +42,21 @@ class SurveyListView(LoginRequiredMixin, ListView):
             return HttpResponseRedirect(reverse('survey:instructions'))
         return super().get(*args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        return dict(
+            super(SurveyListView, self).get_context_data(),
+            has_permissions=self.has_permissions()
+        )
+
+    def has_permissions(self):
+        user = self.request.user
+        if user.is_superuser:
+            return True
+        return 'Otsuka Administrator' in user.get_flags()
+
     def post(self, *args, **kwargs):
-        if "survey_id" in self.request.POST:
+
+        if "survey_id" in self.request.POST and self.has_permissions():
             survey_id = self.request.POST['survey_id']
             try:
                 survey = Survey.objects.get(pk=survey_id)

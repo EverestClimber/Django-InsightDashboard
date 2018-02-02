@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from django import forms
-from django.core.urlresolvers import reverse
-from django.views.generic import DetailView, ListView, RedirectView, UpdateView, CreateView, FormView
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.views.generic import (
+    DetailView, ListView, RedirectView, UpdateView,
+    CreateView, FormView, DeleteView
+)
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404
 
-from django.contrib.auth import password_validation
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
-from crispy_forms.layout import Div, Layout, Fieldset, Field
-from crispy_forms.helper import FormHelper
-
 from .models import User
+from .forms import UpdateUserForm, CreateUserForm
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -33,39 +32,6 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
                        kwargs={'username': self.request.user.username})
 
 
-class UpdateUserForm(forms.ModelForm):
-    helper = FormHelper()
-    helper.layout = Layout(
-        Div(
-            Div(
-                Fieldset(
-                    '',
-                    'name',
-                    'email',
-                    Field('country', css_class='selectpicker', data_style='btn selectpicker-btn'),
-                    Field('secondary_language', css_class='selectpicker', data_style='btn selectpicker-btn'),
-                ),
-                css_class="col-sm-6"),
-            Div(
-                Fieldset(
-                    '',
-                    'therapeutic_areas',
-                    'groups',
-                ),
-                css_class="col-sm-6"),
-            css_class="row",
-        ),
-    )
-
-    email = forms.EmailField(label=_('Email address'), required=True)
-
-    class Meta:
-        model = User
-        fields = ['email', 'name',
-                  'therapeutic_areas', 'country', 'secondary_language',
-                  'groups']
-
-
 class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = User
     form_class = UpdateUserForm
@@ -77,67 +43,6 @@ class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('users:list')
-
-
-class CreateUserForm(forms.ModelForm):
-    helper = FormHelper()
-    helper.layout = Layout(
-        Div(
-            Div(
-                Fieldset(
-                    '',
-                    'name',
-                    'email',
-                    'password1',
-                    'password2',
-                    Field('country', css_class='selectpicker', data_style='btn selectpicker-btn'),
-                    Field('secondary_language', css_class='selectpicker', data_style='btn selectpicker-btn'),
-                ),
-                css_class="col-sm-6"),
-            Div(
-                Fieldset(
-                    '',
-                    'therapeutic_areas',
-                    'groups',
-                ),
-                css_class="col-sm-6"),
-            css_class="row",
-        ),
-    )
-    password1 = forms.CharField(
-        label=_('Password'),
-        strip=False,
-        widget=forms.PasswordInput)
-    password2 = forms.CharField(
-        label=_('Password (again)'),
-        strip=False,
-        help_text=_('Enter the same password as before, for verification.'),
-        widget=forms.PasswordInput())
-    email = forms.EmailField(label=_('Email address'), required=True)
-
-    class Meta:
-        model = User
-        fields = ['email', 'password1', 'password2', 'name',
-                  'therapeutic_areas', 'country', 'secondary_language',
-                  'groups']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        if 'password1' in cleaned_data:
-            if cleaned_data['password1'] != cleaned_data['password2']:
-                self.add_error('password1', _('Passwords did not match'))
-            else:
-                password_validation.validate_password(self.cleaned_data.get('password2'), self.instance)
-
-        return cleaned_data
-
-    def save(self, commit=True):
-        user = super().save()
-        user.set_password(self.cleaned_data['password1'])
-        user.username = self.cleaned_data['email']
-        if commit:
-            user.save()
-        return user
 
 
 class UserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, FormView):
@@ -152,8 +57,22 @@ class UserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMe
     def get_success_url(self):
         return reverse('users:update_user', kwargs={'username': self.kwargs['username']})
 
+    def form_valid(self, form):
+        form.save()
+        return super(UserSetPasswordView, self).form_valid(form)
+
     def get_success_message(self, cleaned_data):
         return _('Password for %(username)s is changed successfully.' % {'username': self.user.name})
+
+
+class DeleteUser(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = User
+    permission_required = 'users.change_user'
+    raise_exception = True
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+    query_pk_and_slug = True
+    success_url = reverse_lazy('users:list')
 
 
 class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

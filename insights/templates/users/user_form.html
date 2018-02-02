@@ -23,6 +23,9 @@
         <a href="{% url 'users:set_password' object.username %}" class="btn btn-info">{% trans 'Set Password' %}</a>
       {% endif %}
       <a href="{% url 'users:list' %}" class="btn btn-link">{% trans 'Cancel' %}</a>
+      {% if object %}
+        <a href="{% url 'users:delete_user' object.username %}" class="btn btn-danger pull-right">{% trans 'Delete User' %}</a>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
