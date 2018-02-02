@@ -25,8 +25,7 @@
       <label for="report-filter">{% trans 'Country' %}</label>
       <select id="report-filter" class="report-filter selectpicker" data-width="100%" onchange="">
         <option value="all" {% if not country %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug 'all' %}">All</option>
-        {% get_countries as countries %}
-        {% for c in countries %}
+        {% for c in survey.countries.all %}
           <option value="{{ c.pk }}" {% if c.pk == country.pk %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug c.slug %}">{{ c.name }}</option>
         {% endfor %}
       </select>
