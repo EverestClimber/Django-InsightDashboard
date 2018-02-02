@@ -196,6 +196,11 @@ div.bootstrap-tagsinput input{
   padding-bottom: 10px;
 }
 
+.question.translation {
+  font-weight: normal;
+  font-style: italic;
+}
+
 .has-error .form-control {
     border-color: #e60000 !important;
 }

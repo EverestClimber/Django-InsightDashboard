@@ -533,9 +533,9 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 .top-navigation .nav > li.active > a {
   color: #487FBF;
 }
-.top-navigation .navbar-right {
+/*.top-navigation .navbar-right {
   margin-right: 10px;
-}
+}*/
 .top-navigation .navbar-nav .dropdown-menu {
   box-shadow: none;
   border: 1px solid #e7eaec;

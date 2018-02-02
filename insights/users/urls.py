@@ -32,6 +32,11 @@ urlpatterns = [
         name='set_password'
     ),
     url(
+        regex=r'^(?P<username>[\w.@+-]+)/detele/?$',
+        view=views.DeleteUser.as_view(),
+        name='delete_user'
+    ),
+    url(
         regex=r'^~create/?$',
         view=views.UserCreateView.as_view(),
         name='create_user'
@@ -40,5 +45,5 @@ urlpatterns = [
         regex=r'^~update/$',
         view=views.UserUpdateView.as_view(),
         name='update'
-    ),
+    )
 ]

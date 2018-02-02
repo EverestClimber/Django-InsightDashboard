@@ -3,5 +3,5 @@
 <div class="question question-main" data-depends_on="{{ question.depends_on_id|default:'' }}" data-available_if="{{ question.available_if|default:'' }}">{{ question.text }}</div>
 {% get_translation question lang as t %}
 {% if t %}
-  <div class="question">{{ t }}</div>
+  <div class="question translation">{{ t }}</div>
 {% endif %}

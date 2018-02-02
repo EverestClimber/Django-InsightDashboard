@@ -24,8 +24,31 @@
     <input type="checkbox" name="data[{{ question.pk }}][]" id="type_multiselect_with_other-checkbox-{{ option.pk }}" value="{{ option.value }}">
 {% endfor %}
 
+    <div class="template hidden" id="type_multiselect_option_template-{{ question.pk }}">
+        <div class="btn-group" role="group">
+            <button
+                type="button"
+                class="text-left btn btn-default fancy-checked"
+            >
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                {{ option.value }}
+            </button>
+        </div>
+
+        <input
+            type="checkbox"
+            name="data[{{ question.pk }}][]"
+        >
+    </div>
+
     <div class="input-group w-100p field-other text-left">
-        <input type="text" class="tagsinput form-control" name="data[{{ question.pk }}][other]" placeholder="Other">
+        <input
+            class="tagsinput form-control"
+            type="text"
+            name="data[{{ question.pk }}][other]"
+            data-id="{{ question.pk }}"
+            placeholder="Other"
+        >
     </div>
 
 
