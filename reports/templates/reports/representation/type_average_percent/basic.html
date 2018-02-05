@@ -5,7 +5,7 @@
       <div>{{ stat.vars.question_text }}</div>
     </div>
     <div class="row equal-heights mb-30">
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card chart-card pie-card report-card-red">
           <div class="report-card-head">
             <div class="title">{{ stat.vars.region_name | upper }} TOTAL</div>
@@ -18,14 +18,14 @@
                 {{ stat.vars.label1 }}
               </div>
             </div>
-            <div class="pie q{{ i }}-pie col-md-6">
-              <canvas id="q{{ i }}Pie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
+            <div class="pie col-md-6 q{{ i }}-pie">
+              <canvas id="q{{ i }}Pie" width="100" height="150" style="width: 100%; height: 150px;"></canvas>
               <div id="q{{ i }}PieLegend" class="chart-legend pie-legend"></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card chart-card report-card-red">
           <div class="report-card-head">
             <div class="title">{{ stat.vars.header_by_country | upper }}</div>

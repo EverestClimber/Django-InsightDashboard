@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="row equal-heights mb-30">
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card chart-card q1-pie-card report-card-red">
           <div class="report-card-head">
             <div class="title">{{ stat.vars.region_name | upper }} TOP #1</div>
@@ -15,10 +15,10 @@
           </div>
           <div class="report-card-body">
             <div class="row equal-heights">
-              <div class="pie q{{ i }}-pie col-md-6 col-sm-12">
+              <div class="pie q{{ i }}-pie col-md-6 col-sm-12 col-print-6">
                 <canvas id="q{{ i }}LeftPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
               </div>
-              <div class="col-md-6 col-sm-12 right-side-pie-legend-container">
+              <div class="col-md-6 col-sm-12 col-print-6 right-side-pie-legend-container">
                 <div id="q{{ i }}LeftPieLegend" class="chart-legend right-side-pie-legend pie-legend"></div>
               </div>
             </div>
@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card chart-card q1-pie-card report-card-blue">
           <div class="report-card-head">
             <div class="title">{{ stat.vars.region_name | upper }} TOP #3</div>
@@ -38,10 +38,10 @@
           </div>
           <div class="report-card-body">
             <div class="row equal-heights">
-              <div class="pie q{{ i }}-pie col-md-6 col-sm-12">
+              <div class="pie q{{ i }}-pie col-md-6 col-sm-12 col-print-6">
                 <canvas id="q{{ i }}RightPie" width="150" height="150" style="width: 150px; height: 150px;"></canvas>
               </div>
-              <div class="col-md-6 col-sm-12 right-side-pie-legend-container">
+              <div class="col-md-6 col-sm-12 col-print-6 right-side-pie-legend-container">
                 <div id="q{{ i }}RightPieLegend" class="chart-legend right-side-pie-legend pie-legend"></div>
               </div>
             </div>
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="row tables-row equal-heights mb-30">
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card report-card-table">
           <div class="report-card-head text-center">
             <div class="title">{{ stat.vars.region_name | upper }} TOP #1</div>
@@ -79,7 +79,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card report-card-table report-card-blue">
           <div class="report-card-head text-center">
             <div class="title">{{ stat.vars.region_name | upper }} TOP #3</div>

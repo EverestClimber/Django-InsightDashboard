@@ -75,10 +75,11 @@
 </head>
 
 
-<body class="top-navigation">
+<body class="top-navigation {% if preview_mode %}preview-mode{% endif %}">
 
 <div id="wrapper">
     <div id="page-wrapper" class="gray-bg">
+        {% if not preview_mode %}
         <div class="row border-bottom white-bg">
             <div class="container navbar-container">
                 <nav class="navbar navbar-static-top" role="navigation">
@@ -171,6 +172,7 @@
                 </nav>
             </div>
         </div>
+        {% endif %}
         <div class="wrapper wrapper-content">
             <div class="container ">
                 {% block messages %}

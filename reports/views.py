@@ -46,6 +46,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
 
         survey = get_by_slug_or_pk(Survey, kwargs['survey_id'])
+        prepare_charts = self.request.GET.get('prepareCharts', 'false')
 
         ctx = super(self.__class__, self).get_context_data(**kwargs)
 
@@ -53,7 +54,8 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         ctx['country'] = self.country
         ctx['survey_stat'] = SurveyStat.objects.filter(survey=survey, country_id=self.country_id).last()
         ctx['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=self.country_id)
-
+        ctx['prepare_charts'] = prepare_charts
+        ctx['preview_mode'] = prepare_charts == 'true'
         ctx['question_stat'] = []
         for qs in QuestionStat.objects.filter(survey=survey, country_id=self.country_id):
             ctx['question_stat'].append(qs)

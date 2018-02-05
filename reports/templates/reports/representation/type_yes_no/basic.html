@@ -5,7 +5,7 @@
       <div>{{ stat.vars.question_text }}</div>
     </div>
     <div class="row equal-heights mb-30">
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card chart-card pie-card report-card-red">
           <div class="report-card-head">
             <div class="title">{{ stat.vars.region_name | upper }} TOTAL</div>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-12 col-md-6 col-print-6">
         <div class="report-card chart-card report-card-blue">
           <div class="report-card-head">
             <div class="title">{{ stat.vars.header_by_country | upper }}</div>
@@ -56,8 +56,8 @@
               </div>
               <div class="chart-legend h-bar-legend">
                 <ul>
-                  <li><span style="background-color:#b8103b"></span>Yes</li>
-                  <li><span style="background-color:#328ec9"></span>No</li>
+                  <li><span style="background-color:#b8103b !important;"></span>Yes</li>
+                  <li><span style="background-color:#328ec9 !important;"></span>No</li>
                 </ul>
               </div>
             </div>

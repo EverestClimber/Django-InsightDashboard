@@ -1,4 +1,10 @@
-(function() {
+$(function() {
+  var chartCount = 0;
+
+  $('#print').click(function() {
+    var printUrl = $(this).attr('data-url-print') + '?prepareCharts=true';
+    window.open(printUrl, 'print-report', 'width=870,height=700'); //,resizable=no,toolbar=no,menubar=no,status=no
+  });
 
   window.ChartDrawer = {
     drawPie: function(pieData, pieId, legendId) {
@@ -35,9 +41,10 @@
   function _drawPie(pieData, pieId, legendId, pieLabelCallback) {
     var $pieCtx = $(pieId).get(0).getContext("2d");
     var $pieLegend = $(legendId);
-    var pie = new Chart($pieCtx,{
+    var chartOptions = {
       type: 'pie',
       data: pieData,
+      responsive: true,
       options: {
         legend: false,
         tooltips: {
@@ -47,8 +54,32 @@
           }
         }
       }
-    });
+    };
+    if (window.prepareCharts) {
+      chartOptions.options.animation = {
+        duration: 0,
+        onComplete: function() {
+          chartCount -= 1;
+          if (chartCount === 0) {
+            $(window).load(function() {
+              $('#overlay').toggleClass('visible'); 
+              window.print();
+              setTimeout(function() {
+                window.close()
+              }, 1);
+            });
+          }
+        }
+      };
+    }
+
+    var pie = new Chart($pieCtx, chartOptions);
+
     $pieLegend.html(pie.generateLegend());
+    $pieLegend.find('li span').each(function() {
+      var backgroundColor = $(this).css('background-color');
+      $(this).attr('style', 'background-color: ' + backgroundColor +' !important;');
+    })
     _filterLegend();
 
     function _filterLegend() {
@@ -90,7 +121,7 @@
   function drawOnScroll(elemId, drawFn) {
     var inView = false;
     var wasShown = false;
-
+    chartCount += 1;
     function isScrolledIntoView(elemId)
     {
       var $elemContainer = $(elemId).closest('.report-card');
@@ -116,8 +147,12 @@
       }
     }
 
-    $(document).ready(show);
-    $(window).scroll(show);
+    if (window.prepareCharts) {
+      drawFn();
+    } else {
+      $(document).ready(show);
+      $(window).scroll(show);
+    }
   }
 
   function drawHorizontalBarChart(chartId, chartData) {
@@ -602,4 +637,4 @@
     }
   }
 
-})();
+});

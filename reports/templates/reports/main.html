@@ -1,27 +1,35 @@
 {% extends "base.html" %}
 
-{% load i18n %}
+{% load i18n staticfiles %}
 {% load get_countries from user_tags %}
 
+{% block javascript %}
+  {{ block.super }}
+  <script src="{% static 'js/resize-charts.js' %}"></script>
+  <script type="text/javascript">
+    window.prepareCharts = {{ prepare_charts }};
+  </script>
+
+{% endblock %}
 {% block content %}
 <div class="report">
   <div id="chartjs-tooltip">
     <table></table>
   </div>
   <div class="row report-survey-info-row">
-    <div class="col-md-5 report-survey-name-col">
+    <div class="col-md-5 col-print-5 report-survey-name-col">
       <div class="report-survey-name">{{ survey.name }}</div>
       <div class="report-survey-dates">
         {{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}
       </div>
     </div>
-    <div class="col-md-5 report-survey-info-col">
+    <div class="col-md-4 col-print-5 report-survey-info-col">
       <div class="report-survey-info">
         <div class="report-survey-info-label">{% trans 'Therapeutic Area' %}</div>
         <div class="report-survey-info-value">{{ survey.therapeutic_area|default:'-' }}</div>
       </div>
     </div>
-    <div class="col-md-2 report-survey-info-filter-col">
+    <div class="col-md-2 col-print-2 report-survey-info-filter-col">
       <label for="report-filter">{% trans 'Country' %}</label>
       <select id="report-filter" class="report-filter selectpicker" data-width="100%" onchange="">
         <option value="all" {% if not country %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug 'all' %}">All</option>
@@ -29,16 +37,22 @@
           <option value="{{ c.pk }}" {% if c.pk == country.pk %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug c.slug %}">{{ c.name }}</option>
         {% endfor %}
       </select>
+
       <script>
         $('.report-filter').change(function () {
           window.location.href = $(this).find(':selected').data('url');
         });
       </script>
     </div>
+    {% if prepare_charts != 'true' %}
+      <div class="col-md-1">
+        <button id="print" data-url-print="{{ request.get_full_path }}" class="btn btn-default">Print Report</button>
+      </div>
+    {% endif %}
   </div>
   <div class="survey-cards">
     <div class="row equal-heights">
-      <div class="col-md-3 col-sm-6">
+      <div class="col-md-3 col-sm-6 col-print-3">
         <div class="report-card report-card-red">
           <div class="report-card-head">
             <div class="title">SURVEYS</div>
@@ -63,7 +77,7 @@
       </div>
 
       {% for org_stat in organization_stat %}
-      <div class="col-md-3 col-sm-6">
+      <div class="col-md-3 col-sm-6 col-print-3">
         <div class="report-card report-card-gray">
           <div class="report-card-head">
             <div class="title">{{ org_stat.organization.name_plural | upper }}</div>
@@ -105,3 +119,11 @@
   {% endfor %}
 </div>
 {% endblock content %}
+
+{% block modal %}
+  {% if prepare_charts == 'true' %}
+  <div id="overlay" class="visible">
+    <div class="spinner"></div>
+  </div>
+  {% endif %}
+{% endblock modal %}
