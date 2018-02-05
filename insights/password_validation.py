@@ -11,12 +11,12 @@ class PasswordValidator(object):
         self.min_length = min_length
 
     def validate(self, password, user=None):
-        pattern = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)([A-Za-z\d])+$'
+        pattern = r'^(?=.*[a-z])(?=.*[A-Z])((?=.*\d)|(?=.*(_|[^\w]))).+$'
         match = re.search(pattern, password)
         if not match or not match.group(0) == password:
             raise ValidationError(
-                "Your password must include upper and lower letters and numbers and number character")
+                "Your password must include upper and lower letters and numbers or symbol character")
 
     def get_help_text(self):
-        return "Your password must include upper and lower letters and numbers and number character"
+        return "Your password must include upper and lower letters and numbers or symbol character"
             
