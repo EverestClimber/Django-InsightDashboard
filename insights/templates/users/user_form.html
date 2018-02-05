@@ -18,7 +18,7 @@
   {% crispy form %}
   <div class="form-group">
     <div class="controls">
-      <button type="submit" class="btn btn-primary" onclick="(function () { $('form').submit() })()">{% if object %}{% trans 'Update' %}{% else %}{% trans 'Create' %}{% endif %}</button>
+      <button type="submit" class="btn btn-primary" onclick="(function () { $('form').submit() })()">{% if object %}{% trans 'Update User' %}{% else %}{% trans 'Create User' %}{% endif %}</button>
       {% if object %}
         <a href="{% url 'users:set_password' object.username %}" class="btn btn-info">{% trans 'Set Password' %}</a>
       {% endif %}
