@@ -62,7 +62,17 @@ class UserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMe
         return super(UserSetPasswordView, self).form_valid(form)
 
     def get_success_message(self, cleaned_data):
-        return _('Password for %(username)s is changed successfully.' % {'username': self.user.name})
+        return _('Password for %(username)s is changed successfully.') % {'username': self.user.name}
+
+
+class DeleteUser(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = User
+    permission_required = 'users.change_user'
+    raise_exception = True
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+    query_pk_and_slug = True
+    success_url = reverse_lazy('users:list')
 
 
 class DeleteUser(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
