@@ -44,10 +44,12 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_more_{{ survey.pk }}">
                       <li class="report-dropdown-item"><a href="{% url 'reports:advanced' survey.slug 'all' %}">{% trans 'View Report' %}</a></li>
-                      {# <li><a href="#">Preview</a></li> #}
                       {% if has_permissions %}
-                        <li><a href="#" data-toggle="modal" data-target="#clear-survey-modal" data-survey_id="{{ survey.pk }}">{% trans 'Clear Survey Data' %}</a></li>
+                        {% if survey.is_active %}
+                          <li><a href="#" data-toggle="modal" data-target="#clear-survey-modal" data-survey_id="{{ survey.pk }}">{% trans 'Clear Survey Data' %}</a></li>
+                        {% endif %}
                       {% endif %}
+                      <li><a href="{% url 'survey:preview' survey.pk %}">{% trans 'Preview Survey' %}</a></li>
                     </ul>
                   </span>
                 </div>
