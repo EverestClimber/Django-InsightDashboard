@@ -3245,6 +3245,10 @@ body.tour-open .animated {
 .forgot-pw {
   margin-bottom: 15px;
 }
+/* Print btn */
+#print {
+  margin-top: 6px;
+}
 .sidebard-panel {
   width: 220px;
   background: #ebebed;

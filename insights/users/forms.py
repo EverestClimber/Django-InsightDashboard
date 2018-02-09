@@ -44,11 +44,9 @@ class UpdateUserForm(forms.ModelForm):
                   'groups']
 
     def save(self, commit=True):
-        # commit=False tells Django that "Don't send this to database yet."
-        # user = super(UpdateUserForm, self).save(commit=False)
         user = super(UpdateUserForm, self).save()
         user.username = self.cleaned_data['email']
-        # never get in, so never update
+
         if commit:
             user.save()
         return user

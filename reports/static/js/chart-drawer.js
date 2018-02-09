@@ -2,7 +2,9 @@ $(function() {
   var chartCount = 0;
 
   $('#print').click(function() {
+
     var printUrl = $(this).attr('data-url-print') + '?prepareCharts=true';
+    //window.print(printUrl);
     window.open(printUrl, 'print-report', 'width=870,height=700'); //,resizable=no,toolbar=no,menubar=no,status=no
   });
 
@@ -62,7 +64,7 @@ $(function() {
           chartCount -= 1;
           if (chartCount === 0) {
             $(window).load(function() {
-              $('#overlay').toggleClass('visible'); 
+              $('#overlay').toggleClass('visible');
               window.print();
               setTimeout(function() {
                 window.close()
