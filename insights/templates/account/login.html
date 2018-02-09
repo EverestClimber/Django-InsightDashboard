@@ -40,10 +40,10 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
   <div class="form-actions">
     <div class="row">
       <div class="col-xs-6">
+        <div class="forgot-pw">
+          <a href="{% url 'account_reset_password' %}">{% trans 'Forgot your password' %}?</a>
+        </div>
         <button class="primaryAction btn btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>
-      </div>
-      <div class="col-xs-6">
-        <a class="btn btn-default btn-block" href="{% url 'account_reset_password' %}">{% trans 'Forgot your password' %}?</a>
       </div>
     </div>
   </div>
