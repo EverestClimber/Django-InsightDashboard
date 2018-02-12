@@ -8,7 +8,7 @@
 
 {% block inner %}
 
-<h1>{% trans "Sign In" %}</h1>
+<h1>{% trans "MSL Insights" %}</h1>
 
 {% get_providers as socialaccount_providers %}
 
@@ -39,12 +39,18 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
   {% endif %}
   <div class="form-actions">
     <div class="row">
-      <div class="col-xs-6">
+
+      <div class="col-xs-12">
         <div class="forgot-pw">
           <a href="{% url 'account_reset_password' %}">{% trans 'Forgot your password' %}?</a>
         </div>
-        <button class="primaryAction btn btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>
       </div>
+      <div class="col-xs-12">
+        <div class="col-xs-6 col-xs-offset-3">
+            <button class="primaryAction btn btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
