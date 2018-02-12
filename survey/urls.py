@@ -8,8 +8,7 @@ urlpatterns = [
     url(r'^list/$', views.SurveyListView.as_view(), name='list'),
     url(r'^definition/$', views.definition_view, name='definition'),
     url(r'^start/(?P<survey_id>\d+)/?$', views.start_view, name='start'),
-    url(r'^preview/(?P<survey_id>\d+)/?$', views.preview_view, name='preview'),
     url(r'^pass/(?P<id>\d+)$', views.pass_view, name='pass'),
-    url(r'^pass-preview/(?P<id>\d+)$', views.pass_preview_view, name='pass_preview'),
+    url(r'^preview/(?P<survey_id>\d+)/$', views.preview_view, name='preview'),
     url(r'^thanks/(?P<survey_id>.+)/?$', TemplateView.as_view(template_name='survey/thanks.html'), name='thanks'),
 ]

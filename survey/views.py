@@ -8,7 +8,7 @@ from django.views.generic import TemplateView, ListView
 from django.utils.translation import ugettext_lazy as _
 
 from survey.models import Answer, Survey
-from survey.forms import StartForm, PreviewForm
+from survey.forms import StartForm
 
 
 @login_required
@@ -106,40 +106,6 @@ def start_view(request, survey_id):
 
 @login_required
 @permission_required('survey.add_answer', raise_exception=True)
-def preview_view(request, survey_id):
-    survey = get_object_or_404(Survey, pk=survey_id)
-    if request.user.country is None:
-        raise ValueError('User country is not set')
-    if not survey.countries.filter(pk=request.user.country_id).exists():
-        raise ValueError('The survey is not available in {}'.format(request.user.country.name))
-
-    regions = request.user.country.region_set.all()
-    if len(regions):
-        region_choices = [(region.pk, region.name) for region in regions]
-    else:
-        region_choices = []
-
-    form = PreviewForm(request.POST or None, region_choices=region_choices, survey_id=survey_id)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            response = Answer(
-                user=request.user,
-                country=request.user.country,
-                organization_id=form.cleaned_data['organization'],
-                survey_id=form.cleaned_data['survey']
-            )
-            if form.cleaned_data['region']:
-                response.region_id = form.cleaned_data['region']
-            response.save()
-            return HttpResponseRedirect(reverse('survey:pass_preview', kwargs={'id': response.pk}))
-
-    return render(request, 'survey/preview.html', {'form': form, 'survey': survey})
-
-
-
-@login_required
-@permission_required('survey.add_answer', raise_exception=True)
 def pass_view(request, id):
     answer = Answer.objects.select_related('survey').get(pk=id)
     if answer.body:
@@ -159,19 +125,8 @@ def pass_view(request, id):
 
 @login_required
 @permission_required('survey.add_answer', raise_exception=True)
-def pass_preview_view(request, id):
-    answer = Answer.objects.select_related('survey').get(pk=id)
-    if answer.body:
-        return HttpResponseRedirect(reverse('survey:list'))
+def preview_view(request, survey_id):
+    survey = get_object_or_404(Survey, pk=survey_id)
 
-    if answer.user_id != request.user.pk:
-        return HttpResponseRedirect(reverse('survey:list'))
-
-    if request.method == 'POST':
-        answer.body = request.POST.urlencode()
-        answer.save()
-        return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': answer.survey.slug}))
-
-    questions = answer.survey.questions.prefetch_related('options')
-    return render(request, 'survey/pass_preview.html', {'questions': questions})
-
+    questions = survey.questions.prefetch_related('options')
+    return render(request, 'survey/pass.html', {'questions': questions, 'preview': True})

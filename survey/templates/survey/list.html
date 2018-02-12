@@ -49,7 +49,8 @@
                           <li><a href="#" data-toggle="modal" data-target="#clear-survey-modal" data-survey_id="{{ survey.pk }}">{% trans 'Clear Survey Data' %}</a></li>
                         {% endif %}
                       {% endif %}
-                      <li><a href="{% url 'survey:preview' survey.pk %}">{% trans 'Preview Survey' %}</a></li>
+
+                      <li><a id="preview-survey" href="{% url 'survey:preview' survey.pk  %}">{% trans 'Preview Survey' %}</a></li>
                     </ul>
                   </span>
                 </div>

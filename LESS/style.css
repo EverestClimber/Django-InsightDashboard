@@ -1064,11 +1064,9 @@ button.dim:active:before {
   outline: none !important;
 }
 /* Preview survey btn */
-.preview-form .wizard a[href='#finish'] {
-  background-color: gray !important;
-}
-.preview-form .wizard a[href='#finish'].disabled {
+.wizard a[href='#finish'].disabled {
   cursor: not-allowed;
+  background-color: gray !important;
 }
 .label {
   background-color: #d1dade;

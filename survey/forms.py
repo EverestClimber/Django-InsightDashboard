@@ -45,36 +45,3 @@ class StartForm(forms.Form):
             raise forms.ValidationError('Cannot start inactive survey')
         return survey_id
 
-
-class PreviewForm(forms.Form):
-    region = forms.ChoiceField('Region', required=False)
-    organization = forms.ChoiceField('Organization', required=True)
-    survey = forms.ChoiceField('Survey', required=True)
-
-    def __init__(self, *args, **kwargs):
-        region_choices = kwargs.pop('region_choices')
-        survey_id = kwargs.pop('survey_id')
-
-        super(PreviewForm, self).__init__(*args, **kwargs)
-
-        if len(region_choices):
-            # region_choices = [('', '---')] + region_choices
-            self.fields["region"] = forms.ChoiceField(choices=region_choices, required=True, widget=FancyRadioSelect)
-        else:
-            self.fields['region'] = forms.IntegerField(widget=forms.HiddenInput(), initial=None, required=False)
-
-        survey = get_object_or_404(Survey, pk=survey_id)
-        self.fields['survey'] = forms.IntegerField(initial=survey.pk, widget=forms.HiddenInput())
-
-        organizations = survey.organizations.all()
-        organization_choices = [(organization.pk, organization.name) for organization in organizations]
-        if len(organization_choices):
-            self.fields["organization"] = forms.ChoiceField(choices=organization_choices,
-                                                            widget=FancyRadioSelect,
-                                                            label='Organization')
-        else:
-            raise ValueError('There are no organizations assigned to selected survey')
-
-    def clean_survey(self):
-        survey_id = self.cleaned_data['survey']
-        return survey_id

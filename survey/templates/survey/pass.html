@@ -1,22 +1,30 @@
-{% extends "base.html" %}
+{% extends "base-full-width.html" %}
 {% load static i18n compress %}
 
 {% block content %}
 
-    <form action="" method="post" id="survey-pass-form">{% csrf_token %}
-
-        <div id="wizard" style="display:none">
-            {% for q in questions %}
-                <h1>1</h1>
-                <div class="step-content">
-                    <div class="text-center m-t-md {{ q.type }}">
-                        {% include q.get_type_template_name with question=q %}
-                    </div>
-                </div>
-            {% endfor %}
+    {% if preview %}
+        <div class="container sp-bar">
+          <h4>Survey Preview</h4>
         </div>
+    {% endif %}
 
-    </form>
+    <div class="container" style="max-width: 600px;">
+        <form action="" method="post" id="survey-pass-form">{% csrf_token %}
+
+            <div id="wizard" data-preview="{{ preview }}" style="display:none">
+                {% for q in questions %}
+                    <h1>1</h1>
+                    <div class="step-content">
+                        <div class="text-center m-t-md {{ q.type }}">
+                            {% include q.get_type_template_name with question=q %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+
     <script>
         (function () {
 
@@ -40,6 +48,12 @@
                     }
                 }
             });
+
+            var preview = $('#wizard').data('preview') === 'True' ? true : false;
+
+
+            console.log(preview);
+            console.log(typeof preview);
 
             $("#wizard").steps({
                 titleTemplate: '<span class="number">#index#</span>',
@@ -102,11 +116,16 @@
                         }
                     }
 
-
+                    if(preview){
+                        $('#wizard').find('a[href=#finish]').attr('disabled', 'disabled');
+                        $('#wizard').find('a[href=#finish]').addClass('disabled');
+                    }
                 },
 
                 onFinished: function (event, currentIndex) {
-                    $('#survey-pass-form').submit();
+                    if(!preview){
+                        $('#survey-pass-form').submit();
+                    }
                 },
             });
 
