@@ -3,13 +3,6 @@
 
 {% block content %}
 
-    {% if preview %}
-        <div class="container sp-bar">
-          <h4>Survey Preview</h4>
-        </div>
-    {% endif %}
-
-
     <div class="container" style="max-width: 600px;">
         <form class="start-form" action="" method="post" onsubmit="return fancy_validate()">{% csrf_token %}
             {% if survey %}

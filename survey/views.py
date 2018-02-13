@@ -101,7 +101,7 @@ def start_view(request, survey_id):
             response.save()
             return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
 
-    return render(request, 'survey/start.html', {'form': form, 'survey': survey})
+    return render(request, 'survey/start.html', {'form': form, 'survey': survey, 'preview': False})
 
 
 @login_required
