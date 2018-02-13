@@ -38,9 +38,13 @@
     flex-direction: column;
   }
 
-  .report-card .report-card-body {
+  .survey-cards .report-card-body {
     margin-top: auto;
   }
+
+  /*.report-card .report-card-body {*/
+    /*margin-top: auto;*/
+  /*}*/
 
   .report-card-table .report-card-body {
     margin-top: 0;
