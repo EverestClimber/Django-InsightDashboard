@@ -22,7 +22,7 @@
         {{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}
       </div>
     </div>
-    <div class="col-md-4 col-print-5 report-survey-info-col">
+    <div class="col-md-3 col-print-5 report-survey-info-col">
       <div class="report-survey-info">
         <div class="report-survey-info-label">{% trans 'Therapeutic Area' %}</div>
         <div class="report-survey-info-value">{{ survey.therapeutic_area|default:'-' }}</div>
@@ -36,7 +36,6 @@
           <option value="{{ c.pk }}" {% if c.pk == country.pk %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug c.slug %}">{{ c.name }}</option>
         {% endfor %}
       </select>
-
       <script>
         $('.report-filter').change(function () {
           window.location.href = $(this).find(':selected').data('url');
@@ -44,8 +43,8 @@
       </script>
     </div>
     {% if prepare_charts != 'true' %}
-      <div class="col-md-1">
-        <button id="print" data-url-print="{{ request.get_full_path }}" class="btn btn-default">Print Report</button>
+      <div class="col-md-2">
+        <button id="print" data-url-print="{{ request.get_full_path }}" class="btn btn-default pull-right">Print Report</button>
       </div>
     {% endif %}
   </div>
