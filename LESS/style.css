@@ -3247,6 +3247,10 @@ body.tour-open .animated {
 #print {
   margin-top: 6px;
 }
+/* Form h */
+.h-form {
+  margin-bottom: 30px;
+}
 .sidebard-panel {
   width: 220px;
   background: #ebebed;
