@@ -523,7 +523,6 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 .top-navigation .nav > li a:hover,
 .top-navigation .nav > li a:focus {
-  background: #fff;
   color: #487fbf;
 }
 .top-navigation .nav > li.active {
