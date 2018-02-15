@@ -201,13 +201,13 @@ div.bootstrap-tagsinput input{
   font-style: italic;
 }
 
-.has-error .form-control {
-    border-color: #e60000 !important;
-}
+/*.has-error .form-control {*/
+    /*border-color: #e60000 !important;*/
+/*}*/
 
-.has-error .help-block {
-    color: #e60000;
-}
+/*.has-error .help-block {*/
+    /*color: #e60000;*/
+/*}*/
 
 
 
