@@ -2,6 +2,7 @@
     $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn';
     $('.users-list').DataTable({
       scrollX: true,
+      pageLength: 50,
       dom:
         "<'row'<'col-sm-12'f>>" +
         "<'row'<'col-sm-12'tr>>" +
