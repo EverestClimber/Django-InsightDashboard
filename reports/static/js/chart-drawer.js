@@ -64,11 +64,9 @@ $(function() {
           chartCount -= 1;
           if (chartCount === 0) {
             $(window).load(function() {
-              $('#overlay').toggleClass('visible');
-              window.print();
               setTimeout(function() {
-                window.close()
-              }, 1);
+                  window.print();
+              }, 500);
             });
           }
         }
