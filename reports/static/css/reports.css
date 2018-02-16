@@ -934,6 +934,13 @@
     background-color: #f2f2f2 !important;
   }
 
+  .report-table > tbody > tr > td {
+    padding: 0px 0px;
+    vertical-align: middle;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
   .report-multiselect tr:nth-child(1),
   .report-multiselect-top5 tr:nth-child(1) {
     background-color: #b8103b !important;
@@ -971,12 +978,20 @@
     background-color: #f2f2f2 !important;
   }
 
-  .advanced-addon {
-    page-break-inside: avoid;
-    page-break-after: always;
+  .report-survey-info-row {
+    margin-bottom: 5px;
   }
 
   .survey-cards {
+    margin-bottom: 11px;
+  }
+
+  .report-table {
+    font-size: 12px !important;
+  }
+
+  .advanced-addon {
+    page-break-inside: avoid;
     page-break-after: always;
   }
 

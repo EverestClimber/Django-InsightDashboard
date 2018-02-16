@@ -5,7 +5,7 @@ $(function() {
 
     var printUrl = $(this).attr('data-url-print') + '?prepareCharts=true';
     //window.print(printUrl);
-    window.open(printUrl, 'print-report', 'width=870,height=700'); //,resizable=no,toolbar=no,menubar=no,status=no
+    window.open(printUrl, 'print-report', 'width=980,height=980'); //,resizable=no,toolbar=no,menubar=no,status=no
   });
 
   window.ChartDrawer = {
@@ -73,6 +73,9 @@ $(function() {
           }
         }
       };
+      chartOptions.options.responsive = true;
+      chartOptions.options.maintainAspectRatio = false;
+
     }
 
     var pie = new Chart($pieCtx, chartOptions);
