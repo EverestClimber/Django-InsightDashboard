@@ -85,7 +85,7 @@
             <h3>{% trans 'Clear all survey data?' %}</h3>
           </div>
           <div class="modal-body" style="font-size: 18px; font-weight: 200">
-            {% trans 'All data submitted to <span class="confirm-survey-title"></span> survey wil be lost.' %}
+            {% trans 'All data submitted to <span class="confirm-survey-title"></span> survey will be lost.' %}
             <form style="display: none" method="POST">
               {% csrf_token %}
               <input type="hidden" name="survey_id" />
