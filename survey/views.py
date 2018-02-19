@@ -90,16 +90,12 @@ def start_view(request, survey_id):
 
     if request.method == 'POST':
         if form.is_valid():
-            response = Answer(
-                user=request.user,
-                country=request.user.country,
-                organization_id=form.cleaned_data['organization'],
-                survey_id=form.cleaned_data['survey']
-            )
+            survey_id = form.cleaned_data['survey']
+            request.session['org_id'] = form.cleaned_data['organization']
+            request.session['survey_id'] = survey_id
             if form.cleaned_data['region']:
-                response.region_id = form.cleaned_data['region']
-            response.save()
-            return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': response.pk}))
+                request.session['region'] = form.cleaned_data['region']
+            return HttpResponseRedirect(reverse('survey:pass', kwargs={'id': survey_id}))
 
     return render(request, 'survey/start.html', {'form': form, 'survey': survey})
 
@@ -107,19 +103,22 @@ def start_view(request, survey_id):
 @login_required
 @permission_required('survey.add_answer', raise_exception=True)
 def pass_view(request, id):
-    answer = Answer.objects.select_related('survey').get(pk=id)
-    if answer.body:
-        return HttpResponseRedirect(reverse('survey:list'))
-
-    if answer.user_id != request.user.pk:
-        return HttpResponseRedirect(reverse('survey:list'))
-
     if request.method == 'POST':
+        org_id = request.session.pop('org_id')
+        answer = Answer(
+                user=request.user,
+                country=request.user.country,
+                organization_id=org_id,
+                survey_id=id
+        )
+        if request.session.get('region'):
+            answer.region_id = request.session.pop('region')
         answer.body = request.POST.urlencode()
         answer.save()
         return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': answer.survey.slug}))
 
-    questions = answer.survey.questions.prefetch_related('options')
+    survey = Survey.objects.get(id=id)
+    questions = survey.questions.prefetch_related('options')
     return render(request, 'survey/pass.html', {'questions': questions})
 
 
