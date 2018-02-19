@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -103,6 +104,7 @@ def start_view(request, survey_id):
 @login_required
 @permission_required('survey.add_answer', raise_exception=True)
 def pass_view(request, id):
+    survey = get_object_or_404(Survey, pk=id)
     if request.method == 'POST':
         org_id = request.session.pop('org_id')
         answer = Answer(
@@ -117,7 +119,6 @@ def pass_view(request, id):
         answer.save()
         return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': answer.survey.slug}))
 
-    survey = Survey.objects.get(id=id)
     questions = survey.questions.prefetch_related('options')
     return render(request, 'survey/pass.html', {'questions': questions})
 
