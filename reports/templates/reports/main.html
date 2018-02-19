@@ -30,12 +30,16 @@
     </div>
     <div class="col-md-2 col-print-2 report-survey-info-filter-col">
       <label for="report-filter">{% trans 'Country' %}</label>
+      {% if prepare_charts == 'true' %}
+      <div class="report-survey-info-value">{% if country %} {{ country.name }} {% else %} All {% endif %}</div>
+      {% else %}
       <select id="report-filter" class="report-filter selectpicker" data-width="100%" onchange="">
         <option value="all" {% if not country %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug 'all' %}">All</option>
         {% for c in survey.countries.all %}
           <option value="{{ c.pk }}" {% if c.pk == country.pk %}selected=""{% endif %} data-url="{% url 'reports:advanced' survey.slug c.slug %}">{{ c.name }}</option>
         {% endfor %}
       </select>
+      {% endif %}
       <script>
         $('.report-filter').change(function () {
           window.location.href = $(this).find(':selected').data('url');
