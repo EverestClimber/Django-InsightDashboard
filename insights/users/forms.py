@@ -2,7 +2,10 @@
 from __future__ import absolute_import, unicode_literals
 
 from django import forms
-from django.contrib.auth import password_validation
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template import Context
+from django.template.loader import get_template
 from django.utils.translation import ugettext_lazy as _
 
 from crispy_forms.layout import Div, Layout, Fieldset, Field
@@ -77,37 +80,42 @@ class CreateUserForm(forms.ModelForm):
             css_class="row",
         ),
     )
-    password1 = forms.CharField(
-        label=_('Password'),
-        strip=False,
-        widget=forms.PasswordInput)
-    password2 = forms.CharField(
-        label=_('Password (again)'),
-        strip=False,
-        help_text=_('Enter the same password as before, for verification.'),
-        widget=forms.PasswordInput())
     email = forms.EmailField(label=_('Email address'), required=True)
 
     class Meta:
         model = User
-        fields = ['email', 'password1', 'password2', 'name',
-                  'therapeutic_areas', 'country', 'secondary_language',
-                  'groups']
+        fields = ['email', 'name', 'therapeutic_areas', 'country',
+                  'secondary_language', 'groups']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        if 'password1' in cleaned_data:
-            if cleaned_data['password1'] != cleaned_data['password2']:
-                self.add_error('password1', _('Passwords did not match'))
-            else:
-                password_validation.validate_password(self.cleaned_data.get('password2'), self.instance)
-
-        return cleaned_data
 
     def save(self, commit=True):
         user = super().save()
-        user.set_password(self.cleaned_data['password1'])
         user.username = self.cleaned_data['email']
+        # User becomes active once he sets up his password
+        user.is_active = False
         if commit:
             user.save()
         return user
+
+    def send_set_password_email(self, user, request):
+        plaintext_mail = get_template('users/emails/set_password_initial.txt')
+        html_mail = get_template('users/emails/set_password_initial.html')
+        subject = "Finish your account setup!"
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to = user.email
+
+        email_context = Context(
+            {
+                'set_password_url': user.get_set_password_url(request)
+            }
+        )
+        text_content = plaintext_mail.render(email_context)
+        html_content = html_mail.render(email_context)
+        msg = EmailMultiAlternatives(
+            subject,
+            text_content,
+            from_email,
+            [to]
+        )
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()

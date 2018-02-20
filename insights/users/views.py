@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.signing import TimestampSigner, SignatureExpired
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import HttpResponseRedirect, Http404
 from django.views.generic import (
     DetailView, ListView, RedirectView, UpdateView,
     CreateView, FormView, DeleteView
@@ -97,6 +100,11 @@ class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('users:list')
 
+    def form_valid(self, form):
+        created_user = form.save()
+        form.send_set_password_email(created_user, self.request)
+        return HttpResponseRedirect(self.get_success_url())
+
 
 class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = User
@@ -112,3 +120,45 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         if not self.request.user.is_superuser:
             qs = qs.filter(is_superuser=False)
         return qs
+
+
+class CompleteSignupView(FormView):
+    form_class = SetPasswordForm
+    template_name = 'users/set_initial_password.html'
+
+    def _get_user_from_hash(self, hash):
+        # If we want this to become more customizable, we can move it to common.py
+        # For now, the link would be available for 24h
+        MAX_AGE = 24 * 60 * 60
+        signer = TimestampSigner()
+        try:
+            email = signer.unsign(hash, max_age=MAX_AGE)
+        except SignatureExpired:
+            return Http404
+
+        try:
+            user = User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            return Http404
+
+        return user
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.user
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def form_valid(self, form):
+        # If form is valid, it means the user has successfully update his password,
+        # so we can mark him as is_active so he can log in after redirect.
+        self.user.is_active = True
+        self.user.save()
+        form.save(commit=True)
+        return super().form_valid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.user = self._get_user_from_hash(kwargs.get('hash'))
+        return super().dispatch(request, *args, **kwargs)
