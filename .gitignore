@@ -16,6 +16,7 @@ npm-debug.log*
 .tox
 nosetests.xml
 htmlcov
+.pytest_cache/
 
 # Translations
 *.mo
@@ -39,6 +40,7 @@ node_modules/
 
 # virtual environments
 .env
+insight/
 
 # User-uploaded media
 insights/media/

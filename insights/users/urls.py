@@ -45,5 +45,10 @@ urlpatterns = [
         regex=r'^~update/$',
         view=views.UserUpdateView.as_view(),
         name='update'
-    )
+    ),
+    url(
+        regex=r'^(?P<hash>.*)/complete_signup/?$',
+        view=views.CompleteSignupView.as_view(),
+        name='complete'
+    ),
 ]

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, absolute_import
 
 from django.contrib.auth.models import AbstractUser, AnonymousUser as DjangoAnonymousUser
+from django.core.signing import TimestampSigner
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -61,6 +62,11 @@ class User(AbstractUser):
         if self.is_superuser:
             return ['Superuser']
         return list(g.name for g in self.groups.all())
+
+    def get_set_password_url(self, request):
+        signer = TimestampSigner()
+        user_hash = signer.sign(self.email)
+        return request.build_absolute_uri(reverse('users:complete', kwargs={'hash': user_hash}))
 
 
 class AnonymousUser(User, DjangoAnonymousUser):
