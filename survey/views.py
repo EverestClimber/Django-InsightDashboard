@@ -21,7 +21,7 @@ def definition_view(request):
 
 class InstructionsView(LoginRequiredMixin, TemplateView):
     template_name = 'survey/instructions.html'
-    cookie_name = 'instructions_was_viewed2'
+    cookie_name = 'instructions'
 
     def get(self, request, *args, **kwargs):
         response = super(self.__class__, self).get(self, request, *args, **kwargs)
