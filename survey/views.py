@@ -129,3 +129,11 @@ def preview_view(request, survey_id):
 
     questions = survey.questions.prefetch_related('options')
     return render(request, 'survey/pass.html', {'questions': questions, 'preview': True})
+
+
+@login_required
+@permission_required('survey.delete_survey', raise_exception=True)
+def delete_survey_data(request, survey_id):
+    survey = get_object_or_404(Survey, pk=survey_id)
+    Answer.objects.filter(survey=survey).delete()
+    return HttpResponseRedirect(reverse('survey:list'))
