@@ -100,7 +100,7 @@ class CreateUserForm(forms.ModelForm):
     def send_set_password_email(self, user, request):
         plaintext_mail = get_template('users/emails/set_password_initial.txt')
         html_mail = get_template('users/emails/set_password_initial.html')
-        subject = "[MST Insights] Finish your account setup!"
+        subject = "[MLS Insights] Finish your account setup!"
         from_email = settings.DEFAULT_FROM_EMAIL
         to = user.email
 
