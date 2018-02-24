@@ -5,7 +5,7 @@
 
     {% if preview %}
         <div class="container sp-bar">
-          <h4>Survey Preview</h4>
+          <h4>Questionnaire Preview</h4>
         </div>
     {% endif %}
 
@@ -54,7 +54,7 @@
             $("#wizard").steps({
                 titleTemplate: '<span class="number">#index#</span>',
                 labels: {
-                  finish: 'Submit Survey',
+                  finish: 'Submit Questionnaire',
                 },
                 onStepChanging: function (event, currentIndex, newIndex) {
                     // Always allow going backward even if the current step contains invalid fields!
