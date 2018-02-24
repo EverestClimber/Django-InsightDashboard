@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+from allauth.utils import get_current_site
 from django import forms
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -103,11 +104,13 @@ class CreateUserForm(forms.ModelForm):
         subject = "[MLS Insights] Finish your account setup!"
         from_email = settings.DEFAULT_FROM_EMAIL
         to = user.email
+        current_site = get_current_site(request)
 
         email_context = Context(
             {
                 'user': user,
-                'set_password_url': user.get_set_password_url(request)
+                'set_password_url': user.get_set_password_url(request),
+                'site_name': current_site.domain
             }
         )
         text_content = plaintext_mail.render(email_context)
