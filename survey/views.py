@@ -61,7 +61,7 @@ class SurveyListView(LoginRequiredMixin, ListView):
             try:
                 survey = Survey.objects.get(pk=survey_id)
                 survey.clear()
-                messages.success(self.request, _('The survey data is cleared successfully.'))
+                messages.success(self.request, _('The survey data has been cleared successfully.'))
             except Survey.DoesNotExist:
                 messages.warning(
                     self.request,
