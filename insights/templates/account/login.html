@@ -31,7 +31,7 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
 
 {% endif %}
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
+<form class="login" method="POST" action="{% url 'account_login' %}" novalidate="novalidate">
   {% csrf_token %}
 
     <div id="div_id_login" class="form-group {% if form.login.errors or form.non_field_errors %}has-error{% endif %}">
