@@ -110,7 +110,8 @@ class CreateUserForm(forms.ModelForm):
             {
                 'user': user,
                 'set_password_url': user.get_set_password_url(request),
-                'current_site': current_site
+                'site_name': current_site.name,
+                'site_domain': current_site.domain
             }
         )
         text_content = plaintext_mail.render(email_context)
