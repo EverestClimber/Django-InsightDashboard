@@ -89,7 +89,7 @@ class SurveyListViewTest(AssertHTMLMixin, TestCase):
         assert resp.url == reverse('survey:list')
         messages = list(resp.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
-        self.assertEqual("{}".format(messages[0]), 'The survey data is cleared successfully.')
+        self.assertEqual("{}".format(messages[0]), 'The survey data has been cleared successfully.')
         self.assertEqual(messages[0].tags, 'success')
         self.assertEqual(s.answers.count(), 0)
 
