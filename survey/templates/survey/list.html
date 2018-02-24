@@ -34,7 +34,7 @@
                 <div class="col-xs-6 col-md-4 col-md-push-4 survey-actions-column">
                   {% if survey.is_active and request.user.country in survey.countries.all %}
                     {% if request.user.is_superuser or survey.therapeutic_area in request.user.therapeutic_areas.all and perms.survey.add_answer %}
-                      <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Questionnaires' %}</a>
+                      <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Questionnaire' %}</a>
                     {% endif %}
                   {% endif %}
                   <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-info report-button">{% trans 'View Report' %}</a>
