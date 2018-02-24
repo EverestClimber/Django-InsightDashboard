@@ -106,6 +106,7 @@ class CreateUserForm(forms.ModelForm):
 
         email_context = Context(
             {
+                'user': user,
                 'set_password_url': user.get_set_password_url(request)
             }
         )
