@@ -68,7 +68,7 @@ class User(AbstractUser):
     def get_set_password_url(self, request):
         signer = TimestampSigner()
         user_hash = signer.sign(self.email)
-        encoded_hash = base64.b64encode(user_hash.encode('utf-8'))
+        encoded_hash = base64.urlsafe_b64encode(user_hash.encode('utf-8'))
         return request.build_absolute_uri(reverse('users:complete', kwargs={'hash': encoded_hash}))
 
 

@@ -133,7 +133,7 @@ class CompleteSignupView(FormView):
         # For now, the link would be available for 24h
         MAX_AGE = 24 * 60 * 60
         signer = TimestampSigner()
-        decoded_hash = base64.decode(hash)
+        decoded_hash = base64.urlsafe_b64decode(hash)
         try:
             email = signer.unsign(decoded_hash, max_age=MAX_AGE)
         except SignatureExpired:
