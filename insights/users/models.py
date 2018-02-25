@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
+import base64
+
 from django.contrib.auth.models import AbstractUser, AnonymousUser as DjangoAnonymousUser
 from django.core.signing import TimestampSigner
 from django.core.urlresolvers import reverse
@@ -66,7 +68,8 @@ class User(AbstractUser):
     def get_set_password_url(self, request):
         signer = TimestampSigner()
         user_hash = signer.sign(self.email)
-        return request.build_absolute_uri(reverse('users:complete', kwargs={'hash': user_hash}))
+        encoded_hash = base64.b64encode(user_hash.encode('utf-8'))
+        return request.build_absolute_uri(reverse('users:complete', kwargs={'hash': encoded_hash}))
 
 
 class AnonymousUser(User, DjangoAnonymousUser):

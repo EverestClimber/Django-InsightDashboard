@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import base64
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.signing import TimestampSigner, SignatureExpired
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -131,8 +133,9 @@ class CompleteSignupView(FormView):
         # For now, the link would be available for 24h
         MAX_AGE = 24 * 60 * 60
         signer = TimestampSigner()
+        decoded_hash = base64.decode(hash)
         try:
-            email = signer.unsign(hash, max_age=MAX_AGE)
+            email = signer.unsign(decoded_hash, max_age=MAX_AGE)
         except SignatureExpired:
             return Http404
 
