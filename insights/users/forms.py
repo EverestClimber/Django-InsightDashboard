@@ -142,4 +142,4 @@ class CustomLoginForm(LoginForm):
             self.errors.pop('password', '')
         elif 'password' in self.errors.keys():
             self.errors.pop('login', '')
-        return self.cleaned_data
+        return super().clean()

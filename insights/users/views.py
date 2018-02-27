@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 import base64
 
+from allauth.account.forms import SetPasswordForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.signing import TimestampSigner, SignatureExpired
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -14,7 +15,6 @@ from django.views.generic import (
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404
 
-from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
