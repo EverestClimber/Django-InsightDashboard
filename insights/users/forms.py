@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+from allauth.account.forms import LoginForm
 from allauth.utils import get_current_site
 from django import forms
 from django.conf import settings
@@ -124,3 +125,21 @@ class CreateUserForm(forms.ModelForm):
         )
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+
+
+class CustomLoginForm(LoginForm):
+    def clean(self):
+        required_field_error_msg = 'This field is required.'
+        if not self.cleaned_data:
+            if required_field_error_msg in self.errors.get('login') and \
+                    required_field_error_msg in self.errors.get('password'):
+                self.errors.pop('login')
+                self.errors.pop('password')
+                raise forms.ValidationError(
+                    _('Both email and password are required')
+                )
+        if 'login' in self.errors.keys():
+            self.errors.pop('password', '')
+        elif 'password' in self.errors.keys():
+            self.errors.pop('login', '')
+        return self.cleaned_data

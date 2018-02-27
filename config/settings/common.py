@@ -281,3 +281,7 @@ COMPRESS_CSS_FILTERS = [
     'compressor.filters.cssmin.CSSCompressorFilter',
     'compressor.filters.cssmin.rCSSMinFilter',
 ]
+
+ACCOUNT_FORMS = {
+    'login': 'insights.users.forms.CustomLoginForm'
+}
