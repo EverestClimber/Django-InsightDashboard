@@ -35,7 +35,7 @@ class SurveyListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return (qs.get_active(), qs.get_inactive())
+        return (qs.get_active(), qs.get_upcoming(), qs.get_inactive())
 
     def get(self, *args, **kwargs):
         if not self.request.COOKIES.get(InstructionsView.cookie_name):

@@ -40,8 +40,12 @@ class SurveyQuerySet(models.QuerySet):
 
     def get_inactive(self):
         now = timezone.now()
-        q = models.Q(active=False) | models.Q(start__gt=now) | models.Q(end__lt=now)
+        q = models.Q(active=False) | models.Q(end__lt=now)
         return self.filter(q)
+
+    def get_upcoming(self):
+        now = timezone.now()
+        return self.filter(start__gt=now)
 
 
 class Survey(models.Model):

@@ -3,10 +3,11 @@
 
 {% block content %}
   {% if object_list.0.count == 0 and object_list.1.count == 0 %}
-    <p class="row"><label class="no-surveys">{% trans 'No questionnaires.' %}</label></p>
+    <p class="row"><label class="no-surveys">{% trans 'No Areas of Interest.' %}</label></p>
   {% else %}
-    {% trans 'Active Questionnaires:' as active_label %}
-    {% trans 'Past Questionnaires:' as past_label %}
+    {% trans 'Active Areas of Interest:' as active_label %}
+    {% trans 'Upcoming Areas of Interest:' as upcoming_label %}
+    {% trans 'Past Areas of Interest:' as past_label %}
     {% for sl in object_list %}
       {% if sl.count > 0 %}
         <div class="row">
@@ -14,6 +15,8 @@
             <p class="row"><label>
               {% if forloop.counter == 1 %}
                 {{ active_label }}
+              {% elif forloop.counter == 2 %}
+                {{ upcoming_label }}
               {% else %}
                 {{ past_label }}
               {% endif %}
@@ -34,7 +37,7 @@
                 <div class="col-xs-6 col-md-4 col-md-push-4 survey-actions-column">
                   {% if survey.is_active and request.user.country in survey.countries.all %}
                     {% if request.user.is_superuser or survey.therapeutic_area in request.user.therapeutic_areas.all and perms.survey.add_answer %}
-                      <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start Questionnaire' %}</a>
+                      <a href="{% url 'survey:start' survey.pk %}" class="btn btn-primary">{% trans 'Start' %}</a>
                     {% endif %}
                   {% endif %}
                   <a href="{% url 'reports:advanced' survey.slug 'all' %}" class="btn btn-info report-button">{% trans 'View Report' %}</a>
@@ -82,10 +85,10 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h3>{% trans 'Clear all survey data?' %}</h3>
+            <h3>{% trans 'Clear all data?' %}</h3>
           </div>
           <div class="modal-body" style="font-size: 18px; font-weight: 200">
-            {% trans 'All data submitted to Questionnaire <strong><span class="confirm-survey-title"></span></strong> will be lost.' %}
+            {% trans 'All data submitted to the Area of Interest <strong><span class="confirm-survey-title"></span></strong> will be lost.' %}
             <form id="clear-survey-form" style="display: none" method="POST" action=".">
               {% csrf_token %}
               <input type="hidden" name="survey_id" />
