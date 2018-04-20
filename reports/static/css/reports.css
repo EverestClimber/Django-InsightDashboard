@@ -995,6 +995,10 @@
     page-break-after: always;
   }
 
+  .advanced-addon:last-child {
+    page-break-after: auto;
+  }
+
   .question-container {
     page-break-before: auto;
     page-break-after: auto;
@@ -1013,5 +1017,9 @@
     size: A4;
     margin-left: -5cm;
     margin-right: -5cm;
+  }
+
+  .mb-30 {
+    margin-bottom: 15px;
   }
 }
