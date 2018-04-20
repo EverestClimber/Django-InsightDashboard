@@ -39,7 +39,7 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
                 E-mail<span class="asteriskField">*</span>
       </label>
       <div class="controls">
-        <input autofocus="autofocus" class="textinput textInput form-control" id="id_login" name="login" placeholder="E-mail address" type="email" required="">
+        <input autofocus="autofocus" class="textinput textInput form-control" id="id_login" name="login" placeholder="E-mail address" type="email" required="" tabindex="0">
       </div>
     </div>
 
@@ -48,10 +48,10 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
                 Password<span class="asteriskField">*</span>
       </label>
       <div class="forgot-pw pull-right">
-        <a href="{% url 'account_reset_password' %}">{% trans 'Forgot your password' %}?</a>
+        <a href="{% url 'account_reset_password' %}" tabindex="1">{% trans 'Forgot your password' %}?</a>
       </div>
       <div class="controls">
-        <input class="textinput textInput form-control" id="id_password" name="password" placeholder="Password" type="password" required="">
+        <input class="textinput textInput form-control" id="id_password" name="password" placeholder="Password" type="password" required="" tabindex="0">
       </div>
     </div>
 

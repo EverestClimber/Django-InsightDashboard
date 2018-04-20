@@ -73,6 +73,10 @@ class Survey(models.Model):
         now = timezone.now()
         return self.active and self.start <= now <= self.end
 
+    def has_report(self):
+        now = timezone.now()
+        return self.start <= now
+
     def __str__(self):
         return self.name
 
