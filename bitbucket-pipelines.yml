@@ -3,6 +3,6 @@ pipelines:
   branches:
     master:
       - step:
-        script:
-          - pip install -r ./requirements/test.txt
-          - pytest --pep8
+          script:
+            - pip install -r ./requirements/test.txt
+            - pytest --pep8
