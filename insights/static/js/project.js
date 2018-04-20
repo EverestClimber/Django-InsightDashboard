@@ -148,6 +148,12 @@ $(document).ready(function () {
         });
 
         function fancyBtnHandler(btn) {
+            var parent = $(btn).closest('.fancy-checkbox');
+            var isRadio = parent.data('radio') != null;
+            if (isRadio) {
+                parent.find('.fancy-checked').removeClass('fancy-checked');
+                parent.find('input[type=checkbox]').prop('checked', false);
+            }
             var id = $(btn).attr('data-checkbox-for');
             var checkbox = $('#' + id);
             if (checkbox.prop('checked') == true) {

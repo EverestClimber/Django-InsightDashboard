@@ -1,6 +1,6 @@
 {% include "survey/question_with_translation.html" with question=question lang=request.user.secondary_language %}
 
-<div class="fancy-select fancy-checkbox">
+<div class="fancy-select fancy-checkbox" {% if question.is_radio %}data-radio="true"{% endif %}>
     <div class="btn-group-vertical" role="group">
         {% for option in question.options.all %}
 
@@ -41,15 +41,17 @@
         >
     </div>
 
-    <div class="input-group w-100p field-other text-left">
-        <input
-            class="tagsinput form-control"
-            type="text"
-            name="data[{{ question.pk }}][other]"
-            data-id="{{ question.pk }}"
-            placeholder="Other"
-        >
-    </div>
+    {% if not question.is_radio %}
+        <div class="input-group w-100p field-other text-left">
+            <input
+                class="tagsinput form-control"
+                type="text"
+                name="data[{{ question.pk }}][other]"
+                data-id="{{ question.pk }}"
+                placeholder="Other"
+            >
+        </div>
+    {% endif %}
 
 
 </div>

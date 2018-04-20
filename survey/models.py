@@ -148,6 +148,7 @@ class Question(models.Model):
     dependency_type = models.PositiveIntegerField('Dependency Type', null=True, blank=True, choices=DEPENDENCY_CHOICES)
     script = models.CharField('Additional script', max_length=5000, null=True, blank=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
+    is_radio = models.BooleanField(_('Allow to select only one'), default=False)
 
     class Meta:
         ordering = ['survey_id', 'ordering', 'created_at']
