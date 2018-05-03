@@ -51,13 +51,25 @@ class SurveyListViewTest(AssertHTMLMixin, TestCase):
             self.assertEqual(1, len(elems), 'More than one survey list is shown')
             self.assertIn('Past', elems[0].text)
 
+    def test_only_upcoming_shown(self):
+        now = timezone.now()
+        s = mixer.blend(Survey, active=True, countries=[self.country],
+                        start=now + timezone.timedelta(days=2),
+                        end=now + timezone.timedelta(days=5))
+        resp = SurveyListView.as_view()(self.req)
+        self.response_200(resp)
+        resp.render()
+        with self.assertHTML(resp, '.survey-list>p>label') as elems:
+            self.assertEqual(1, len(elems), 'More than one survey list is shown')
+            self.assertIn('Upcoming', elems[0].text)
+
     def test_empty_list(self):
         resp = SurveyListView.as_view()(self.req)
         self.response_200(resp)
         resp.render()
         self.assertNotHTML(resp, '.survey-list>p>label')
         with self.assertHTML(resp, '.no-surveys') as elems:
-            self.assertIn('No surveys', elems[0].text)
+            self.assertIn('No Areas of Interest', elems[0].text)
 
     def test_clear_data_wrong_id(self):
         now = timezone.now()
@@ -66,7 +78,8 @@ class SurveyListViewTest(AssertHTMLMixin, TestCase):
                         end=now + timezone.timedelta(days=1))
 
         c = Client()
-        c.force_login(self.user)
+        user = mixer.blend(User, country=self.country, groups=[Group.objects.get(name='Otsuka Administrator')])
+        c.force_login(user)
         resp = c.post(reverse('survey:list'), {'survey_id': -1})
         self.response_302(resp)
         assert resp.url == reverse('survey:list')
@@ -83,7 +96,8 @@ class SurveyListViewTest(AssertHTMLMixin, TestCase):
         mixer.blend(Answer, survey=s)
 
         c = Client()
-        c.force_login(self.user)
+        user = mixer.blend(User, country=self.country, groups=[Group.objects.get(name='Otsuka Administrator')])
+        c.force_login(user)
         resp = c.post(reverse('survey:list'), {'survey_id': s.pk})
         self.response_302(resp)
         assert resp.url == reverse('survey:list')
@@ -219,16 +233,18 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
             }
         )
         request.user = user
+        request.session = {}
 
         resp = start_view(request, self.s1.pk)
         self.response_302(resp)
         _, _, kwargs = resolve(resp.url)
-        survey_response = Answer.objects.get(pk=kwargs['id'])
-        assert survey_response
-        assert survey_response.user_id == user.pk
-        assert survey_response.region_id == region.pk
-        assert survey_response.survey_id == self.s1.pk
-        assert survey_response.organization_id == organization.pk
+        # TODO the test should pass survey
+        # survey_response = Answer.objects.get(pk=kwargs['id'])
+        # assert survey_response
+        # assert survey_response.user_id == user.pk
+        # assert survey_response.region_id == region.pk
+        # assert survey_response.survey_id == self.s1.pk
+        # assert survey_response.organization_id == organization.pk
 
 
 class TestSurveyPass(AssertHTMLMixin, TestCase):
@@ -238,17 +254,11 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
         country = mixer.blend(Country)
         user = mixer.blend(User, country=country, groups=[Group.objects.get(name='Otsuka User')])
 
-        answer = mixer.blend(Answer,
-                             user=user,
-                             country=country,
-                             organization_id=1,
-                             hcp_category_id=1,
-                             survey_id=1)
-
-        kwargs = {'id': answer.pk}
+        survey_id = 1
+        kwargs = {'id': survey_id}
         request = RequestFactory().get(reverse('survey:pass', kwargs=kwargs))
         request.user = user
-        resp = pass_view(request, answer.pk)
+        resp = pass_view(request, survey_id)
         self.response_200(resp)
         with self.assertHTML(resp, 'input'):
             pass
@@ -260,11 +270,14 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
              'data[7][other]': [''], 'data[1][main]': ['33'], 'data[3][other]': [''], 'data[1][additional]': ['']}
         )
         request.user = user
-        resp = pass_view(request, answer.pk)
+        request.session = {
+            "org_id": 1,
+        }
+        resp = pass_view(request, survey_id)
 
         self.response_302(resp)
         assert resp.url == reverse('survey:thanks', kwargs={"survey_id": 'test'})
-        answer.refresh_from_db()
+        answer = Answer.objects.get()
         assert answer.body
 
 

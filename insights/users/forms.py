@@ -66,8 +66,6 @@ class CreateUserForm(forms.ModelForm):
                     '',
                     'name',
                     'email',
-                    'password1',
-                    'password2',
                     Field('country', css_class='selectpicker', data_style='btn selectpicker-btn'),
                     Field('secondary_language', css_class='selectpicker', data_style='btn selectpicker-btn'),
                 ),
@@ -88,7 +86,6 @@ class CreateUserForm(forms.ModelForm):
         model = User
         fields = ['email', 'name', 'therapeutic_areas', 'country',
                   'secondary_language', 'groups']
-
 
     def save(self, commit=True):
         user = super().save()

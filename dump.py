@@ -1,11 +1,10 @@
-import django
-django.setup()
-
 from django.contrib.admin.utils import NestedObjects
 from django.db import DEFAULT_DB_ALIAS
 from django.core import serializers
 from factory.django import get_model
 
+import django
+django.setup()
 
 Survey = get_model('survey', 'Survey')
 

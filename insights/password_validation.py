@@ -19,4 +19,3 @@ class PasswordValidator(object):
 
     def get_help_text(self):
         return "Your password must include upper and lower letters and numbers or symbol character"
-            

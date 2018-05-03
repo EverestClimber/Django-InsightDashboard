@@ -78,8 +78,8 @@ class TestUserPermissions(TestCase, AssertHTMLMixin):
         resp = UserCreateView.as_view()(req)
         self.response_200(resp)
         resp.render()
-        with self.assertHTML(resp, '#id_password1') as elems:
-            self.assertEqual(1, len(elems), 'Should be only one first password')
+        with self.assertHTML(resp, 'input[name=email]') as elems:
+            self.assertEqual(1, len(elems), 'Should be only one email input')
 
         req = RequestFactory().get(reverse('users:update_user', kwargs={'username': user.email}))
         req.user = user

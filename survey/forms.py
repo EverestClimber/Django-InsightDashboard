@@ -44,4 +44,3 @@ class StartForm(forms.Form):
         if not Survey.objects.get(pk=survey_id).is_active():
             raise forms.ValidationError('Cannot start inactive survey')
         return survey_id
-
