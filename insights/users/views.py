@@ -63,6 +63,9 @@ class UserSetPasswordView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMe
         return reverse('users:update_user', kwargs={'username': self.kwargs['username']})
 
     def form_valid(self, form):
+        # mark user as active if the password is set by admin
+        self.user.is_active = True
+        self.user.save()
         form.save()
         return super(UserSetPasswordView, self).form_valid(form)
 
@@ -159,7 +162,7 @@ class CompleteSignupView(FormView):
         # so we can mark him as is_active so he can log in after redirect.
         self.user.is_active = True
         self.user.save()
-        form.save(commit=True)
+        form.save()
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
