@@ -896,6 +896,7 @@
 
   .report-table > tbody > tr.report-table-first-red {
     background-color: #b8103b !important;
+    color: white !important;
   }
 
   .report-table > tbody > tr.report-table-second-red {
@@ -916,6 +917,7 @@
 
   .report-table > tbody > tr.report-table-1-gray {
     background-color: #464646 !important;
+    color: white !important;
   }
 
   .report-table > tbody > tr.report-table-2-gray {
