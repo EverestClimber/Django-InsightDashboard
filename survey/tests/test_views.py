@@ -297,7 +297,7 @@ class TestSurveyDefinition(AssertHTMLMixin, TestCase):
         request.user = user
         response = SurveyListView.as_view()(request)
         self.response_302(response)
-        assert '/survey/instructions/' in response.url
+        assert '/aoi/instructions/' in response.url
 
     def test_with_cookies(self):
         country = mixer.blend(Country)
