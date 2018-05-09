@@ -44,6 +44,7 @@ THIRD_PARTY_APPS = (
     "compressor",
     'svg',
     'nested_admin',
+    'raven.contrib.django.raven_compat',
 )
 
 # Apps specific for this project go here.

@@ -50,3 +50,4 @@ django-jsonfield
 django-flat-responsive
 django-inline-svg
 django-nested-admin
+raven==6.7.0
