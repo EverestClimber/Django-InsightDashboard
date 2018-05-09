@@ -1,5 +1,5 @@
 $(function() {
-  var chartCount = 0;
+  window.chartCount = 0;
 
   $('#print').click(function() {
 
@@ -62,13 +62,6 @@ $(function() {
         duration: 0,
         onComplete: function() {
           chartCount -= 1;
-          if (chartCount === 0) {
-            $(window).load(function() {
-              setTimeout(function() {
-                  window.print();
-              }, 500);
-            });
-          }
         }
       };
       chartOptions.options.responsive = true;
@@ -167,6 +160,7 @@ $(function() {
     initTooltips($horizontalBarChart);
     animateBars($horizontalBarChart);
     animateLabels($horizontalBarChart);
+    --chartCount;
 
     function drawBars($chart, data) {
       var $bars = $chart.find('.horizontal-bars');
@@ -415,6 +409,7 @@ $(function() {
       animateLabels(chartId, '.ct-label');
       animateLabels(labelsId, '.ct-bar-label');
       wasDrawn = true;
+      --chartCount;
     }
 
     function animateGrid() {
@@ -576,6 +571,7 @@ $(function() {
       animateLabels(chartId, '.ct-label');
       animateLabels(labelsId, '.ct-bar-label');
       wasDrawn = true;
+      --chartCount;
     }
 
     function animateGrid() {

@@ -120,6 +120,19 @@
     {% endif %}
   {% endfor %}
 </div>
+
+<script>
+  var checkChartsAreDrawn = () => {
+    if (window.chartCount === 0) {
+      window.print();
+      return;
+    }
+    setTimeout(checkChartsAreDrawn, 100);
+  };
+  if (window.prepareCharts) {
+    checkChartsAreDrawn();
+  }
+</script>
 {% endblock content %}
 
 {% block modal %}
