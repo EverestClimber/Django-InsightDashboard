@@ -44,6 +44,8 @@ class TherapeuticArea(models.Model):
 
 
 class User(AbstractUser):
+    class Meta:
+        unique_together = ('email',)
 
     # First Name and Last Name do not cover name patterns
     # around the globe.
