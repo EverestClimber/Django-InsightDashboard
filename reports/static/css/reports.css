@@ -894,7 +894,7 @@
     background-color: inherit !important;
   }
 
-  .report-table > tbody > tr.report-table-first-red {
+  .report-table > tbody > tr.report-table-first-red > *{
     background-color: #b8103b !important;
     color: white !important;
   }
@@ -915,7 +915,7 @@
     background-color: #84bbdf !important;
   }
 
-  .report-table > tbody > tr.report-table-1-gray {
+  .report-table > tbody > tr.report-table-1-gray > * {
     background-color: #464646 !important;
     color: white !important;
   }
@@ -943,9 +943,10 @@
     font-weight: 600;
   }
 
-  .report-multiselect tr:nth-child(1),
-  .report-multiselect-top5 tr:nth-child(1) {
+  .report-multiselect tr:nth-child(1) > *,
+  .report-multiselect-top5 tr:nth-child(1) > * {
     background-color: #b8103b !important;
+    color: white !important;
   }
 
   .report-multiselect tr:nth-child(2),
