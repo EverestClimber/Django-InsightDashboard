@@ -9,6 +9,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 from __future__ import absolute_import, unicode_literals
+from django.contrib.messages import constants as messages
 
 import environ
 
@@ -285,4 +286,9 @@ COMPRESS_CSS_FILTERS = [
 
 ACCOUNT_FORMS = {
     'login': 'insights.users.forms.CustomLoginForm'
+}
+
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
 }

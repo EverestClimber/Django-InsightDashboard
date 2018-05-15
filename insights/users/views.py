@@ -13,10 +13,12 @@ from django.views.generic import (
     CreateView, FormView, DeleteView
 )
 from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.conf import settings
+from django.contrib import messages
 
 from .models import User
 from .forms import UpdateUserForm, CreateUserForm
@@ -132,20 +134,25 @@ class CompleteSignupView(FormView):
     template_name = 'users/set_initial_password.html'
 
     def _get_user_from_hash(self, hash):
-        # If we want this to become more customizable, we can move it to common.py
-        # For now, the link would be available for 24h
-        MAX_AGE = 24 * 60 * 60
         signer = TimestampSigner()
         decoded_hash = base64.urlsafe_b64decode(hash)
+        max_age = settings.ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS * 24 * 60 * 60
         try:
-            email = signer.unsign(decoded_hash, max_age=MAX_AGE)
+            email = signer.unsign(decoded_hash, max_age=max_age)
         except SignatureExpired:
-            return Http404
+            messages.warning(
+                self.request,
+                _("Your password reset link has expired. "
+                    "You can click Forget Password to request a new one."))
+            return None
 
         try:
             user = User.objects.get(email=email)
         except ObjectDoesNotExist:
-            return Http404
+            messages.error(
+                self.request,
+                _("The e-mail address is not assigned to any user account: {email}").format(email=email))
+            return None
 
         return user
 
@@ -167,4 +174,6 @@ class CompleteSignupView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         self.user = self._get_user_from_hash(kwargs.get('hash'))
+        if self.user is None:
+            return redirect(self.get_success_url())
         return super().dispatch(request, *args, **kwargs)
