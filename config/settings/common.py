@@ -288,7 +288,8 @@ ACCOUNT_FORMS = {
     'login': 'insights.users.forms.CustomLoginForm'
 }
 
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 14
+NEW_PASSWORD_TIMEOUT_DAYS = 14
+PASSWORD_RESET_TIMEOUT_DAYS = 1
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }

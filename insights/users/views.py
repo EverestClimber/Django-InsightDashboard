@@ -136,14 +136,13 @@ class CompleteSignupView(FormView):
     def _get_user_from_hash(self, hash):
         signer = TimestampSigner()
         decoded_hash = base64.urlsafe_b64decode(hash)
-        max_age = settings.ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS * 24 * 60 * 60
+        max_age = settings.NEW_PASSWORD_TIMEOUT_DAYS * 24 * 60 * 60
         try:
             email = signer.unsign(decoded_hash, max_age=max_age)
         except SignatureExpired:
             messages.warning(
                 self.request,
-                _("Your password reset link has expired. "
-                    "You can click Forget Password to request a new one."))
+                _("Your link has expired. Please request a new one."))
             return None
 
         try:

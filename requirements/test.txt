@@ -21,4 +21,4 @@ pylint-django>=0.11
 
 mixer
 django-with-asserts  # https://django-with-asserts.readthedocs.io/en/latest/
-
+freezegun
