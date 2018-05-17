@@ -292,15 +292,15 @@ class TestUserPermissions(TestCase, AssertHTMLMixin):
         with freeze_time(initial_datetime) as frozen_datetime:
             token = default_token_generator.make_token(user)
             self.assertEqual(default_token_generator.check_token(user, token), True,
-                              'Newly generated token should be valid')
+                             'Newly generated token should be valid')
 
             frozen_datetime.move_to(initial_datetime + datetime.timedelta(hours=23))
             self.assertEqual(default_token_generator.check_token(user, token), True,
-                              'Token should be valid after 23 hours')
+                             'Token should be valid after 23 hours')
 
             frozen_datetime.move_to(initial_datetime + datetime.timedelta(days=2))
             self.assertEqual(default_token_generator.check_token(user, token), False,
-                              'Token should expire after two days')
+                             'Token should expire after two days')
 
     def _send_password_reset_email(self, user):
         c = Client()
