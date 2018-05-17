@@ -99,7 +99,7 @@ $(function() {
     var percentage = Math.round(recordsNum/totalNum*100);
 
     return tooltipItems.yLabel = data.labels[tooltipItems.index] + '\n' +
-      'Areas of Interest: ' + recordsNum + '\n' +
+      'Entries: ' + recordsNum + '\n' +
       'Percent: ' + percentage + '%';
   }
 
@@ -109,7 +109,7 @@ $(function() {
       var percentage = data.datasets[tooltipItems.datasetIndex].data[tooltipItems.index];
 
       return tooltipItems.yLabel = data.labels[tooltipItems.index] + '\n' +
-        'Areas of Interest: ' + surveysNum + '\n' +
+        'Entries: ' + surveysNum + '\n' +
         'Percent: ' + percentage + '%';
     }
   }
@@ -330,7 +330,7 @@ $(function() {
       plugins: [
         Chartist.plugins.tooltip({
           tooltipFnc: function (surveysNum, percentage) {
-            return 'Areas of Interest: ' + surveysNum;
+            return 'Entries: ' + surveysNum;
           },
           anchorToPoint: true
         }),
@@ -472,7 +472,7 @@ $(function() {
       plugins: [
         Chartist.plugins.tooltip({
           tooltipFnc: function (percentage, surveysNum) {
-            return 'Areas of Interest: ' + surveysNum;
+            return 'Entries: ' + surveysNum;
           },
           anchorToPoint: true
         }),
