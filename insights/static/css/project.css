@@ -470,7 +470,7 @@ input.form-control.percents {
   margin-right: 0;
 }
 
-.btn-info {
+.btn-info, .btn-info[disabled], .btn-info.disabled {
   color: #487FBF;
   border-color: #487FBF;
   background-color: white;

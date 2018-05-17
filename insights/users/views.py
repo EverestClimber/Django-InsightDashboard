@@ -123,7 +123,7 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     raise_exception = True
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = super().get_queryset().select_related("country").prefetch_related("therapeutic_areas", "groups")
         if not self.request.user.is_superuser:
             qs = qs.filter(is_superuser=False)
         return qs
