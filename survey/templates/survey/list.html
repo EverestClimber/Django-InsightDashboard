@@ -32,7 +32,7 @@
                     {% endif %}
                   </i>
                   <div class="survey-title">{{ survey.name }}</div>
-                  <div class="survey-dates">{{ survey.start|date:'d M' }} - {{ survey.end|date:'d M' }}</div>
+                  <div class="survey-dates">{{ survey.start|date }} - {{ survey.end|date }}</div>
                 </div>
                 <div class="col-xs-6 col-md-4 col-md-push-4 survey-actions-column">
                   {% if survey.is_active and request.user.country in survey.countries.all %}
@@ -74,7 +74,7 @@
                     {% if last_answer %}
                       <span class="survey-info">
                         <div class="survey-info-label">{% trans 'Last Entry' %}</div>
-                        <div class="survey-info-value">{{ last_answer.created_at|date:'d M H:m T' }}</div>
+                        <div class="survey-info-value">{{ last_answer.created_at|date:'DATETIME_FORMAT' }}</div>
                       </span>
                     {% endif %}
                   {% endwith %}

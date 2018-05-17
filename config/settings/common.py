@@ -136,6 +136,9 @@ LOCALE_PATHS = (
     str(ROOT_DIR('locale')),
 
 )
+FORMAT_MODULE_PATH = [
+    'insights.formats',
+]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
