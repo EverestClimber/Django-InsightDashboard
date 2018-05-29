@@ -309,6 +309,25 @@ $(function() {
     }
   }
 
+  function getBarChartPlugins() {
+    var plugins = [
+      Chartist.plugins.tooltip({
+        tooltipFnc: function (surveysNum, percentage) {
+          return 'Entries: ' + surveysNum;
+        },
+        anchorToPoint: true
+      })
+    ];
+    if (!window.prepareCharts) {
+      plugins.push(
+        Chartist.plugins.barAnimation({
+          duration: 2000
+        })
+      );
+    }
+    return plugins;
+  }
+
   function drawVerticalBarChart(chartId, labelsId, data) {
     var wasDrawn = false;
 
@@ -327,17 +346,7 @@ $(function() {
       axisX: {
         showGrid: false
       },
-      plugins: [
-        Chartist.plugins.tooltip({
-          tooltipFnc: function (surveysNum, percentage) {
-            return 'Entries: ' + surveysNum;
-          },
-          anchorToPoint: true
-        }),
-        Chartist.plugins.barAnimation({
-          duration: 2000
-        })
-      ]
+      plugins: getBarChartPlugins()
     })
       .on('draw',setBarTitle)
       .on('draw', setBarWidth)
@@ -469,17 +478,7 @@ $(function() {
       axisX: {
         showGrid: false
       },
-      plugins: [
-        Chartist.plugins.tooltip({
-          tooltipFnc: function (percentage, surveysNum) {
-            return 'Entries: ' + surveysNum;
-          },
-          anchorToPoint: true
-        }),
-        Chartist.plugins.barAnimation({
-          duration: 2000
-        })
-      ]
+      plugins: getBarChartPlugins()
     })
       .on('draw',setBarTitle)
       .on('draw', setBarWidth)
