@@ -29,6 +29,10 @@
     align-items: stretch;
   }
 
+  .equal-heights:before {
+    display: none !important;
+  }
+
   .equal-heights > * {
     display: flex;
   }
