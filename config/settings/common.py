@@ -296,3 +296,6 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+# required for survey form
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000

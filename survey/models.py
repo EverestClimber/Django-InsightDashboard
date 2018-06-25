@@ -49,7 +49,7 @@ class SurveyQuerySet(models.QuerySet):
 
 
 class Survey(models.Model):
-    MAX_ORGANIZATIONS = 3
+    MAX_ORGANIZATIONS = 10
 
     objects = SurveyQuerySet.as_manager()
 
