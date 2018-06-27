@@ -71,22 +71,26 @@ class QTranslationInline(nested_admin.NestedStackedInline):
     formset = QuestionTranslationInlineFormset
     model = QuestionTranslation
     extra = 0
+    classes = ['collapse']
 
 
 class OptionInline(nested_admin.NestedStackedInline):
     model = Option
     extra = 0
+    classes = ['collapse']
 
 
 class RepresentationInline(nested_admin.NestedStackedInline):
     model = Representation
     extra = 0
+    classes = ['collapse']
 
 
 class QuestionInline(nested_admin.NestedStackedInline):
     model = Question
     extra = 0
     inlines = [QTranslationInline, OptionInline, RepresentationInline]
+    classes = ['collapse']
 
 
 class SurveyForm(forms.ModelForm):
