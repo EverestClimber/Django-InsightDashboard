@@ -65,7 +65,8 @@
       var total = q{{ i }}PieData.datasets[0].data.reduce(function(a,b) {return a + b});
       var percentage = Math.round(q{{ i }}PieData.datasets[0].data[0]/total*100);
 
-      $('#q{{ i }}Percentage').html(percentage + '%');
+      var unit = {% if stat.vars.unit != None and stat.vars.unit != '' %}' {{ stat.vars.unit }}'{% else %}'%'{% endif %};
+      $('#q{{ i }}Percentage').html(percentage + unit);
       ChartDrawer.drawSurveysAveragePie(q{{ i }}PieData, '#q{{ i }}Pie', '#q{{ i }}PieLegend')
     }
 

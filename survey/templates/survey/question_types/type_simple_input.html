@@ -19,6 +19,25 @@
           />
       </div>
     </div>
+  {% elif question.field == question.FIELD_NUMBER %}
+    <div class="centered">
+      <div class="input-group">
+        <input
+          id="type_simple_input-{{ question.pk }}"
+          type="number"
+          class="form-control"
+          name="data[{{ question.pk }}][main]"
+          pattern="[0-9]*"
+          data-rule-number="true"
+          data-rule-min="0"
+          data-msg-min="Value should be greater than zero"
+          onkeyup="$(this).valid(); return true;"
+          />
+        {% if question.unit != None and question.unit != '' %}
+          <div class="input-group-addon">{{ question.unit }}</div>
+        {% endif %}
+      </div>
+    </div>
   {% else %}
     <textarea
             rows="4"

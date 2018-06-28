@@ -298,6 +298,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
     def update_vars(self):
         try:
             self.vars['question_text'] = self.representation.question.text
+            self.vars['unit'] = self.representation.question.unit
         except Exception:
             return
 

@@ -149,6 +149,7 @@ class Question(models.Model):
     script = models.CharField('Additional script', max_length=5000, null=True, blank=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
     is_radio = models.BooleanField(_('Allow to select only one'), default=False)
+    unit = models.CharField(_('Unit'), null=True, blank=True, max_length=10)
 
     class Meta:
         ordering = ['survey_id', 'ordering', 'created_at']
