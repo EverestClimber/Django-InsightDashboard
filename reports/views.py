@@ -56,9 +56,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         ctx['organization_stat'] = OrganizationStat.objects.filter(survey=survey, country_id=self.country_id)
         ctx['prepare_charts'] = prepare_charts
         ctx['preview_mode'] = prepare_charts == 'true'
-        ctx['question_stat'] = []
-        for qs in QuestionStat.objects.filter(survey=survey, country_id=self.country_id):
-            ctx['question_stat'].append(qs)
+        ctx['question_stat'] = list(QuestionStat.objects.filter(survey=survey, country_id=self.country_id))
 
         return ctx
 

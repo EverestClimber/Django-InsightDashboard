@@ -35,11 +35,15 @@
 
   <script>
   (function() {
+    {% include './vars.html' %}
 
     function drawGrayBars() {
       var grayBarsData = {
         labels: {{ stat.vars.org_labels|safe }},
-        series: {{ stat.vars.org_series_meta|safe }}
+        series: {{ stat.vars.org_series_meta|safe }},
+        unit: unit,
+        lowest: lowest,
+        highest: highest
       };
 
       ChartDrawer.drawVerticalBarChart('#grayBarChartContainer{{ i }}', '#grayBarChart{{ i }}', '#grayBarLabels{{ i }}', grayBarsData);
@@ -48,7 +52,10 @@
     function drawDistBars() {
       var q4BarsData = {
         labels: {{ stat.vars.dist_labels|safe }},
-        series: {{ stat.vars.dist_series_meta|safe }}
+        series: {{ stat.vars.dist_series_meta|safe }},
+        unit: unit,
+        lowest: lowest,
+        highest: highest
       };
 
       ChartDrawer.drawDistributionChart('#distBarChartContainer{{ i }}', '#distBarChart{{ i }}', '#distBarLabels{{ i }}', q4BarsData);

@@ -1,0 +1,3 @@
+    var unit = {% if stat.vars.unit != None and stat.vars.unit != '' %}' {{ stat.vars.unit }}'{% else %}'%'{% endif %};
+    var lowest = {% if stat.vars.lowest != None %}{{ stat.vars.lowest }}{% else %}0{% endif %};
+    var highest = {% if stat.vars.highest != None %}{{ stat.vars.highest }}{% else %}100{% endif %};

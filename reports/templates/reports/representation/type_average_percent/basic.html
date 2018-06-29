@@ -42,7 +42,7 @@
 
 <script>
   (function() {
-    // {{ stat.vars.main_cnt }}
+    {% include './vars.html' %}
 
     function drawQ{{ i }}Pie() {
       var q{{ i }}PieData = {
@@ -65,9 +65,10 @@
       var total = q{{ i }}PieData.datasets[0].data.reduce(function(a,b) {return a + b});
       var percentage = Math.round(q{{ i }}PieData.datasets[0].data[0]/total*100);
 
-      var unit = {% if stat.vars.unit != None and stat.vars.unit != '' %}' {{ stat.vars.unit }}'{% else %}'%'{% endif %};
       $('#q{{ i }}Percentage').html(percentage + unit);
-      ChartDrawer.drawSurveysAveragePie(q{{ i }}PieData, '#q{{ i }}Pie', '#q{{ i }}PieLegend')
+      if (unit === '%') {
+        ChartDrawer.drawSurveysAveragePie(q{{ i }}PieData, '#q{{ i }}Pie', '#q{{ i }}PieLegend')
+      }
     }
 
     function drawQ{{ i }}Bars() {
@@ -76,7 +77,10 @@
 {#        series: [50, 20, -1, 84, 0, 63]#}
 
         labels: {{ stat.vars.bar_labels|safe }},
-        series: {{ stat.vars.bar_series_meta|safe }}
+        series: {{ stat.vars.bar_series_meta|safe }},
+        unit: unit,
+        highest: highest,
+        lowest: lowest,
       };
 
       ChartDrawer.drawVerticalBarChart('#q{{ i }}BarChartContainer', '#q{{ i }}BarChart', '#q{{ i }}BarLabels', q{{ i }}BarsData);

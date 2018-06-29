@@ -4,6 +4,7 @@ from django.db import models
 
 from insights.users.models import Country
 from survey.models import Survey, Organization, Question, Option, Region
+from django.utils.translation import gettext as _
 
 
 class Stat(models.Model):
@@ -59,6 +60,10 @@ class Representation(RepresentationTypeMixin, models.Model):
     label2 = models.CharField('Label 2', max_length=400, default='', blank=True)
     label3 = models.CharField('Label 3', max_length=400, default='', blank=True)
 
+    lowest = models.PositiveIntegerField(_('Lowest'), blank=True, null=True)
+    highest = models.PositiveIntegerField(_('Highest'), blank=True, null=True)
+    distribution = models.PositiveIntegerField(_('Distribution'), blank=True, null=True)
+
     def __str__(self):
         return "%s, %s %s %s" % (self.id, self.label1, self.label2, self.label3)
 
@@ -91,19 +96,25 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         return list(self.survey.organizations.all())
 
     @staticmethod
-    def extract_dist_data(dist):
-        num = 10
-        piece = 100.0 / 10
+    def extract_dist_data(dist, unit, lowest, highest, distribution):
+        num = 10 if distribution is None else distribution
         dist_labels = []
         dist_values = [0] * num
+        if unit is None:
+            unit = '%'
+        if lowest is None:
+            lowest = 0
+        if highest is None:
+            highest = 100.0
+        piece = (highest - lowest) / num
 
         for i in range(num):
             if i:
                 i_min = int(i * piece + 1)
             else:
-                i_min = 0
+                i_min = lowest
             i_max = int((i + 1) * piece)
-            dist_labels.append('{}-{}%'.format(i_min, i_max))
+            dist_labels.append('{}-{}{}'.format(i_min, i_max, unit))
 
         total = sum(dist.values())
         for val_str, n in dist.items():
@@ -153,7 +164,9 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             self.vars['org_labels'].append(org.name_plural_short.upper())
             self.vars['org_series_meta'].append({'meta': org_cnt, 'value': val})
 
-        dist_labels, dist_series_meta = self.extract_dist_data(data['dist'])
+        dist_labels, dist_series_meta = self.extract_dist_data(data['dist'],
+            self.representation.question.unit, self.representation.lowest, self.representation.highest,
+            self.representation.distribution)
 
         self.vars['pie_labels'] = [self.representation.label2, self.representation.label3]
         pers = int(round(self.data['main_sum'] / self.data['main_cnt']))
@@ -299,6 +312,8 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         try:
             self.vars['question_text'] = self.representation.question.text
             self.vars['unit'] = self.representation.question.unit
+            self.vars['lowest'] = self.representation.lowest
+            self.vars['highest'] = self.representation.highest
         except Exception:
             return
 

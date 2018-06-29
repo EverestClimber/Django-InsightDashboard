@@ -328,19 +328,33 @@ $(function() {
     return plugins;
   }
 
+  function genTicks(low, high) {
+    var step = (high - low) / 4;
+    var rv = [];
+    while (low <= (high - step)) {
+      rv.push(low)
+      low += step;
+    }
+    rv.push(high);
+    return rv;
+  }
+
   function drawVerticalBarChart(chartId, labelsId, data) {
     var wasDrawn = false;
+    var unit = data.unit;
+    var low = data.lowest;
+    var high = data.highest;
 
     var barChart = new Chartist.Bar(chartId, {
       labels: data.labels,
       series: [data.series]
     }, {
       stackBars: false,
-      high: 100,
-      low: 0,
+      high: high,
+      low: low,
       axisY: {
         type: Chartist.FixedScaleAxis,
-        ticks: [0, 25, 50, 75, 100],
+        ticks: genTicks(low, high),
         labelInterpolationFnc: setYAxisLabels
       },
       axisX: {
@@ -373,7 +387,7 @@ $(function() {
         if (value == '-1') {
           label.text('n/a');
         } else {
-          label.text(value + '%');
+          label.text(value + unit);
         }
         label.addClass("ct-bar-title");
         label.attr({
@@ -386,7 +400,11 @@ $(function() {
     }
 
     function setYAxisLabels(value) {
-      return value % 50 == 0 ? value + '%' : '';
+      if (unit === '%') {
+        return value % 50 == 0 ? value + '%' : '';
+      } else {
+        return `${value}${unit}`;
+      }
     }
 
     function drawBarLabels() {
