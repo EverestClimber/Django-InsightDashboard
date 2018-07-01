@@ -1,2 +1,2 @@
 DATE_FORMAT = 'd M Y'
-DATETIME_FORMAT = 'd M Y H:m T'
+DATETIME_FORMAT = 'd M Y H:i T'
