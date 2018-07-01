@@ -52,7 +52,14 @@ class RepresentationTypeMixin(models.Model):
         abstract = True
 
 
+class RepresentationManager(models.Manager):
+    def get_by_natural_key(self, text, slug):
+        return self.get(question__text=text, question__survey__slug=slug)
+
+
 class Representation(RepresentationTypeMixin, models.Model):
+    objects = RepresentationManager()
+
     question = models.OneToOneField(Question, on_delete=models.CASCADE, null=True)
     active = models.BooleanField(blank=True, default=True, db_index=True)
     ordering = models.PositiveIntegerField('Ordering in reports', default=1, blank=True, db_index=True)
@@ -63,6 +70,10 @@ class Representation(RepresentationTypeMixin, models.Model):
     lowest = models.PositiveIntegerField(_('Lowest'), blank=True, null=True)
     highest = models.PositiveIntegerField(_('Highest'), blank=True, null=True)
     distribution = models.PositiveIntegerField(_('Distribution'), blank=True, null=True)
+
+    def natural_key(self):
+        return self.question.natural_key
+    natural_key.dependencies = ['survey.question']
 
     def __str__(self):
         return "%s, %s %s %s" % (self.id, self.label1, self.label2, self.label3)

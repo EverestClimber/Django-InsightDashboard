@@ -10,7 +10,14 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
+class CountryManager(models.Manager):
+    def get_by_natural_key(self, slug):
+        return self.get(slug=slug)
+
+
 class Country(models.Model):
+    objects = CountryManager()
+
     name = models.CharField('Country name', unique=True, max_length=100)
     slug = models.SlugField('Country slug', unique=True)
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True, null=True)
@@ -20,6 +27,9 @@ class Country(models.Model):
     class Meta:
         verbose_name_plural = 'countries'
         ordering = ['ordering', 'id']
+
+    def natural_key(self):
+        return (self.slug,)
 
     def __str__(self):
         return self.name

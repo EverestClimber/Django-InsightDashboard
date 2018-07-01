@@ -18,13 +18,23 @@ class Region(models.Model):
         return self.name
 
 
+class OrganizationManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+
 class Organization(models.Model):
-    name = models.CharField('Organization name', max_length=100, default='')
+    objects = OrganizationManager()
+
+    name = models.CharField('Organization name', max_length=100, default='', unique=True)
     name_plural = models.CharField('Organization name in plural form', max_length=100, default='')
     name_plural_short = models.CharField('Short organization name in plural form', max_length=100, default='')
     label1 = models.CharField('Label1 for reports', max_length=200, default='')
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
     ordering = models.PositiveIntegerField('Order in reports', default=1, blank=True, db_index=True)
+
+    def natural_key(self):
+        return (self.name,)
 
     class Meta:
         ordering = ['ordering', 'id']
@@ -48,10 +58,15 @@ class SurveyQuerySet(models.QuerySet):
         return self.filter(start__gt=now)
 
 
+class SurveyManager(models.Manager):
+    def get_by_natural_key(self, slug):
+        return self.get(slug=slug)
+
+
 class Survey(models.Model):
     MAX_ORGANIZATIONS = 10
 
-    objects = SurveyQuerySet.as_manager()
+    objects = SurveyManager.from_queryset(SurveyQuerySet)()
 
     name = models.CharField(_('Name of survey'), max_length=100)
     slug = models.SlugField(_('Survey slug'), unique=True)
@@ -62,6 +77,9 @@ class Survey(models.Model):
     created_at = models.DateTimeField('Datetime of creation', auto_now_add=True)
     start = models.DateTimeField(_('Starts at'))
     end = models.DateTimeField(_('Ends at'))
+
+    def natural_key(self):
+        return (self.slug,)
 
     def get_last_answer(self):
         try:
@@ -102,6 +120,11 @@ class Survey(models.Model):
 models.signals.m2m_changed.connect(Survey.on_organizations_changed, sender=Survey.organizations.through)
 
 
+class QuestionManager(models.Manager):
+    def get_by_natural_key(self, text, slug):
+        return self.get(text=text, survey__slug=slug)
+
+
 class Question(models.Model):
 
     TYPE_TWO_DEPENDEND_FIELDS = 'type_two_dependend_fields'
@@ -137,6 +160,8 @@ class Question(models.Model):
         (DEPENDENCY_CONTEXTUAL, 'Question availability depends on other question'),
     )
 
+    objects = QuestionManager()
+
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name='questions',
                                null=True, blank=True)
     ordering = models.PositiveIntegerField('Order', default=0)
@@ -153,6 +178,10 @@ class Question(models.Model):
 
     class Meta:
         ordering = ['survey_id', 'ordering', 'created_at']
+
+    def natural_key(self):
+        return (self.text,) + self.survey.natural_key()
+    natural_key.dependencies = ['survey.survey']
 
     def __str__(self):
         return self.text
@@ -179,6 +208,11 @@ class QuestionTranslation(models.Model):
         return "[{0.lang.name}] {0.text}".format(self)
 
 
+class OptionManager(models.Manager):
+    def get_by_natural_key(self, value, text, slug):
+        return self.get(value=value, question__text=text, question__survey__slug=slug)
+
+
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="options")
     value = models.CharField('Option value', max_length=200)
@@ -187,6 +221,12 @@ class Option(models.Model):
 
     class Meta:
         ordering = ['question_id', 'ordering', 'created_at']
+
+    objects = OptionManager()
+
+    def natural_key(self):
+        return (self.value,) + self.question.natural_key
+    natural_key.dependencies = ['survey.question']
 
     def __str__(self):
         return self.value
