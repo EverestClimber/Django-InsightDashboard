@@ -53,6 +53,15 @@
   .report-card-table .report-card-body {
     margin-top: 0;
   }
+
+  .survey-cards > .row > div {
+    height: 270px;
+    margin-bottom: 30px;
+  }
+
+  .survey-cards > .row {
+    margin-bottom: -30px;
+  }
 }
 
 @media (min-width: 992px) {
@@ -872,7 +881,10 @@
   align-items: flex-end;
 }
 
-.preview-mode .survey-cards > .row > *,
+.preview-mode .survey-cards > .row > div {
+  height: auto;
+}
+
 .preview-mode .question-container > .row > *,
 .preview-mode .advanced-addon > .row > * {
   margin-bottom: 0;
