@@ -209,7 +209,7 @@ class Answer(models.Model):
     hcp_category = models.ForeignKey(HCPCategory, null=True, blank=True)
     survey = models.ForeignKey(Survey, related_name="answers")
     body = models.TextField(default='')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(_('Submitted'), auto_now_add=True)
     is_updated = models.BooleanField(db_index=True, default=False)
 
     def __str__(self):
