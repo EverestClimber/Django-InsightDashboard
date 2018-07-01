@@ -103,6 +103,9 @@ def start_view(request, survey_id):
 @login_required
 @permission_required('survey.add_answer', raise_exception=True)
 def pass_view(request, id):
+    if "org_id" not in request.session:
+        return HttpResponseRedirect(reverse('survey:start', kwargs={'survey_id': id}))
+
     survey = get_object_or_404(Survey, pk=id)
     if request.method == 'POST':
         org_id = request.session.pop('org_id')
@@ -116,7 +119,7 @@ def pass_view(request, id):
             answer.region_id = request.session.pop('region')
         answer.body = request.POST.urlencode()
         answer.save()
-        return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': answer.survey.slug}))
+        return HttpResponseRedirect(reverse('survey:thanks', kwargs={'survey_id': survey.slug}))
 
     questions = survey.questions.prefetch_related('options')
     return render(request, 'survey/pass.html', {'questions': questions})
