@@ -225,7 +225,7 @@ class Option(models.Model):
     objects = OptionManager()
 
     def natural_key(self):
-        return (self.value,) + self.question.natural_key
+        return (self.value,) + self.question.natural_key()
     natural_key.dependencies = ['survey.question']
 
     def __str__(self):
