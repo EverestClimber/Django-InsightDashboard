@@ -72,7 +72,7 @@ class Representation(RepresentationTypeMixin, models.Model):
     distribution = models.PositiveIntegerField(_('Distribution'), blank=True, null=True)
 
     def natural_key(self):
-        return self.question.natural_key
+        return self.question.natural_key()
     natural_key.dependencies = ['survey.question']
 
     def __str__(self):
