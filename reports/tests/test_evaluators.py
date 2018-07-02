@@ -25,8 +25,9 @@ class TestTotalEvaluator(TestCase):
         self.evaluator = self.evaluator_cls(self.survey)
 
     def test_get_answers(self):
-        mixer.blend(Answer, survey=self.survey, is_updated=True)
-        mixer.blend(Answer, survey=self.survey, is_updated=False)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
+        mixer.blend(Answer, survey=self.survey, organization=o1, is_updated=True)
+        mixer.blend(Answer, survey=self.survey, organization=o2, is_updated=False)
         answers = self.evaluator.get_answers()
         assert len(answers) == 2, 'Should return all records'
 
@@ -38,8 +39,7 @@ class TestTotalEvaluator(TestCase):
     def test_load_stat(self):
         c1 = mixer.blend(Country, use_in_reports=True)
         c2 = mixer.blend(Country, use_in_reports=True)
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
         s1 = mixer.blend(Survey, countries=[c1, c2], organizations=[o1, o2])
         s2 = mixer.blend(Survey, countries=[c1, c2], organizations=[o1, o2])
 
@@ -68,8 +68,7 @@ class TestTotalEvaluator(TestCase):
     def test_fill_out(self):
         c1 = mixer.blend(Country, use_in_reports=True)
         c2 = mixer.blend(Country, use_in_reports=True)
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
         s1 = mixer.blend(Survey, countries=[c1, c2], organizations=[o1, o2], active=True)
         q1 = mixer.blend(Question, survey=s1)
         q2 = mixer.blend(Question, survey=s1)
@@ -117,8 +116,7 @@ class TestTotalEvaluator(TestCase):
         s2 = mixer.blend(Survey)
         c1 = mixer.blend(Country, use_in_reports=True)
         c2 = mixer.blend(Country, use_in_reports=True)
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
         mixer.blend(SurveyStat, survey=s1, country=None)
         mixer.blend(SurveyStat, survey=s1, country=c1)
         mixer.blend(SurveyStat, survey=s2, country=c1)
@@ -126,8 +124,8 @@ class TestTotalEvaluator(TestCase):
         mixer.blend(OrganizationStat, survey=s1, country=c1, organization=o1)
         mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o1)
         mixer.blend(OrganizationStat, survey=s2, country=c1, organization=o2)
-        mixer.blend(Answer, survey=s1, is_updated=False)
-        mixer.blend(Answer, survey=s2, is_updated=False)
+        mixer.blend(Answer, survey=s1, organization=o1, is_updated=False)
+        mixer.blend(Answer, survey=s2, organization=o2, is_updated=False)
         self.evaluator_cls.process_answers(s1)
         self.evaluator_cls.process_answers(s2)
         assert process_answer.call_count == 2
@@ -139,24 +137,26 @@ class TestTotalEvaluator(TestCase):
     @patch('reports.evaluators.AbstractEvaluator.update_organization_stat')
     def test_process_answer_with_empty_data(self, organization_stat, survey_stat):
 
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
         country = mixer.blend(Country, id=1)
-        answer = mixer.blend(Answer, body='', survey=self.survey)
+        answer = mixer.blend(Answer, body='', survey=self.survey, organization=o1)
         self.evaluator.process_answer(answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 
-        answer = mixer.blend(Answer, body='111', survey=self.survey)
+        answer = mixer.blend(Answer, body='111', survey=self.survey, organization=o2)
         self.assertRaises(MalformedQueryStringError, self.evaluator.process_answer, answer)
         assert organization_stat.call_count == 0
         assert survey_stat.call_count == 0
 
-        answer = mixer.blend(Answer, body='a=1', survey=self.survey)
+        answer = mixer.blend(Answer, body='a=1', survey=self.survey, organization=o1)
         self.assertRaises(KeyError, self.evaluator.process_answer, answer)
 
-        answer = mixer.blend(Answer, body='data=1', survey=self.survey)
+        answer = mixer.blend(Answer, body='data=1', survey=self.survey, organization=o2)
         self.assertRaises(KeyError, self.evaluator.process_answer, answer)
 
-        answer = mixer.blend(Answer, country=country, body='data[111]=Yes', survey=self.survey)
+        answer = mixer.blend(Answer, country=country, body='data[111]=Yes', survey=self.survey,
+                             organization=o1)
         self.evaluator.process_answer(answer)
 
         survey_stat.assert_called_once_with((answer.survey_id, country.pk), answer)
@@ -167,8 +167,9 @@ class TestTotalEvaluator(TestCase):
         d2 = timezone.make_aware(datetime(2017, 1, 2))
         mixer.blend(SurveyStat, survey_id=1, country_id=None, total=2, last=d1)
         mixer.blend(SurveyStat, survey_id=1, country_id=1, total=2, last=d1)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=None, organization_id=1, total=2)
-        mixer.blend(OrganizationStat, survey_id=1, country_id=1, organization_id=1, total=2)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
+        mixer.blend(OrganizationStat, survey_id=1, country_id=None, organization=o1, total=2)
+        mixer.blend(OrganizationStat, survey_id=1, country_id=1, organization=o1, total=2)
 
         self.evaluator.load_stat()
 
@@ -229,9 +230,10 @@ class TestTotalEvaluator(TestCase):
     def test_update_survey_stat(self):
         d1 = timezone.make_aware(datetime(2017, 1, 1))
         d2 = timezone.make_aware(datetime(2017, 1, 2))
-        a1 = mixer.blend(Answer)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
+        a1 = mixer.blend(Answer, organization=o1)
         a1.created_at = d1
-        a2 = mixer.blend(Answer)
+        a2 = mixer.blend(Answer, organization=o2)
         a2.created_at = d2
         self.evaluator.update_survey_stat((1, 2), a1)
         self.evaluator.update_survey_stat((1, 2), a2)
@@ -301,8 +303,9 @@ class TestLastEvaluator(object):
 
     def test_get_answers(self):
         s = mixer.blend(Survey)
-        mixer.blend(Answer, survey=s, is_updated=True)
-        mixer.blend(Answer, survey=s, is_updated=False)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
+        mixer.blend(Answer, survey=s, organization=o1, is_updated=True)
+        mixer.blend(Answer, survey=s, organization=o2, is_updated=False)
 
         evaluator = self.evaluator_cls(s)
         answers = evaluator.get_answers()

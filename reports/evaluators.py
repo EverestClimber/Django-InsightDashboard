@@ -46,9 +46,10 @@ class AbstractEvaluator(object):
 
     def type_average_percent_processor(self, question_id, question_data, answer):
         q = self.question_dict[question_id]
-        # if (q.type != Question.TYPE_TWO_DEPENDEND_FIELDS and
-        #         (q.type != Question.TYPE_SIMPLE_INPUT or q.field != Question.FIELD_PERCENT)):
-        #     raise ValueError("type_average_percent_processor doesn't process %s, Question: %s" % (q.type, q.pk))
+        if (q.type != Question.TYPE_TWO_DEPENDEND_FIELDS and
+                (q.type != Question.TYPE_SIMPLE_INPUT or
+                 q.field not in (Question.FIELD_PERCENT, Question.FIELD_NUMBER))):
+            raise ValueError("type_average_percent_processor doesn't process %s, Question: %s" % (q.type, q.pk))
 
         main_str = question_data['main'].strip() if 'main' in question_data else ''
         additional_str = question_data['additional'].strip() if 'additional' in question_data else ''

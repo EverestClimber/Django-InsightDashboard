@@ -115,11 +115,10 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         c1 = mixer.blend(Country, name='France')
         cls.c1 = c1
         c2 = mixer.blend(Country, name='Germany')
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
+        cls.orgs = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
 
         now = timezone.now()
-        s1 = mixer.blend(Survey, countries=[c1, c2], organizations=[o1, o2], active=True,
+        s1 = mixer.blend(Survey, countries=[c1, c2], organizations=cls.orgs, active=True,
                          start=now - timezone.timedelta(days=1),
                          end=now + timezone.timedelta(days=1))
         cls.s1 = s1
@@ -212,9 +211,8 @@ class SurveyStartViewTest(AssertHTMLMixin, TestCase):
         req.user = user
         self.s1.countries.add(country)
         mixer.blend(Survey, active=True)
-        organization = mixer.blend(Organization)
+        organization = self.orgs[0]
         self.s1.organizations.add(organization)
-        mixer.blend(Organization)
         mixer.blend(HCPCategory)
         resp = start_view(req, self.s1.pk)
         assert resp.status_code == 200, 'Now we a ready to start'
@@ -258,6 +256,9 @@ class TestSurveyPass(AssertHTMLMixin, TestCase):
         kwargs = {'id': survey_id}
         request = RequestFactory().get(reverse('survey:pass', kwargs=kwargs))
         request.user = user
+        request.session = {
+            "org_id": 1,
+        }
         resp = pass_view(request, survey_id)
         self.response_200(resp)
         with self.assertHTML(resp, 'input'):

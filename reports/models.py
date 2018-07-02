@@ -107,7 +107,7 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
         return list(self.survey.organizations.all())
 
     @staticmethod
-    def extract_dist_data(dist, unit, lowest, highest, distribution):
+    def extract_dist_data(dist, unit=None, lowest=None, highest=None, distribution=None):
         num = 10 if distribution is None else distribution
         dist_labels = []
         dist_values = [0] * num
@@ -175,7 +175,8 @@ class QuestionStat(RepresentationTypeMixin, models.Model):
             self.vars['org_labels'].append(org.name_plural_short.upper())
             self.vars['org_series_meta'].append({'meta': org_cnt, 'value': val})
 
-        dist_labels, dist_series_meta = self.extract_dist_data(data['dist'],
+        dist_labels, dist_series_meta = self.extract_dist_data(
+            data['dist'],
             self.representation.question.unit, self.representation.lowest, self.representation.highest,
             self.representation.distribution)
 

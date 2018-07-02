@@ -240,7 +240,10 @@ class TestQuestionStat(TestCase):
             'org_series_meta': [{'meta': 3, 'value': 30}, {'meta': 0, 'value': -1}, {'meta': 0, 'value': -1}],
             'dist_labels': dist_labels,
             'dist_series_meta': dist_series_meta,
-            'main_cnt': 3
+            'main_cnt': 3,
+            'unit': None,
+            'highest': None,
+            'lowest': None,
         }
 
         qs1 = mixer.blend(QuestionStat,
@@ -265,8 +268,12 @@ class TestQuestionStat(TestCase):
             'org_series_meta': [{'meta': 3, 'value': 30}, {'meta': 0, 'value': -1}, {'meta': 0, 'value': -1}],
             'dist_labels': dist_labels,
             'dist_series_meta': dist_series_meta,
-            'main_cnt': 3
+            'main_cnt': 3,
+            'unit': None,
+            'highest': None,
+            'lowest': None,
         }
+        # TODO generic distribution test
 
     def test_update_type_yes_no(self):
         data = {
@@ -302,7 +309,10 @@ class TestQuestionStat(TestCase):
                 {'label': 'ORG1', 'positiveNum': 2, 'negativeNum': 1},
                 {'label': 'ORG2', 'positiveNum': -1, 'negativeNum': -1},
                 {'label': 'ORG3', 'positiveNum': -1, 'negativeNum': -1},
-            ]
+            ],
+            'unit': None,
+            'highest': None,
+            'lowest': None,
         }
 
         qs1 = mixer.blend(QuestionStat,
@@ -327,7 +337,10 @@ class TestQuestionStat(TestCase):
                 {'label': 'ORG1', 'positiveNum': 2, 'negativeNum': 1},
                 {'label': 'ORG2', 'positiveNum': -1, 'negativeNum': -1},
                 {'label': 'ORG3', 'positiveNum': -1, 'negativeNum': -1},
-            ]
+            ],
+            'unit': None,
+            'highest': None,
+            'lowest': None,
         }
 
     def test_calculate_top(self):
@@ -487,7 +500,10 @@ class TestQuestionStat(TestCase):
             'label2': 'label2',
             'top1': top1,
             'top3': top3,
-            'org_names': ['ORG1', 'ORG2', 'ORG3']
+            'org_names': ['ORG1', 'ORG2', 'ORG3'],
+            'unit': None,
+            'highest': None,
+            'lowest': None,
         }
 
         qs1 = mixer.blend(QuestionStat,
@@ -508,5 +524,8 @@ class TestQuestionStat(TestCase):
             'label2': 'label2',
             'top1': top1,
             'top3': top3,
-            'org_names': ['ORG1', 'ORG2', 'ORG3']
+            'org_names': ['ORG1', 'ORG2', 'ORG3'],
+            'unit': None,
+            'highest': None,
+            'lowest': None,
         }

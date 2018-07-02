@@ -52,8 +52,7 @@ class TestReports(TestCase):
         c1 = mixer.blend(Country, slug='ukraine')
         cls.c1 = c1
         c2 = mixer.blend(Country, slug='germany')
-        o1 = mixer.blend(Organization)
-        o2 = mixer.blend(Organization)
+        (o1, o2) = mixer.cycle(2).blend(Organization, name=mixer.sequence("org_{0}"))
         s1 = mixer.blend(Survey, countries=[c1, c2], organizations=[o1, o2], active=True)
         cls.s1 = s1
         mixer.blend(SurveyStat, survey=s1, country=None)
