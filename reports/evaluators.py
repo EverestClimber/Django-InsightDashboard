@@ -388,7 +388,10 @@ class AbstractEvaluator(object):
         for org in orgs:
             self.organization_stat[(org.survey_id, org.country_id, org.organization_id)] = org
 
-        quests = QuestionStat.objects.all()
+        quests = (QuestionStat.objects
+            .select_related('representation', 'representation__question', 'country', 'survey')
+            .prefetch_related('survey__organizations')
+            .all())
         for quest in quests:
             self.question_stat[(quest.survey_id, quest.country_id, quest.representation_id)] = quest
 

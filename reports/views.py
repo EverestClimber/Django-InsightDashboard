@@ -72,7 +72,7 @@ def update_stat(request, survey_id):
 @staff_member_required
 def recalculate(request):
     messages = []
-    for survey in Survey.objects.all():
+    for survey in Survey.objects.prefetch_related('organizations', 'countries').all():
         evaluator = TotalEvaluator.process_answers(survey)
         messages += evaluator.messages
     return render(request, 'reports/recalculate.html', {'evaluator_messages': messages})

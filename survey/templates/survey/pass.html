@@ -79,7 +79,8 @@
                     return form.valid();
                 },
                 onStepChanged: function (event, currentIndex, priorIndex) {
-                    var q = $('.body:eq(' + currentIndex + ') .question-main', form);
+                    var qBody = $('.body:eq(' + currentIndex + ')', form);
+                    var q = $('.question-main', qBody);
                     var depends_on = q.data('depends_on');
                     if (depends_on) {
                         var available_if = q.attr('data-available_if');
@@ -94,8 +95,13 @@
                         dependend_input.each(function () {
                             dependend_answer.push($(this).val());
                         });
-                        if (dependend_answer.indexOf(available_if) === -1) {
-                            $('#wizard .actions').find('a[href=#next]:visible, a[href=#finish]:visible').click();
+                        var isBack = priorIndex > currentIndex;
+                        var isHidden = dependend_answer.indexOf(available_if) === -1;
+                        $('input, textarea', qBody).prop('disabled', isHidden);
+                        if (isHidden) {
+                            $('#wizard .actions').find(isBack
+                                ? 'a[href=#previous]'
+                                : 'a[href=#next]:visible, a[href=#finish]:visible').click();
                         }
                     }
 
